@@ -25,7 +25,7 @@ export const CreateProduct = async (req , res , next) => {
 
     try{
         const productData = req.body;
-        const newProduct = await create(productData);
+        const newProduct = await createProduct(productData);
 
         res.status(201).json({
             success : true,

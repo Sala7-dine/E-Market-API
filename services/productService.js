@@ -2,11 +2,10 @@ import Product from "../models/Product.js";
 
 export async function getAllProducts() {
     try {
-        return await Product.find();
+        return await Product.find().where({isDelete : false});
     }catch (err) {
         throw new  Error(err.message);
     }
-
 }
 
 export async function createProduct(productData) {
@@ -34,13 +33,7 @@ export async function updateProduct(id , product) {
             throw new Error("L'id et require");
         }
 
-        const { title , description , prix , stock , categorie } = product;
-
-        if(!title || !description || !prix || !stock || !categorie) {
-            throw new Error("Tous les champs obligatoires doivent être remplis.");
-        }
-
-        return await Product.findByIdAndUpdate(id , product);
+        return await Product.findByIdAndUpdate(id , product , { new : true });
 
     }catch (err) {
 
@@ -53,7 +46,9 @@ export async function updateProduct(id , product) {
 export async function deleteProduct(id) {
 
     try {
-        return await Product.findByIdAndDelete(id);
+        // return await Product.findByIdAndDelete(id);
+        return await Product.findByIdAndUpdate(id, { isDelete: true }, { new: true });
+
     }catch(error) {
         throw new Error(error.message)
     }
