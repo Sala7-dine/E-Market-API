@@ -1,6 +1,4 @@
 import express from "express";
-import swaggerUi from 'swagger-ui-express';
-import swaggerJsdoc from 'swagger-jsdoc';
 import { validate } from "../middlewares/validate.js";
 import { createUserSchema, updateUserSchema } from "../validations/user.validation.js";
 

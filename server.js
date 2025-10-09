@@ -5,6 +5,7 @@ import swaggerJsdoc from 'swagger-jsdoc';
 import dotenv from "dotenv";
 import productRoutes from "./routes/productRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import categorieRoute from "./routes/categoryRoutes.js";
 import  logger from "./middlewares/logger.js"
 import  notFound from "./middlewares/notFound.js"
 
@@ -40,14 +41,12 @@ const swaggerOptions = {
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// app.get('/' , (req , res) => {
-//     res.send("API CONNECTED SUCCESSFULLY");
-// })
 
 app.use('/api/products' , productRoutes);
 
-
 app.use('/api/users' , userRoutes);
+
+app.use('/api/categorie' , categorieRoute);
 
 app.use(logger);
 app.use(notFound);
