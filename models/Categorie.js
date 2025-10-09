@@ -9,7 +9,7 @@ const categorySchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-// Relation virtuelle inverse
+
 categorySchema.virtual("products", {
     ref: "Product",
     localField: "_id",

@@ -20,10 +20,6 @@ const productSchema = new mongoose.Schema(
             required: [true, "Le stock est obligatoire"],
             min: [0, "Le stock ne peut pas être négatif"],
         },
-        categorie: {
-            type: String,
-            required: [true, "La catégorie est obligatoire"],
-        },
         imageUrl: {
             type: String,
             default: "",
@@ -31,7 +27,12 @@ const productSchema = new mongoose.Schema(
         isDelete: {
             type : Boolean,
             default : false
-        }
+        },
+
+        categories: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Categorie"
+        }]
     },
 
     { timestamps: true }

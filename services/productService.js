@@ -1,4 +1,5 @@
 import Product from "../models/Product.js";
+import Category from "../models/Categorie.js";
 
 export async function getAllProducts() {
     try {
@@ -11,9 +12,9 @@ export async function getAllProducts() {
 export async function createProduct(productData) {
 
     try {
-        const {title , description , prix , stock , categorie} = productData;
+        const {title , description , prix , stock , categories} = productData;
 
-        if(!title || !description || !prix || !stock || !categorie) {
+        if(!title || !description || !prix || !stock || !categories) {
             throw new Error("Tous les champs obligatoires doivent être remplis.");
         }
 
