@@ -1,6 +1,8 @@
 import express from "express";
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
+import { validate } from "../middlewares/validate.js";
+import { createUserSchema, updateUserSchema } from "../validations/user.validation.js";
 
 import { CreateUser, GetUsers, DeleteUser , UpdateUser } from "../controllers/userController.js";
 
@@ -50,7 +52,7 @@ router.get('/' , GetUsers);
  *       201:
  *         description: Utilisateur créé
  */
-router.post('/create'  , CreateUser);
+router.post('/create', validate(createUserSchema) ,CreateUser);
 
 
 
@@ -95,7 +97,7 @@ router.post('/create'  , CreateUser);
  *       404:
  *         description: Utilisateur non trouvé
  */
-router.put('/update/:id' , UpdateUser);
+router.put('/update/:id', validate(updateUserSchema) , UpdateUser);
 
 
 /**

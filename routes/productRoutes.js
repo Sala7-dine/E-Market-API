@@ -1,9 +1,9 @@
 import express from "express";
 import { CreateProduct, GetProducts, DeleteProduct , UpdateProduct } from "../controllers/productController.js";
+import { validate } from "../middlewares/validate.js";
+import { createProductSchema, updateProductSchema } from "../validations/product.validations.js";
 
 const router = express.Router();
-
-
 
 /**
  * @swagger
@@ -54,7 +54,7 @@ router.get('/' , GetProducts);
  *       201:
  *         description: produit créé
  */
-router.post('/create'  , CreateProduct);
+router.post('/create', validate(createProductSchema),  CreateProduct);
 
 
 /**
@@ -106,7 +106,7 @@ router.post('/create'  , CreateProduct);
  *       404:
  *         description: Produit non trouvé
  */
-router.put('/update/:id' , UpdateProduct);
+router.put('/update/:id' , validate(updateProductSchema), UpdateProduct);
 
 /**
  * @swagger
