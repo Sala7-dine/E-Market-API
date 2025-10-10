@@ -1,4 +1,5 @@
 import { createUser , getAllUsers ,  deleteUser , updateUser} from "../services/userService.js";
+import mongoose from "mongoose";
 
 export const GetUsers = async (req , res) => {
 
@@ -47,6 +48,10 @@ export const UpdateUser = async (req , res) => {
         const id = req.params.id;
         const user = req.body;
 
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "ID invalide" });
+        }
+
         const data = await updateUser(id , user);
 
         res.status(201).json({
@@ -66,6 +71,10 @@ export const DeleteUser = async (req , res) => {
 
     try {
         const id = req.params.id;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "ID invalide" });
+        }
 
         const newProduit = await deleteUser(id);
 

@@ -1,4 +1,5 @@
 import { createCategorie , getAllCategories ,  deleteCategorie , updateCategorie} from "../services/categorieService.js";
+import mongoose from "mongoose";
 
 export const GetCategories = async (req , res) => {
 
@@ -47,6 +48,10 @@ export const UpdateCategorie = async (req , res) => {
         const id = req.params.id;
         const categorie = req.body;
 
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "ID invalide" });
+        }
+
         const data = await updateCategorie(id , categorie);
 
         res.status(201).json({
@@ -66,6 +71,10 @@ export const DeleteCategorie = async (req , res) => {
 
     try {
         const id = req.params.id;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "ID invalide" });
+        }
 
         const newCategorie = await deleteCategorie(id);
 

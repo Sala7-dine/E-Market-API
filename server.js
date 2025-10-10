@@ -25,7 +25,7 @@ const swaggerOptions = {
     definition: {
         openapi: '3.0.0',
         info: {
-            title: 'API Utilisateurs - Exemple Swagger',
+            title: 'API Utilisateurs - Swagger',
             version: '1.0.0',
             description: 'Une API simple avec Swagger et Express.js',
         },
@@ -39,7 +39,7 @@ const swaggerOptions = {
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec , {explorer : true}) );
 
 
 app.use('/api/products' , productRoutes);

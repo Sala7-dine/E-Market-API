@@ -1,4 +1,5 @@
-import { createProduct , getAllProducts ,  deleteProduct , updateProduct} from "../services/productService.js";
+import { createProduct , getAllProducts ,  deleteProduct , updateProduct , searchProducts} from "../services/productService.js";
+import mongoose from "mongoose";
 
 export const GetProducts = async (req , res) => {
 
@@ -20,6 +21,7 @@ export const GetProducts = async (req , res) => {
     }
 
 }
+
 
 export const CreateProduct = async (req , res , next) => {
 
@@ -47,6 +49,10 @@ export const UpdateProduct = async (req , res) => {
         const id = req.params.id;
         const product = req.body;
 
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "ID invalide" });
+        }
+
         const data = await updateProduct(id , product);
 
         res.status(201).json({
@@ -67,6 +73,10 @@ export const DeleteProduct = async (req , res) => {
     try {
         const id = req.params.id;
 
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: "ID invalide" });
+        }
+
         const newProduit = await deleteProduct(id);
 
         res.status(201).json({
@@ -78,6 +88,42 @@ export const DeleteProduct = async (req , res) => {
         throw new Error(err.message);
     }
 
+}
+
+export const SearchProducts = async (req , res) => {
+
+    try {
+
+        const { title, description , categories , minPrice, maxPrice } = req.query;
+
+        const filter = {};
+
+        if (title) {
+            filter.title = { $regex: title, $options: "i" };
+        }
+
+        if (description) {
+            filter.description = { $regex: description , $options: "i" } ;
+        }
+
+        if (categories) {
+            filter.categories = categories;
+        }
+
+        if (minPrice || maxPrice) {
+            filter.price = {};
+            if (minPrice) filter.prix.$gte = Number(minPrice); // >= minPrice
+            if (maxPrice) filter.prix.$lte = Number(maxPrice); // <= maxPrice
+        }
+
+        const products = await searchProducts(filter);
+
+        res.json(products);
+
+
+    }catch (err) {
+        throw new Error(err.message);
+    }
 
 
 }

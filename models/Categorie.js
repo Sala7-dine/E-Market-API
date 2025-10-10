@@ -16,4 +16,4 @@ categorySchema.virtual("products", {
     foreignField: "categories"
 });
 
-export default mongoose.model("Category", categorySchema);
+export default mongoose.model("Categorie", categorySchema);

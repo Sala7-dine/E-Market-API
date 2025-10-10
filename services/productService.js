@@ -3,7 +3,7 @@ import Category from "../models/Categorie.js";
 
 export async function getAllProducts() {
     try {
-        return await Product.find().where({isDelete : false});
+        return await Product.find().where({isDelete : false}).populate("categories");
     }catch (err) {
         throw new  Error(err.message);
     }
@@ -48,10 +48,21 @@ export async function deleteProduct(id) {
 
     try {
         // return await Product.findByIdAndDelete(id);
+
         return await Product.findByIdAndUpdate(id, { isDelete: true }, { new: true });
 
     }catch(error) {
         throw new Error(error.message)
+    }
+
+}
+
+export async function searchProducts(filter){
+
+    try {
+        return await Product.find(filter);
+    }catch (err) {
+        throw new Error(err.message);
     }
 
 }
