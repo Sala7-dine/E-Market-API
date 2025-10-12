@@ -8,6 +8,7 @@ import userRoutes from "./routes/userRoutes.js";
 import categorieRoute from "./routes/categoryRoutes.js";
 import  logger from "./middlewares/logger.js"
 import  notFound from "./middlewares/notFound.js"
+import errorHandler from "./middlewares/errorHandler.js";
 
 const app = express();
 
@@ -17,6 +18,8 @@ const Port = process.env.PORT || 3000;
 const MongoUri = process.env.MONGO_URI;
 
 app.use(express.json());
+
+app.use(logger);
 
 await connectDB(MongoUri);
 
@@ -48,9 +51,10 @@ app.use('/api/users' , userRoutes);
 
 app.use('/api/categorie' , categorieRoute);
 
-app.use(logger);
+
 app.use(notFound);
+app.use(errorHandler);
 
 app.listen(Port , () => {
-    console.log("server successfully connect to http://localhost:3000");
+    console.log(" server successfully connect to http://localhost:3000");
 });
