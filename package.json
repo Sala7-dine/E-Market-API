@@ -25,9 +25,9 @@
     "cookie-parser": "^1.4.6",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
+    "js-yaml": "^4.1.0",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^8.19.1",
-    "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
     "uuid": "^9.0.0",
     "yup": "^1.7.1"

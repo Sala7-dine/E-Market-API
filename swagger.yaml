@@ -1,1 +1,562 @@
-test
+openapi: 3.0.0
+info:
+  title: E-Market API
+  description: API pour la gestion d'une plateforme e-commerce
+  version: 1.0.0
+  contact:
+    name: E-Market Team
+    email: support@emarket.com
+
+servers:
+  - url: http://localhost:3000
+    description: Serveur de développement
+
+tags:
+  - name: Authentication
+    description: Gestion de l'authentification
+  - name: Products
+    description: Gestion des produits
+  - name: Users
+    description: Gestion des utilisateurs
+  - name: Categories
+    description: Gestion des catégories
+
+paths:
+  /api/auth/register:
+    post:
+      tags: [Authentication]
+      summary: Inscription d'un nouvel utilisateur
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+                - fullName
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: "user@example.com"
+                password:
+                  type: string
+                  minLength: 6
+                  example: "password123"
+                fullName:
+                  type: string
+                  example: "John Doe"
+      responses:
+        201:
+          description: Utilisateur créé avec succès
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "user created"
+        400:
+          description: Erreur de validation
+        500:
+          description: Erreur serveur
+
+  /api/auth/login:
+    post:
+      tags: [Authentication]
+      summary: Connexion utilisateur
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: "user@example.com"
+                password:
+                  type: string
+                  example: "password123"
+      responses:
+        200:
+          description: Connexion réussie
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        400:
+          description: Identifiants invalides
+        500:
+          description: Erreur serveur
+
+  /api/auth/refresh:
+    post:
+      tags: [Authentication]
+      summary: Renouvellement du token d'accès
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refreshToken:
+                  type: string
+                  example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      responses:
+        200:
+          description: Token renouvelé
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+        401:
+          description: Token invalide
+
+  /api/auth/logout:
+    post:
+      tags: [Authentication]
+      summary: Déconnexion utilisateur
+      responses:
+        200:
+          description: Déconnexion réussie
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "logged out"
+
+  /api/products:
+    get:
+      tags: [Products]
+      summary: Liste tous les produits
+      responses:
+        200:
+          description: Liste des produits
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Product'
+
+  /api/products/create:
+    post:
+      tags: [Products]
+      summary: Crée un nouveau produit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - description
+                - price
+                - stock
+                - category
+              properties:
+                title:
+                  type: string
+                  example: "Casque Bluetooth Sony WH-1000XM5"
+                description:
+                  type: string
+                  example: "Casque antibruit haut de gamme avec autonomie de 30h."
+                price:
+                  type: number
+                  example: 3599
+                stock:
+                  type: integer
+                  example: 12
+                category:
+                  type: string
+                  example: "Électronique"
+                imageUrl:
+                  type: string
+                  format: uri
+                  example: "https://example.com/sony-xm5.jpg"
+      responses:
+        201:
+          description: Produit créé avec succès
+        400:
+          description: Données invalides
+
+  /api/products/update/{id}:
+    put:
+      tags: [Products]
+      summary: Met à jour un produit
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            pattern: '^[0-9a-fA-F]{24}$'
+          example: "68e7b5010bf901dfd66d774a"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                price:
+                  type: number
+                stock:
+                  type: integer
+                category:
+                  type: string
+                imageUrl:
+                  type: string
+                  format: uri
+      responses:
+        200:
+          description: Produit mis à jour
+        400:
+          description: Données invalides
+        404:
+          description: Produit non trouvé
+
+  /api/products/delete/{id}:
+    delete:
+      tags: [Products]
+      summary: Supprime un produit
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            pattern: '^[0-9a-fA-F]{24}$'
+          example: "68e7b5010bf901dfd66d774a"
+      responses:
+        200:
+          description: Produit supprimé
+        404:
+          description: Produit non trouvé
+
+  /api/products/search:
+    get:
+      tags: [Products]
+      summary: Recherche de produits
+      parameters:
+        - in: query
+          name: category
+          schema:
+            type: string
+        - in: query
+          name: minPrice
+          schema:
+            type: number
+        - in: query
+          name: maxPrice
+          schema:
+            type: number
+        - in: query
+          name: name
+          schema:
+            type: string
+      responses:
+        200:
+          description: Résultats de recherche
+
+  /api/users:
+    get:
+      tags: [Users]
+      summary: Liste tous les utilisateurs
+      responses:
+        200:
+          description: Liste des utilisateurs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+
+  /api/users/create:
+    post:
+      tags: [Users]
+      summary: Crée un nouvel utilisateur
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - fullName
+                - email
+                - password
+              properties:
+                fullName:
+                  type: string
+                  example: "John Doe"
+                email:
+                  type: string
+                  format: email
+                  example: "john@example.com"
+                password:
+                  type: string
+                  minLength: 6
+                  example: "password123"
+      responses:
+        201:
+          description: Utilisateur créé
+        400:
+          description: Données invalides
+
+  /api/users/update/{id}:
+    put:
+      tags: [Users]
+      summary: Met à jour un utilisateur
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            pattern: '^[0-9a-fA-F]{24}$'
+          example: "68e7b5010bf901dfd66d774a"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fullName:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+      responses:
+        200:
+          description: Utilisateur mis à jour
+        400:
+          description: Données invalides
+        404:
+          description: Utilisateur non trouvé
+
+  /api/users/delete/{id}:
+    delete:
+      tags: [Users]
+      summary: Supprime un utilisateur
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            pattern: '^[0-9a-fA-F]{24}$'
+          example: "68e7b5010bf901dfd66d774a"
+      responses:
+        200:
+          description: Utilisateur supprimé
+        404:
+          description: Utilisateur non trouvé
+
+  /api/categories:
+    get:
+      tags: [Categories]
+      summary: Liste toutes les catégories
+      responses:
+        200:
+          description: Liste des catégories
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Category'
+
+  /api/categories/create:
+    post:
+      tags: [Categories]
+      summary: Crée une nouvelle catégorie
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  example: "Électronique"
+                description:
+                  type: string
+                  example: "Tous les accessoires électroniques"
+      responses:
+        201:
+          description: Catégorie créée
+        400:
+          description: Données invalides
+
+  /api/categories/update/{id}:
+    put:
+      tags: [Categories]
+      summary: Met à jour une catégorie
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            pattern: '^[0-9a-fA-F]{24}$'
+          example: "68e7b5010bf901dfd66d774a"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+      responses:
+        200:
+          description: Catégorie mise à jour
+        400:
+          description: Données invalides
+        404:
+          description: Catégorie non trouvée
+
+  /api/categories/delete/{id}:
+    delete:
+      tags: [Categories]
+      summary: Supprime une catégorie
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            pattern: '^[0-9a-fA-F]{24}$'
+          example: "68e7b5010bf901dfd66d774a"
+      responses:
+        200:
+          description: Catégorie supprimée
+        404:
+          description: Catégorie non trouvée
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: "68e7b5010bf901dfd66d774a"
+        title:
+          type: string
+          example: "Casque Bluetooth Sony WH-1000XM5"
+        description:
+          type: string
+          example: "Casque antibruit haut de gamme"
+        price:
+          type: number
+          example: 3599
+        stock:
+          type: integer
+          example: 12
+        category:
+          type: string
+          example: "Électronique"
+        imageUrl:
+          type: string
+          example: "https://example.com/image.jpg"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: "68e7b5010bf901dfd66d774a"
+        fullName:
+          type: string
+          example: "John Doe"
+        email:
+          type: string
+          example: "john@example.com"
+        role:
+          type: string
+          enum: [user, admin]
+          example: "user"
+        isDelete:
+          type: boolean
+          example: false
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    Category:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: "68e7b5010bf901dfd66d774a"
+        name:
+          type: string
+          example: "Électronique"
+        description:
+          type: string
+          example: "Tous les accessoires électroniques"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
