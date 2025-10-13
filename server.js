@@ -9,6 +9,9 @@ import categorieRoute from "./routes/categoryRoutes.js";
 import  logger from "./middlewares/logger.js"
 import  notFound from "./middlewares/notFound.js"
 import errorHandler from "./middlewares/errorHandler.js";
+import cookieParser from 'cookie-parser';
+import authRoutes from './routes/auth.js';
+import { authenticate } from './middlewares/auth.js';
 
 const app = express();
 
@@ -18,8 +21,10 @@ const Port = process.env.PORT || 3000;
 const MongoUri = process.env.MONGO_URI;
 
 app.use(express.json());
-
+app.use(cookieParser());
 app.use(logger);
+
+
 
 await connectDB(MongoUri);
 
@@ -45,7 +50,10 @@ const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec , {explorer : true}) );
 
 
-app.use('/api/products' , productRoutes);
+app.use('/api/auth', authRoutes);
+
+
+app.use('/api/products' , authenticate , productRoutes);
 
 app.use('/api/users' , userRoutes);
 
