@@ -9,9 +9,19 @@ const REFRESH_EXP = process.env.REFRESH_TOKEN_EXP || '30d';
 const ACCESS_SECRET = process.env.JWT_ACCESS_SECRET;
 const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
 
+if (!ACCESS_SECRET) {
+    console.error('JWT_ACCESS_SECRET not found in environment');
+    console.log('Available env vars:', Object.keys(process.env).filter(k => k.includes('JWT')));
+}
+if (!REFRESH_SECRET) {
+    console.error('JWT_REFRESH_SECRET not found in environment');
+}
+
 export function signAccessToken(payload) {
     // payload should include minimal claims (sub, roles, maybe name)
-    return jwt.sign(payload, ACCESS_SECRET, { expiresIn: ACCESS_EXP });
+    const secret = process.env.JWT_ACCESS_SECRET || ACCESS_SECRET;
+    console.log('Using secret in signAccessToken:', secret ? 'Found' : 'Missing');
+    return jwt.sign(payload, secret, { expiresIn: ACCESS_EXP });
 }
 
 export function signRefreshToken(payload) {

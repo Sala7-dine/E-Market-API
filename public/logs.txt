@@ -27,3 +27,13 @@
 [2025-10-13T13:38:08.627Z] GET /
 [2025-10-13T13:38:14.492Z] GET /api/products/
 [2025-10-13T13:38:22.669Z] GET /api/categorie/
+[2025-10-13T13:50:16.760Z] POST /api/users/create
+[2025-10-13T13:50:28.392Z] POST /api/auth/register
+[2025-10-13T13:51:15.731Z] POST /api/auth/register
+[2025-10-13T13:51:34.475Z] POST /api/auth/register
+[2025-10-13T13:52:46.917Z] POST /api/auth/register
+[2025-10-13T13:54:35.099Z] POST /api/auth/register
+[2025-10-13T13:54:52.877Z] POST /api/auth/register
+[2025-10-13T13:55:10.041Z] POST /api/auth/register
+[2025-10-13T13:59:01.196Z] POST /api/auth/register
+[2025-10-13T13:59:19.386Z] POST /api/auth/login

@@ -1,56 +1,21 @@
-import Categorie from "../models/Categorie.js";
+import Categorie from '../models/Categorie.js';
 
-export async function getAllCategories() {
-    try {
-        return await Categorie.find().where({isDelete : false});
-    }catch (err) {
-        throw new  Error(err.message);
-    }
-}
+export const createCategorie = async (data) => {
+  return await Categorie.create(data);
+};
 
-export async function createCategorie(categorieData) {
+export const getAllCategories = async () => {
+  return await Categorie.find();
+};
 
-    try {
-        const { name , description } = categorieData;
+export const getCategorieById = async (id) => {
+  return await Categorie.findById(id);
+};
 
-        if(!name || !description ) {
-            throw new Error("Tous les champs obligatoires doivent être remplis.");
-        }
+export const updateCategorie = async (id, data) => {
+  return await Categorie.findByIdAndUpdate(id, data, { new: true });
+};
 
-        return await Categorie.create(categorieData);
-
-    } catch (err) {
-        throw new Error(err.message);
-    }
-
-}
-
-export async function updateCategorie(id , categorie) {
-
-    try {
-
-        if(!id) {
-            throw new Error("L'id et require");
-        }
-
-        return await Categorie.findByIdAndUpdate(id , categorie , { new : true });
-
-    }catch (err) {
-
-        throw new Error(err.message);
-
-    }
-
-}
-
-export async function deleteCategorie(id) {
-
-    try {
-        // return await Categorie.findByIdAndDelete(id);
-        return await Categorie.findByIdAndUpdate(id, { isDelete: true }, { new: true });
-
-    }catch(error) {
-        throw new Error(error.message)
-    }
-
-}
+export const deleteCategorie = async (id) => {
+  return await Categorie.findByIdAndDelete(id);
+};

@@ -1,9 +1,10 @@
 import express from 'express';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { signAccessToken, signRefreshToken, verifyRefreshToken, generateJti } from '../utils/tokens.js';
 import User from '../models/User.js';
 import RefreshToken from '../models/RefreshToken.js';
-
+import dotenv from 'dotenv';
+dotenv.config();
 const router = express.Router();
 
 // helper pour set cookie
@@ -24,9 +25,11 @@ router.post('/register', async (req,res) => {
         const { email, password, fullName } = req.body;
         if (!email || !password) return res.status(400).json({ error: 'email & password required' });
 
-        const existing = await User.findOne({ email });
-        if (existing) return res.status(400).json({ error: 'email already used' });
 
+        const existing = await User.findOne({ email });
+        console.log(existing);
+        if (existing) return res.status(400).json({ error: 'email already used' });
+        console.log(email, password, fullName);
         const user = new User({ email, fullName });
         await user.setPassword(password);
         await user.save();
@@ -52,6 +55,8 @@ router.post('/login', async (req,res) => {
 
         // payload minimal pour access token
         const accessPayload = { sub: user._id.toString(), roles: user.roles };
+        console.log('JWT_ACCESS_SECRET:', process.env.JWT_ACCESS_SECRET ? 'Found' : 'Missing');
+        console.log('Secret value:', process.env.JWT_ACCESS_SECRET?.substring(0, 10) + '...');
         const accessToken = signAccessToken(accessPayload);
 
         // refresh token generation + store hashed version
