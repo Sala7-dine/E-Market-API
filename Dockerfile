@@ -14,4 +14,4 @@ EXPOSE 3000
 
 USER bun
 
-CMD ["bun", "start"]
+CMD ["bun", "--hot", "server.js"]

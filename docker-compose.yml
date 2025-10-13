@@ -14,6 +14,9 @@ services:
       - REFRESH_TOKEN_EXP=30d
       - COOKIE_DOMAIN=localhost
       - NODE_ENV=development
+    volumes:
+      - .:/app
+      - /app/node_modules
     depends_on:
       - mongo
     restart: unless-stopped
