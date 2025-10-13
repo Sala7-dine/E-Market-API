@@ -3,5 +3,4 @@
 .vscode
 dist
 build
-.env
 node_modules
