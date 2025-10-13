@@ -3,6 +3,7 @@ import { CreateProduct, GetProducts, DeleteProduct , UpdateProduct , SearchProdu
 import { validate } from "../middlewares/validate.js";
 import { createProductSchema, updateProductSchema } from "../validations/product.validations.js";
 
+
 const router = express.Router();
 
 /**
