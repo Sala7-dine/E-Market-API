@@ -19,15 +19,6 @@ services:
     depends_on:
       - mongo
     restart: unless-stopped
-    develop:
-      watch:
-        - action: sync
-          path: ./
-          target: /app
-          ignore:
-            - node_modules/
-        - action: rebuild
-          path: package.json
 
   mongo:
     image: mongo:7
