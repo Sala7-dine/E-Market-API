@@ -100,12 +100,14 @@ export const GetCurrentUser = async (req, res) => {
 export const UpdateProfile = async (req, res) => {
     try {
         const userId = req.user._id;
+        const userRole = req.user.role;
         const updateData = { ...req.body };
         if (req.file) {
             updateData.profileImage = `/images/users/${req.file.filename}`;
         }
-        const updatedUser = await UpdateProfileService(userId, updateData);
-        res.json({ success: true, data: updatedUser });
+        const updatedUser = await UpdateProfileService(userId, updateData, userRole);
+        const { password, ...userWithoutPassword } = updatedUser.toObject();
+        res.json({ success: true, data: userWithoutPassword });
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
