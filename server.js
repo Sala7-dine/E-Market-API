@@ -9,8 +9,9 @@ import  logger from "./middlewares/logger.js"
 import  notFound from "./middlewares/notFound.js"
 import errorHandler from "./middlewares/errorHandler.js";
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 import authRoutes from './routes/auth.js';
-import { authenticate } from './middlewares/auth.js';
+import { authenticate } from './middlewares/authMiddleware.js';
 
 const app = express();
 
@@ -19,6 +20,7 @@ dotenv.config();
 const Port = process.env.PORT || 3000;
 const MongoUri = process.env.MONGO_URI;
 
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 app.use(logger);
@@ -33,7 +35,7 @@ app.use('/api/products' , authenticate , productRoutes);
 
 app.use('/api/users' , userRoutes);
 
-app.use('/api/categorie' , categorieRoute);
+app.use('/api/categories' , categorieRoute);
 
 app.use(notFound);
 app.use(errorHandler);

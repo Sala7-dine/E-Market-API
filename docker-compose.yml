@@ -1,8 +1,7 @@
-version: '3.8'
-
 services:
   api:
     build: .
+    container_name: emarket-api
     ports:
       - "3000:3000"
     environment:
@@ -32,6 +31,7 @@ services:
 
   mongo:
     image: mongo:7
+    container_name: emarket-mongo
     ports:
       - "27017:27017"
     volumes:
