@@ -35,7 +35,7 @@ app.use('/api/products' , authenticate , productRoutes);
 
 app.use('/api/users' , userRoutes);
 
-app.use('/api/categorie' , categorieRoute);
+app.use('/api/categories' , categorieRoute);
 
 app.use(notFound);
 app.use(errorHandler);
