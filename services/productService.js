@@ -50,7 +50,7 @@ export async function deleteProduct(id) {
         // return await Product.findByIdAndDelete(id);
 
         return await Product.findByIdAndUpdate(id, { isDelete: true }, { new: true });
-
+     
     }catch(error) {
         throw new Error(error.message)
     }
