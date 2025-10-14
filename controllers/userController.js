@@ -1,4 +1,4 @@
-import { createUser , getAllUsers ,  deleteUser , updateUser} from "../services/userService.js";
+import { createUser , getAllUsers ,  deleteUser , updateUser, getCurrentUser } from "../services/userService.js";
 import mongoose from "mongoose";
 
 export const GetUsers = async (req , res) => {
@@ -88,3 +88,13 @@ export const DeleteUser = async (req , res) => {
     }
 
 }
+
+export const GetCurrentUser = async (req, res) => {
+    try {
+        const user = await getCurrentUser(req.user._id);
+        res.json({ success: true, data: user });
+    } catch (err) {
+        res.status(404).json({ error: err.message });
+    }
+};
+
