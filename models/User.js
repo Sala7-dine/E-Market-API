@@ -23,6 +23,10 @@ const UserSchema = new mongoose.Schema(
             enum : ['admin' , 'user'],
             default : "user"
         },
+        profileImage: {
+            type: String,
+            default: null
+        },
         isDelete : {
             type : Boolean,
             default : false

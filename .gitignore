@@ -5,3 +5,4 @@ build
 .env
 public/logs.txt
 node_modules
+public/images/users/

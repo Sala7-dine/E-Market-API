@@ -53,6 +53,7 @@ export async function deleteUser(id) {
 
 }
 
+// gets the current user by ID
 export async function getCurrentUser(userId) {
     try {
         const user = await User.findById(userId).select('-password');
@@ -63,4 +64,27 @@ export async function getCurrentUser(userId) {
     } catch (err) {
         throw new Error(err.message);
     }
+}
+
+// updates the current user's profile information
+export async function UpdateProfile(userId, updateData) {
+    const { fullName, email, profileImage } = updateData;
+
+
+    const updates = {};
+    if (fullName) updates.fullName = fullName;
+    if (email) updates.email = email;
+    if (profileImage !== undefined) updates.profileImage = profileImage;
+
+    const user = await User.findByIdAndUpdate(
+        userId,
+        updates,
+        { new: true, runValidators: true }
+    );
+
+    if (!user || user.isDelete) {
+        throw new Error('Utilisateur non trouvé');
+    }
+
+    return user;
 }
