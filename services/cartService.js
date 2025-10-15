@@ -3,8 +3,8 @@ import Product from "../models/Product.js";
 
 // get all carts :
 export async function getCarts(userId) {
-  const allCart = await Cart.find({userId});
-console.log(JSON.stringify(allCart, null, 2));
+  const allCart = await Cart.find({ userId });
+  console.log(JSON.stringify(allCart, null, 2));
   if (allCart.length === 0) {
     throw new Error("no carts.");
   }
@@ -43,6 +43,11 @@ export async function addToCart(userId, productId, quantity = 1) {
 }
 
 // delete product from cart :
-export async function deleteproduct(){
-    
+export async function deleteproduct(userId, productId) {
+  let cart = await Cart.findOne({ userId });
+  const updatedcart = cart.items.filter(
+    (item) => item.productId.toString() !== productId
+  );
+  cart.items = updatedcart;
+  return await cart.save();
 }
