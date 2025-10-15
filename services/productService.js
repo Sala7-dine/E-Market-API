@@ -10,20 +10,25 @@ export async function getAllProducts() {
 }
 
 export async function createProduct(productData) {
-
     try {
-        const {title , description , prix , stock , categories} = productData;
+        const { title, description, prix, stock, categories } = productData;
 
-        if(!title || !description || !prix || !stock || !categories) {
-            throw new Error("Tous les champs obligatoires doivent être remplis.");
+        const missing = [];
+        if (title == null || title === "") missing.push("title");
+        if (description == null || description === "") missing.push("description");
+        // autoriser 0
+        if (prix === undefined || prix === null) missing.push("prix");
+        if (stock === undefined || stock === null || stock === "") missing.push("stock");
+        if (!Array.isArray(categories) || categories.length === 0) missing.push("categories");
+
+        if (missing.length) {
+            throw new Error(`Champs obligatoires manquants ou invalides: ${missing.join(", ")}`);
         }
 
         return await Product.create(productData);
-
     } catch (err) {
         throw new Error(err.message);
     }
-
 }
 
 export async function updateProduct(id , product) {
@@ -60,7 +65,23 @@ export async function deleteProduct(id) {
 export async function searchProducts(filter){
 
     try {
-        return await Product.find(filter);
+
+        const skip = (filter.page - 1) * filter.limit;  // Calcul du nombre de docs à sauter
+
+        // Exécution de la query avec count pour total (pour renvoyer les métadonnées)
+        const total = await Product.countDocuments(filter);  // Total sans pagination
+        const products = await Product.find(filter)
+            .skip(skip)
+            .limit(Number(filter.limit))
+            .sort({ createdAt: -1 });
+
+        return {
+            total,
+            products,
+            limit : Number(filter.limit),
+            page : Number(filter.page),
+            totalPages: Math.ceil(total / filter.limit),
+        };
     }catch (err) {
         throw new Error(err.message);
     }
