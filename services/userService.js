@@ -52,3 +52,15 @@ export async function deleteUser(id) {
     }
 
 }
+
+export async function getCurrentUser(userId) {
+    try {
+        const user = await User.findById(userId).select('-password');
+        if (!user || user.isDelete) {
+            throw new Error('Utilisateur non trouvé');
+        }
+        return user;
+    } catch (err) {
+        throw new Error(err.message);
+    }
+}
