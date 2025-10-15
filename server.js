@@ -12,7 +12,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import authRoutes from './routes/auth.js';
 import { authenticate } from './middlewares/authMiddleware.js';
-
+import cartRoutes from "./routes/cartRouter.js"
 const app = express();
 
 dotenv.config();
@@ -34,6 +34,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/products' , authenticate , productRoutes);
 
 app.use('/api/users' , userRoutes);
+app.use('/api/carts' , authenticate,cartRoutes);
 
 app.use('/api/categories' , categorieRoute);
 
