@@ -51,3 +51,26 @@ export async function deleteproduct(userId, productId) {
   cart.items = updatedcart;
   return await cart.save();
 }
+
+// update update Product Quantity and total price in the cart :
+export async function updateProductQuantity(userId, productId, quantity) {
+  let cart = await Cart.findOne({ userId });
+  if (!cart) {
+    throw new Error("Cart not found for this user");
+  }
+  const item = cart.items.find((i) => i.productId.toString() === productId);
+  if (!item) {
+    throw new Error("Product not found in cart");
+  }
+
+  //   update quantity:
+  item.quantity = quantity;
+
+  //   update the total price:
+  cart.totalPrice = cart.items.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
+  await cart.save();
+  return cart;
+}
