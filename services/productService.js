@@ -10,25 +10,20 @@ export async function getAllProducts() {
 }
 
 export async function createProduct(productData) {
+
     try {
-        const { title, description, prix, stock, categories } = productData;
+        const {title , description , prix , stock , categories} = productData;
 
-        const missing = [];
-        if (title == null || title === "") missing.push("title");
-        if (description == null || description === "") missing.push("description");
-        // autoriser 0
-        if (prix === undefined || prix === null) missing.push("prix");
-        if (stock === undefined || stock === null || stock === "") missing.push("stock");
-        if (!Array.isArray(categories) || categories.length === 0) missing.push("categories");
-
-        if (missing.length) {
-            throw new Error(`Champs obligatoires manquants ou invalides: ${missing.join(", ")}`);
+        if(!title || !description || !prix || !stock || !categories) {
+            throw new Error("Tous les champs obligatoires doivent être remplis.");
         }
 
         return await Product.create(productData);
+
     } catch (err) {
         throw new Error(err.message);
     }
+
 }
 
 export async function updateProduct(id , product) {
@@ -62,25 +57,25 @@ export async function deleteProduct(id) {
 
 }
 
-export async function searchProducts(filter){
+export async function searchProducts(filter , page , limit){
 
     try {
 
-        const skip = (filter.page - 1) * filter.limit;  // Calcul du nombre de docs à sauter
+        const skip = (page - 1) * limit;  // Calcul du nombre de docs à sauter
 
         // Exécution de la query avec count pour total (pour renvoyer les métadonnées)
         const total = await Product.countDocuments(filter);  // Total sans pagination
         const products = await Product.find(filter)
             .skip(skip)
-            .limit(Number(filter.limit))
+            .limit(Number(limit))
             .sort({ createdAt: -1 });
 
         return {
             total,
-            products,
-            limit : Number(filter.limit),
-            page : Number(filter.page),
-            totalPages: Math.ceil(total / filter.limit),
+            products : products,
+            limit : Number(limit),
+            page : Number(page),
+            totalPages: Math.ceil(total / limit),
         };
     }catch (err) {
         throw new Error(err.message);
