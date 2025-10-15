@@ -1,4 +1,4 @@
-import { addToCart, getCarts } from "../services/cartService.js";
+import { addToCart, getCarts, deleteproduct } from "../services/cartService.js";
 
 export const addProductToCard = async (req, res, next) => {
   try {
@@ -27,3 +27,5 @@ export const getAllCarts = async (req, res, next) => {
     next(err); 
   }
 };
+
+export const deleteProductcart()

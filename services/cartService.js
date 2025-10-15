@@ -10,6 +10,7 @@ console.log(JSON.stringify(allCart, null, 2));
   }
   return allCart;
 }
+
 // add product to cart :
 export async function addToCart(userId, productId, quantity = 1) {
   const product = await Product.findById(productId);
@@ -39,4 +40,9 @@ export async function addToCart(userId, productId, quantity = 1) {
   }
   await cart.save();
   return cart;
+}
+
+// delete product from cart :
+export async function deleteproduct(){
+    
 }
