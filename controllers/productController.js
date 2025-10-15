@@ -119,17 +119,7 @@ export const SearchProducts = async (req , res) => {
             if (maxPrice) filter.prix.$lte = Number(maxPrice); // <= maxPrice
         }
 
-        if(limit) {
-            filter.page = page;
-            filter.limit = filter
-        }
-
-        if(page) {
-            filter.page = page;
-            filter.limit = filter
-        }
-
-        const products = await searchProducts(filter);
+        const products = await searchProducts(filter , page , limit);
 
         res.json({
             success: true,
