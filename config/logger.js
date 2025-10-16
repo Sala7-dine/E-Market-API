@@ -1,14 +1,13 @@
 import winston from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
+import 'winston-mongodb';
 
 const logger = winston.createLogger({
     level: 'info',
     format: winston.format.combine(
         winston.format.timestamp(),
         winston.format.errors({ stack: true }),
-        process.env.NODE_ENV === 'development' 
-            ? winston.format.prettyPrint() 
-            : winston.format.json()
+        winston.format.json()
     ),
     transports: [
         new DailyRotateFile({
@@ -24,6 +23,12 @@ const logger = winston.createLogger({
                     return `${timestamp} [${level}]: ${message} ${Object.keys(meta).length ? JSON.stringify(meta, null, 2) : ''}`;
                 })
             )
+        }),
+        new winston.transports.MongoDB({
+            db: process.env.MONGO_URI,
+            collection: 'logs',
+            options: { useUnifiedTopology: true },
+            level: 'error'
         })
     ],
     exceptionHandlers: [
