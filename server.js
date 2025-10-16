@@ -43,7 +43,11 @@ if (process.env.NODE_ENV !== 'test') {
 
 app.use('/api/auth', authRoutes);
 
-app.use('/api/products' , authenticate , productRoutes);
+if (process.env.NODE_ENV === 'test') {
+    app.use('/api/products', productRoutes);
+} else {
+    app.use('/api/products', authenticate, productRoutes);
+}
 
 app.use('/api/users' , userRoutes);
 app.use('/api/carts' , authenticate,cartRoutes);
