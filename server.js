@@ -5,37 +5,14 @@ import dotenv from "dotenv";
 import productRoutes from "./routes/productRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import categorieRoute from "./routes/categoryRoutes.js";
-import  logger from "./middlewares/logger.js"
-import  notFound from "./middlewares/notFound.js"
+import loggerMiddleware from "./middlewares/logger.js";
+import notFound from "./middlewares/notFound.js";
 import errorHandler from "./middlewares/errorHandler.js";
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import authRoutes from './routes/auth.js';
-import winston from 'winston';
-import DailyRotateFile from 'winston-daily-rotate-file'
-
 import { authenticate } from './middlewares/authMiddleware.js';
-
-const { combine, timestamp, errors, printf } = winston.format;
-const logger = winston.createLogger({
-    level: process.env.LOG_LEVEL || 'info',
-    format: combine(
-        timestamp(),
-        errors({stack: true}),
-        printf(info => `${info.timestamp} ${info.level}: ${info.message}${info.stack ? '\n' + info.stack : ''}`)
-    ),
-    transports: [
-        new winston.transports.Console(),
-        new DailyRotateFile({ filename: 'logs/error-%DATE%.log', datePattern: 'YYYY-MM-DD', level: 'error', maxFiles: '14d' }),
-        new DailyRotateFile({ filename: 'logs/combined-%DATE%.log', datePattern: 'YYYY-MM-DD', maxFiles: '14d' })
-    ],
-    exceptionHandlers: [
-        new DailyRotateFile({ filename: 'logs/exceptions-%DATE%.log', datePattern: 'YYYY-MM-DD', maxFiles: '14d' })
-    ],
-    rejectionHandlers: [
-        new DailyRotateFile({ filename: 'logs/rejections-%DATE%.log', datePattern: 'YYYY-MM-DD', maxFiles: '14d' })
-    ]
-})
+import logger from './config/logger.js';
 
 
 
@@ -50,10 +27,11 @@ const MongoUri = process.env.MONGO_URI;
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
-app.use(logger);
+app.use(loggerMiddleware);
 app.use('/images', express.static('public/images'));
 
 await connectDB(MongoUri);
+logger.info('Database connected successfully');
 app.get('/', (req, res) => {
     res.redirect('/api-docs');
 });
@@ -72,6 +50,5 @@ app.use(notFound);
 app.use(errorHandler);
 
 app.listen(Port , () => {
-    console.log(" server successfully connect to http://localhost:3000");
-
+    logger.info(`Server successfully connected to http://localhost:${Port}`);
 });
