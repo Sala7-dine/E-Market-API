@@ -12,35 +12,51 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import authRoutes from './routes/auth.js';
 import { authenticate } from './middlewares/authMiddleware.js';
+import cartRoutes from "./routes/cartRouter.js";
 
 const app = express();
 
 dotenv.config();
 
 const Port = process.env.PORT || 3000;
-const MongoUri = process.env.MONGO_URI;
+const MongoUri = process.env.NODE_ENV === 'test'
+    ? process.env.MONGO_URI_TEST
+    : process.env.MONGO_URI;
 
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 app.use(logger);
+app.use('/images', express.static('public/images'));
 
-await connectDB(MongoUri);
+if (process.env.NODE_ENV !== 'test') {
+    await connectDB(MongoUri);
+}
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, { explorer: true }));
+app.get('/', (req, res) => {
+    res.redirect('/api-docs');
+});
+
+if (process.env.NODE_ENV !== 'test') {
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {explorer: true}));
+}
 
 app.use('/api/auth', authRoutes);
 
 app.use('/api/products' , authenticate , productRoutes);
 
 app.use('/api/users' , userRoutes);
+app.use('/api/carts' , authenticate,cartRoutes);
 
 app.use('/api/categories' , categorieRoute);
 
 app.use(notFound);
 app.use(errorHandler);
 
-app.listen(Port , () => {
-    console.log(" server successfully connect to http://localhost:3000");
+export default app;
 
-});
+if (process.env.NODE_ENV !== 'test') {
+    app.listen(Port, () => {
+        console.log(`server successfully connect to http://localhost:${Port}`);
+    });
+}

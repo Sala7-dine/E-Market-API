@@ -27,6 +27,7 @@ export const CreateProduct = async (req , res , next) => {
 
     try{
         const productData = req.body;
+
         const newProduct = await createProduct(productData);
 
         res.status(201).json({
@@ -94,7 +95,7 @@ export const SearchProducts = async (req , res) => {
 
     try {
 
-        const { title, description , categories , minPrice, maxPrice } = req.query;
+        const { title, description , categories , minPrice, maxPrice , page = 1 , limit = 10 } = req.query;
 
         const filter = {};
 
@@ -111,14 +112,17 @@ export const SearchProducts = async (req , res) => {
         }
 
         if (minPrice || maxPrice) {
-            filter.price = {};
+            filter.prix = {};
             if (minPrice) filter.prix.$gte = Number(minPrice); // >= minPrice
             if (maxPrice) filter.prix.$lte = Number(maxPrice); // <= maxPrice
         }
 
-        const products = await searchProducts(filter);
+        const products = await searchProducts(filter , page , limit);
 
-        res.json(products);
+        res.json({
+            success: true,
+            products
+        });
 
 
     }catch (err) {

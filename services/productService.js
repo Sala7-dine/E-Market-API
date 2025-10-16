@@ -50,17 +50,33 @@ export async function deleteProduct(id) {
         // return await Product.findByIdAndDelete(id);
 
         return await Product.findByIdAndUpdate(id, { isDelete: true }, { new: true });
-
+     
     }catch(error) {
         throw new Error(error.message)
     }
 
 }
 
-export async function searchProducts(filter){
+export async function searchProducts(filter , page , limit){
 
     try {
-        return await Product.find(filter);
+
+        const skip = (page - 1) * limit;  // Calcul du nombre de docs à sauter
+
+        // Exécution de la query avec count pour total (pour renvoyer les métadonnées)
+        const total = await Product.countDocuments(filter);  // Total sans pagination
+        const products = await Product.find(filter)
+            .skip(skip)
+            .limit(Number(limit))
+            .sort({ createdAt: -1 });
+
+        return {
+            total,
+            products : products,
+            limit : Number(limit),
+            page : Number(page),
+            totalPages: Math.ceil(total / limit),
+        };
     }catch (err) {
         throw new Error(err.message);
     }

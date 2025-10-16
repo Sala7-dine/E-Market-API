@@ -3,7 +3,6 @@ import * as authService from '../services/authService.js';
 export async function register(req, res) {
     try {
         const user = await authService.register(req.body);
-        console.log(user);
         res.status(201).json({ message: 'Utilisateur créé', user });
     } catch (err) {
         res.status(400).json({ error: err.message });

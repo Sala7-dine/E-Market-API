@@ -53,6 +53,7 @@ export async function deleteUser(id) {
 
 }
 
+// gets the current user by ID
 export async function getCurrentUser(userId) {
     try {
         const user = await User.findById(userId).select('-password');
@@ -63,4 +64,29 @@ export async function getCurrentUser(userId) {
     } catch (err) {
         throw new Error(err.message);
     }
+}
+
+// updates the current user's profile information
+export async function UpdateProfile(userId, updateData, userRole) {
+    const user = await User.findById(userId);
+    if (!user || user.isDelete) {
+        throw new Error('Utilisateur non trouvé');
+    }
+
+    const { fullName, email, password, role, profileImage } = updateData;
+
+    if (fullName) user.fullName = fullName;
+    if (email) user.email = email;
+    if (profileImage !== undefined) user.profileImage = profileImage;
+    
+    if (password) {
+        await user.setPassword(password);
+    }
+
+    if (role && userRole !== 'admin') {
+        throw new Error('Seul un admin peut modifier le rôle');
+    }
+
+    await user.save();
+    return user;
 }
