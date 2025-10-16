@@ -41,16 +41,38 @@ export async function login({ email, password }) {
 }
 
 export async function refresh(token) {
-    const payload = verifyRefreshToken(token);
-    const stored = await RefreshToken.findOne({ token });
+    if (!token) {
+        throw new Error('Refresh token requis');
+    }
+    let payload;
+    try {
+        payload = verifyRefreshToken(token);
+    } catch (e) {
+        // Normalize JWT errors to a generic message
+        throw new Error('Refresh token invalide');
+    }
+
+    const stored = await RefreshToken.findOne({ jti: payload.jti });
     if (!stored) throw new Error('Refresh token invalide');
 
-    const newAccessToken = signAccessToken({ sub: payload.sub });
-    return newAccessToken;
+    const isMatch = await bcrypt.compare(token, stored.tokenHash);
+    if (!isMatch) throw new Error('Refresh token invalide');
+
+    // Optionally include roles in the new access token
+    return signAccessToken({ sub: payload.sub });
 }
 
 export async function logout(token) {
-    const decoded = verifyRefreshToken(token);
-    await RefreshToken.findOneAndDelete({ token });
+    if (!token) {
+        throw new Error('Refresh token requis');
+    }
+    let decoded;
+    try {
+        decoded = verifyRefreshToken(token);
+    } catch (e) {
+        throw new Error('Refresh token invalide');
+    }
+    // Delete by jti since we store hashed tokens
+    await RefreshToken.findOneAndDelete({ jti: decoded.jti });
     return { message: 'Déconnexion réussie' };
 }

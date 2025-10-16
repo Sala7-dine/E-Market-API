@@ -14,7 +14,6 @@ import authRoutes from './routes/auth.js';
 import { authenticate } from './middlewares/authMiddleware.js';
 import cartRoutes from "./routes/cartRouter.js";
 
-
 const app = express();
 
 dotenv.config();
@@ -33,7 +32,7 @@ app.use('/images', express.static('public/images'));
 if (process.env.NODE_ENV !== 'test') {
     await connectDB(MongoUri);
 }
-await connectDB(MongoUri);
+
 app.get('/', (req, res) => {
     res.redirect('/api-docs');
 });

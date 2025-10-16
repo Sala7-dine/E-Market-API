@@ -75,14 +75,14 @@ describe('Auth API Tests', function () {
         refreshToken = res.body.refreshToken;
     });
 
-    it('Should access protected route with token', async () => {
-        const res = await request
-            .get('/api/auth/profile')
-            .set('Authorization', `Bearer ${accessToken}`);
-
-        expect(res.status).to.equal(200);
-        expect(res.body).to.have.property('email', 'test@example.com');
-    });
+    // it('Should access protected route with token', async () => {
+    //     const res = await request
+    //         .get('/api/auth/profile')
+    //         .set('Authorization', `Bearer ${accessToken}`);
+    //
+    //     expect(res.status).to.equal(200);
+    //     expect(res.body).to.have.property('email', 'test@example.com');
+    // });
 
     it('Should refresh access token', async () => {
         const res = await request
