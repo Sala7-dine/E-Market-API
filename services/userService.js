@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import fs from "fs";
 
 export async function getAllUsers() {
     try {
@@ -77,7 +78,17 @@ export async function UpdateProfile(userId, updateData, userRole) {
 
     if (fullName) user.fullName = fullName;
     if (email) user.email = email;
-    if (profileImage !== undefined) user.profileImage = profileImage;
+    
+    if (profileImage !== undefined) {
+        const previousImage = user.profileImage;
+        if (previousImage) {
+            const imagePath = `public${previousImage}`;
+            if (fs.existsSync(imagePath)) {
+                fs.unlinkSync(imagePath);
+            }
+        }
+        user.profileImage = profileImage;
+    }
     
     if (password) {
         await user.setPassword(password);

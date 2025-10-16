@@ -5,18 +5,23 @@ import path from "path";
 const logFilePath = path.join(process.cwd(), "public/logs.txt");
 
 const logger = (req, res, next) => {
-    const now = new Date().toISOString();
-    const logMessage = `[${now}] ${req.method} ${req.originalUrl}\n`;
+    const startTime = Date.now();
+    const timestamp = new Date().toISOString();
+    const ip = req.ip || req.connection.remoteAddress;
+    const userAgent = req.get('user-agent') || 'Unknown';
 
-    // Affiche dans la console
-    console.log(logMessage.trim());
-
-    // Écrit dans le fichier (ajout à la fin)
-    fs.appendFile(logFilePath, logMessage, (err) => {
-        if (err) console.error("Erreur écriture log:", err);
+    res.on('finish', () => {
+        const duration = Date.now() - startTime;
+        const logMessage = `[${timestamp}] ${req.method} ${req.originalUrl} | Status: ${res.statusCode} | ${duration}ms | IP: ${ip} | User-Agent: ${userAgent}\n`;
+        
+        console.log(logMessage.trim());
+        
+        fs.appendFile(logFilePath, logMessage, (err) => {
+            if (err) console.error("Erreur écriture log:", err);
+        });
     });
 
-    next(); // passe à la route suivante
+    next();
 };
 
 export default logger;

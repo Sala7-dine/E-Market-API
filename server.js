@@ -11,7 +11,34 @@ import errorHandler from "./middlewares/errorHandler.js";
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import authRoutes from './routes/auth.js';
+import winston from 'winston';
+import DailyRotateFile from 'winston-daily-rotate-file'
+
 import { authenticate } from './middlewares/authMiddleware.js';
+
+const { combine, timestamp, errors, printf } = winston.format;
+const logger = winston.createLogger({
+    level: process.env.LOG_LEVEL || 'info',
+    format: combine(
+        timestamp(),
+        errors({stack: true}),
+        printf(info => `${info.timestamp} ${info.level}: ${info.message}${info.stack ? '\n' + info.stack : ''}`)
+    ),
+    transports: [
+        new winston.transports.Console(),
+        new DailyRotateFile({ filename: 'logs/error-%DATE%.log', datePattern: 'YYYY-MM-DD', level: 'error', maxFiles: '14d' }),
+        new DailyRotateFile({ filename: 'logs/combined-%DATE%.log', datePattern: 'YYYY-MM-DD', maxFiles: '14d' })
+    ],
+    exceptionHandlers: [
+        new DailyRotateFile({ filename: 'logs/exceptions-%DATE%.log', datePattern: 'YYYY-MM-DD', maxFiles: '14d' })
+    ],
+    rejectionHandlers: [
+        new DailyRotateFile({ filename: 'logs/rejections-%DATE%.log', datePattern: 'YYYY-MM-DD', maxFiles: '14d' })
+    ]
+})
+
+
+
 
 const app = express();
 

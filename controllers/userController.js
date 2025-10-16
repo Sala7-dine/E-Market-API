@@ -102,6 +102,8 @@ export const UpdateProfile = async (req, res) => {
         const userId = req.user._id;
         const userRole = req.user.role;
         const updateData = { ...req.body };
+        const previousImage = req.user.profileImage;
+
         if (req.file) {
             updateData.profileImage = `/images/users/${req.file.filename}`;
         }
