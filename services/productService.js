@@ -18,6 +18,7 @@ export async function createProduct(productData) {
         const {title , description , prix , stock , categories} = productData;
 
         if(!title || !description || !prix || !stock || !categories) {
+            logger.warn("Tous les champs obligatoires doivent être remplis.")
             throw new Error("Tous les champs obligatoires doivent être remplis.");
         }
 
