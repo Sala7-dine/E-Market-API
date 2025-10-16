@@ -5,3 +5,8 @@ build
 .env
 public/logs.txt
 node_modules
+public/images/users/
+public/.*
+public/*.log
+bun.lock
+package-lock.json
