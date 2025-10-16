@@ -31,7 +31,6 @@ app.use(loggerMiddleware);
 app.use('/images', express.static('public/images'));
 
 await connectDB(MongoUri);
-logger.info('Database connected successfully');
 app.get('/', (req, res) => {
     res.redirect('/api-docs');
 });

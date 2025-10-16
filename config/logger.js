@@ -6,7 +6,9 @@ const logger = winston.createLogger({
     format: winston.format.combine(
         winston.format.timestamp(),
         winston.format.errors({ stack: true }),
-        winston.format.json()
+        process.env.NODE_ENV === 'development' 
+            ? winston.format.prettyPrint() 
+            : winston.format.json()
     ),
     transports: [
         new DailyRotateFile({
@@ -18,7 +20,9 @@ const logger = winston.createLogger({
         new winston.transports.Console({
             format: winston.format.combine(
                 winston.format.colorize(),
-                winston.format.simple()
+                winston.format.printf(({ timestamp, level, message, ...meta }) => {
+                    return `${timestamp} [${level}]: ${message} ${Object.keys(meta).length ? JSON.stringify(meta, null, 2) : ''}`;
+                })
             )
         })
     ],
