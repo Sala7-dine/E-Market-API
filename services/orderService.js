@@ -1,5 +1,6 @@
 import Order from "../models/Order";
 import Cart from "../models/Cart";
+import Product from "../models/Product";
 
 // add order :
 export async function addOrder(userId, cartId) {
@@ -33,6 +34,19 @@ export async function updateStatus(orderId, status) {
   const order = await Order.findById(orderId);
   if (!order) {
     throw new Error("no order");
+  }
+  const orderedProducts = order.items;
+  
+    // Paiement Simulation :
+  if (status === "paid") {
+      for (const item of orderedProducts) {
+      const product = await Product.findById(item.productId);
+      if (!product) {
+        throw new Error("no product");
+      }
+      product.stock -= item.quantity;
+      await product.save();
+    }
   }
   order.status = status;
   return await order.save();
