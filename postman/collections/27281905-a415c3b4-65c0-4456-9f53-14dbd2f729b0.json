@@ -1,0 +1,1311 @@
+{
+	"info": {
+		"_postman_id": "27281905-a415c3b4-65c0-4456-9f53-14dbd2f729b0",
+		"name": "Merket_API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Product Managment",
+			"item": [
+				{
+					"name": "Create Products",
+					"id": "27281905-671b37a9-45a0-4588-8d97-00d72745f517",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"followRedirects": true,
+						"disableUrlEncoding": false,
+						"disableCookies": false
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "User-Agent",
+								"value": "insomnia/11.6.1"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Products 2\",\n  \"description\": \"somthing 2\",\n  \"prix\": 3599,\n  \"stock\": 12,\n  \"imageUrl\": \"https://example.com/sony-xm5.jpg\",\n\t\"categories\" : [\n\t\t\"68e8080a186e0c45a07b0574\"\n\t]\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/products/create",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Products",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "3ce92654-68e6-4d10-896f-d59ba58c1b24",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"id": "27281905-eee69f2a-1263-4c48-9d64-d72a0e1ae7e5",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": false,
+						"followRedirects": true,
+						"disableUrlEncoding": false,
+						"disableCookies": false
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "User-Agent",
+								"value": "insomnia/11.6.1"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/api/products/",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"products",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Product",
+					"id": "27281905-76e6993c-6715-4e08-b774-8a4244f918e1",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": false,
+						"followRedirects": true,
+						"disableUrlEncoding": false,
+						"disableCookies": false
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "User-Agent",
+								"value": "insomnia/11.6.1"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/api/products/delete/68ee55f05fb10627400639f2",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"delete",
+								"68ee55f05fb10627400639f2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Product",
+					"id": "27281905-e5a1c522-2444-4a28-bc1b-e0c9d89d2cab",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"followRedirects": true,
+						"disableUrlEncoding": false,
+						"disableCookies": false
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "User-Agent",
+								"value": "insomnia/11.6.1"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Casque Bluetooth\",\n  \"description\": \"Casque antibruit haut de gamme avec autonomie de 30h.\",\n  \"prix\": 3599,\n  \"stock\": 12,\n  \"categorie\": \"Électronique\",\n  \"imageUrl\": \"https://example.com/sony-xm5.jpg\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/products/update/68ee55f05fb10627400639f2",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"update",
+								"68ee55f05fb10627400639f2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Products",
+					"id": "27281905-db20cebc-a3e4-42b5-873d-bfbc4a19f7ad",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": false,
+						"followRedirects": true,
+						"disableUrlEncoding": false,
+						"disableCookies": false
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "User-Agent",
+								"value": "insomnia/11.6.1"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/api/products/search?page=2&&limit=2",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"search"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": null,
+									"value": null
+								},
+								{
+									"key": "limit",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "27281905-abf39ab0-cbc3-4df3-97a0-dc2e87c74f63",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "c37b5abe-930e-4d17-9af2-e22c5c4cbc95",
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							"// Pre-request script to programmatically obtain accessToken and set it as environment variable",
+							"",
+							"const loginRequest = {",
+							"    url: pm.variables.replaceIn(\"{{baseURL}}/api/auth/login\"),",
+							"    method: 'POST',",
+							"    header: {",
+							"        'Content-Type': 'application/json',",
+							"        'User-Agent': 'insomnia/11.6.1'",
+							"    },",
+							"    body: {",
+							"        mode: 'raw',",
+							"        raw: JSON.stringify({",
+							"            email: 'salahdaha7@gmail.com',",
+							"            password: 'salah1234'",
+							"        })",
+							"    }",
+							"};",
+							"",
+							"pm.sendRequest(loginRequest, function (err, res) {",
+							"    if (err) {",
+							"        console.error('Login request failed:', err);",
+							"        return;",
+							"    }",
+							"    try {",
+							"        const data = res.json();",
+							"        if (data && data.accessToken) {",
+							"            pm.environment.set('accessToken', data.accessToken);",
+							"            console.log('accessToken set in environment:', data.accessToken);",
+							"        } else {",
+							"            console.error('accessToken not found in login response:', data);",
+							"        }",
+							"    } catch (e) {",
+							"        console.error('Failed to parse login response:', e);",
+							"    }",
+							"});"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "40c4edf6-2ff3-47b7-ac8a-e1a88b9436d7",
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "User Management",
+			"item": [
+				{
+					"name": "Get Usrers",
+					"id": "27281905-a1d82a25-3318-470f-95b9-ab803cab0689",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"followRedirects": true,
+						"disableUrlEncoding": false,
+						"disableCookies": false
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "User-Agent",
+								"value": "insomnia/11.6.1"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/api/users",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User",
+					"id": "27281905-eb98158a-abef-4707-8dbc-5e488b0fbc5c",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"followRedirects": true,
+						"disableUrlEncoding": false,
+						"disableCookies": false
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "User-Agent",
+								"value": "insomnia/11.6.1"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"fullName\" : \"adil\",\n\t\"email\" : \"adil@gmail.com\",\n\t\"password\" : \"12341234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/users/create",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"id": "27281905-72362071-27df-400d-873c-6419dce3a1dc",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": false,
+						"followRedirects": true,
+						"disableUrlEncoding": false,
+						"disableCookies": false
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "User-Agent",
+								"value": "insomnia/11.6.1"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/api/users/delete/68ee5b270f6cc8d08c66e84b",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"delete",
+								"68ee5b270f6cc8d08c66e84b"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"id": "27281905-babc0461-c94d-4287-b2c4-6ecbc22199a5",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"followRedirects": true,
+						"disableUrlEncoding": false,
+						"disableCookies": false
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "User-Agent",
+								"value": "insomnia/11.6.1"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"fullName\" : \"ayoub\",\n\t\"email\" : \"ayoub@gmail.com\",\n\t\"password\" : \"salah1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/users/update/68ed0b532552bcf9fe0c3390",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"update",
+								"68ed0b532552bcf9fe0c3390"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Patch User",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "6198564e-fdfd-4689-a9dc-4bb83e56b5e5",
+								"exec": [
+									"// Pre-request script to programmatically obtain accessToken and set it as environment variable",
+									"",
+									"const loginRequest = {",
+									"    url: pm.variables.replaceIn(\"{{baseURL}}/api/auth/login\"),",
+									"    method: 'POST',",
+									"    header: {",
+									"        'Content-Type': 'application/json',",
+									"        'User-Agent': 'insomnia/11.6.1'",
+									"    },",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({",
+									"            email: 'salahdaha7@gmail.com',",
+									"            password: 'salah1234'",
+									"        })",
+									"    }",
+									"};",
+									"",
+									"pm.sendRequest(loginRequest, function (err, res) {",
+									"    if (err) {",
+									"        console.error('Login request failed:', err);",
+									"        return;",
+									"    }",
+									"    try {",
+									"        const data = res.json();",
+									"        if (data && data.accessToken) {",
+									"            pm.environment.set('accessToken', data.accessToken);",
+									"            console.log('accessToken set in environment:', data.accessToken);",
+									"        } else {",
+									"            console.error('accessToken not found in login response:', data);",
+									"        }",
+									"    } catch (e) {",
+									"        console.error('Failed to parse login response:', e);",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "2614b4f6-8338-4b23-8737-be3894787511",
+								"exec": [],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "27281905-a44f13fe-84ae-40dd-a554-9bec5d06f4e3",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "avatar",
+									"type": "file",
+									"src": "/home/nizar/Downloads/1759833951065.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/users/me",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "27281905-ec0647a8-7276-41c3-98d8-9ad1eacb8eaa"
+		},
+		{
+			"name": "Category Management",
+			"item": [
+				{
+					"name": "Get Categories",
+					"id": "27281905-94ecf8fc-e27f-467f-92a0-6ba2bc66e9b2",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": false,
+						"followRedirects": true,
+						"disableUrlEncoding": false,
+						"disableCookies": false
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "User-Agent",
+								"value": "insomnia/11.6.1"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/api/categories/",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"categories",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Categorie",
+					"id": "27281905-3aa763cd-77cc-497d-b476-4c356152f16a",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"followRedirects": true,
+						"disableUrlEncoding": false,
+						"disableCookies": false
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "User-Agent",
+								"value": "insomnia/11.6.1"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\" : \"Electronique 4\",\n\t\"description\" : \"lorem eckrnv ckwejnc cjwibec cwbeicbwe ciwubhc\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/categories/create",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"categories",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Categorie",
+					"id": "27281905-4bf07cb7-a5ae-42a0-a198-c9a06679a1ff",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"followRedirects": true,
+						"disableUrlEncoding": false,
+						"disableCookies": false
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "User-Agent",
+								"value": "insomnia/11.6.1"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\" : \"Neuvoux cc\",\n\t\"description\" : \"updated categorie\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/categories/update/68ef67fd1752c33779f27082",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"categories",
+								"update",
+								"68ef67fd1752c33779f27082"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Categorie",
+					"id": "27281905-a0023f4c-530e-41b7-956a-5a1c949b1a81",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": false,
+						"followRedirects": true,
+						"disableUrlEncoding": false,
+						"disableCookies": false
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "User-Agent",
+								"value": "insomnia/11.6.1"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/api/categorie/delete/68ee4f0942439e37bd8119b3",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"categorie",
+								"delete",
+								"68ee4f0942439e37bd8119b3"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "27281905-b979f01e-6b0a-453f-a8ab-82579a0d8570"
+		},
+		{
+			"name": "Authentification",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "74be766b-3d75-46aa-be6d-fee60484c059",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "7789690e-6be4-40f8-b55b-b96abe79b1d2",
+								"exec": [
+									"// Test: Response status is 200",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Test: Response contains accessToken",
+									"pm.test(\"Response contains accessToken\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property(\"accessToken\");",
+									"    pm.expect(jsonData.accessToken).to.be.a(\"string\").and.not.empty;",
+									"});",
+									"",
+									"// Test: User object has expected properties",
+									"pm.test(\"User object has expected properties\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property(\"user\");",
+									"    pm.expect(jsonData.user).to.be.an(\"object\");",
+									"    pm.expect(jsonData.user).to.have.property(\"_id\");",
+									"    pm.expect(jsonData.user).to.have.property(\"fullName\");",
+									"    pm.expect(jsonData.user).to.have.property(\"email\");",
+									"    pm.expect(jsonData.user._id).to.be.a(\"string\").and.not.empty;",
+									"    pm.expect(jsonData.user.fullName).to.be.a(\"string\").and.not.empty;",
+									"    pm.expect(jsonData.user.email).to.be.a(\"string\").and.not.empty;",
+									"});",
+									"",
+									"// (Optional) Existing script: Save accessToken to environment variable",
+									"const resp = pm.response.json();",
+									"const accessToken = resp.accessToken;",
+									"if (accessToken) {",
+									"    pm.environment.set(\"accessToken\", accessToken);",
+									"    // pm.collectionVariables.set(\"accessToken\", accessToken);",
+									"    // pm.globals.set(\"accessToken\", accessToken);",
+									"    console.log(\"Access Token saved:\", accessToken);",
+									"} else {",
+									"    console.error(\"accessToken not found in response:\", resp);",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"id": "27281905-4efb1e1d-a47a-40d3-abf7-2c257b983834",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"followRedirects": true,
+						"disableUrlEncoding": false,
+						"disableCookies": false
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "User-Agent",
+								"value": "insomnia/11.6.1"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\" : \"nizar@gmail.com\",\n\t\"password\" : \"nizar1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/auth/login",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
+					"id": "27281905-e33c0ab3-946d-4bf9-a7d2-2675f95f70c6",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"followRedirects": true,
+						"disableUrlEncoding": false,
+						"disableCookies": false
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "User-Agent",
+								"value": "insomnia/11.6.1"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"fullName\" : \"salahdine daha\",\n    \"email\" : \"salahdaha7@gmail.com\",\n\t\"password\" : \"salah1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/auth/register",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refrach Token",
+					"id": "27281905-443e10dd-8ec6-4448-9706-b98678870aff",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": false,
+						"followRedirects": true,
+						"disableUrlEncoding": false,
+						"disableCookies": false
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "User-Agent",
+								"value": "insomnia/11.6.1"
+							}
+						],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"id": "27281905-a8e3b142-6626-42b5-a2d5-f28c5732c5d4",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": false,
+						"followRedirects": true,
+						"disableUrlEncoding": false,
+						"disableCookies": false
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "User-Agent",
+								"value": "insomnia/11.6.1"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2OGVlMjgxZDA5NzczMjhkYWE0ODY2ZGIiLCJqdGkiOiI1YTZkMGMwMy04ZmI3LTQ4NTctYWUzNy04NjZlZWJmMDJmNmEiLCJpYXQiOjE3NjA0Mzg2NjQsImV4cCI6MTc2MzAzMDY2NH0.uvzYRMPAdPegIN-Ynaxt80m1Rv57wuDUiA6QcZkQRuw\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/auth/logout",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Current User Info",
+					"id": "27281905-da851daa-8453-4426-90ac-cea408b4f635",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/users/me",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "27281905-8b55722a-279c-4e2e-866b-f423b09d7a43"
+		},
+		{
+			"name": "Cart Management",
+			"item": [
+				{
+					"name": "add product to cart",
+					"id": "27281905-8fd5f452-78f4-4293-bb25-2f3b1a82de2f",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "User-Agent",
+								"value": "insomnia/11.6.1"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"productId\": \"68ee30cfaac65d37e39b5ce3\",\r\n  \"quantity\": 1,\r\n  \"price\": 150\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/carts/addtocart",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"carts",
+								"addtocart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get user's cart",
+					"id": "27281905-a65b47bc-008b-41e2-b5d2-efc31be0da9d",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/api/carts/getcarts",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"carts",
+								"getcarts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete product from cart",
+					"id": "27281905-c809e910-183c-4b3e-873c-2d43cdfc1d29",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updat Cart",
+					"id": "27281905-be16c5f9-af72-4706-86c7-faabe565fd9b",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"quantity\" : 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/carts/updateCart/68ee30cfaac65d37e39b5ce3",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"carts",
+								"updateCart",
+								"68ee30cfaac65d37e39b5ce3"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "27281905-10d0f370-a9d3-45be-bf6d-658bb0a80304"
+		},
+		{
+			"name": "Order Management",
+			"item": [
+				{
+					"name": "add order",
+					"id": "27281905-c3c3013c-cac9-4129-892c-26bd14475b8e",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/api/orders/addOrder/68ef75e68f8b6d61f4dfb357",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"addOrder",
+								"68ef75e68f8b6d61f4dfb357"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get user's orders",
+					"id": "27281905-3b4d0459-5341-4b3b-a323-fcf0623d9fed",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/orders/getOrder",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"getOrder"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "change order's status",
+					"id": "27281905-6c8892ac-7087-49bb-bc31-afdc5c25fea5",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\" : \"paid\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/orders/updateStatus/68f11676343a8c2aaf76ed35",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"updateStatus",
+								"68f11676343a8c2aaf76ed35"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "27281905-27e7381a-dc88-40d0-bad5-7ff6f092fee3"
+		},
+		{
+			"name": "Coupons Management",
+			"item": [
+				{
+					"name": "New Request",
+					"id": "27281905-393b68e1-1e77-4065-a497-23420b5f6a0b",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				}
+			],
+			"id": "27281905-a95a3316-5330-416c-a80a-40c38e78f664"
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "",
+			"type": "default"
+		}
+	]
+}
