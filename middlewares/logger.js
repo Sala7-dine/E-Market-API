@@ -1,22 +1,22 @@
-import fs from "fs";
-import path from "path";
+import logger from '../config/logger.js';
 
-// chemin du fichier logs.txt dans le dossier courant
-const logFilePath = path.join(process.cwd(), "public/logs.txt");
+const loggerMiddleware = (req, res, next) => {
+    const startTime = Date.now();
+    const ip = req.ip || req.connection.remoteAddress;
 
-const logger = (req, res, next) => {
-    const now = new Date().toISOString();
-    const logMessage = `[${now}] ${req.method} ${req.originalUrl}\n`;
-
-    // Affiche dans la console
-    console.log(logMessage.trim());
-
-    // Écrit dans le fichier (ajout à la fin)
-    fs.appendFile(logFilePath, logMessage, (err) => {
-        if (err) console.error("Erreur écriture log:", err);
+    res.on('finish', () => {
+        const duration = Date.now() - startTime;
+        logger.info({
+            method: req.method,
+            url: req.originalUrl,
+            status: res.statusCode,
+            duration: `${duration}ms`,
+            ip,
+            userAgent: req.get('user-agent')
+        });
     });
 
-    next(); // passe à la route suivante
+    next();
 };
 
-export default logger;
+export default loggerMiddleware;
