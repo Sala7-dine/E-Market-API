@@ -1,0 +1,1 @@
+import Coupon from "../models/Coupon.js";

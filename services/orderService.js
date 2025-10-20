@@ -36,10 +36,10 @@ export async function updateStatus(orderId, status) {
     throw new Error("no order");
   }
   const orderedProducts = order.items;
-  
-    // Paiement Simulation :
+
+  // Paiement Simulation :
   if (status === "paid") {
-      for (const item of orderedProducts) {
+    for (const item of orderedProducts) {
       const product = await Product.findById(item.productId);
       if (!product) {
         throw new Error("no product");
