@@ -3,10 +3,10 @@ import chaiHttp from 'chai-http';
 import supertest from 'supertest';
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
-import Product from '../models/Product.js';
 import Categorie from '../models/Categorie.js';
 import User from '../models/User.js'
 import dotenv from "dotenv";
+
 
 dotenv.config();
 
@@ -19,14 +19,12 @@ chai.use(chaiHttp);
 let app;
 let request;
 
-describe('Products API Tests', function () {
+describe('Categories API Tests', function () {
     this.timeout(20000);
 
     let mongod;
     let token;
-    let _idCategorie;
-    let _productID;
-
+    let _categorieID;
     before(async () => {
 
         // Start in-memory MongoDB and connect Mongoose
@@ -38,7 +36,6 @@ describe('Products API Tests', function () {
         const mod = await import('../server.js');
         app = mod.default;
         request = supertest(app);
-        await Product.deleteMany({});
         await Categorie.deleteMany({});
         await User.deleteMany({});
 
@@ -61,17 +58,6 @@ describe('Products API Tests', function () {
 
         token = await access_token._body.accessToken;
 
-
-        // get Categorie Id
-        const categorie_data = await request
-            .post('/api/categories/create')
-            .send({
-                "name" : "Electronique 5",
-                "description" : "lorem eckrnv ckwejnc cjwibec cwbeicbwe ciwubhc"
-            });
-
-        _idCategorie = await categorie_data.body.data._id;
-
     });
 
 
@@ -84,49 +70,40 @@ describe('Products API Tests', function () {
     });
 
 
-    it('Should create new product', async () => {
+    it('Should create new categorie', async () => {
         const res = await request
-            .post('/api/products/create')
+            .post('/api/categories/create')
             .set('Authorization', `Bearer ${token}`)
             .send({
-                "title": "Nike T-shirt",
-                "description": "sportif",
-                "prix": 30.99,
-                "stock": 30,
-                "categories": [_idCategorie],
-                "imageUrl": "https://exemple.com/image.jpg"
+                "name" : "Electronique 4",
+                "description" : "lorem eckrnv ckwejnc cjwibec cwbeicbwe ciwubhc"
             });
 
-        _productID = await res.body.data._id;
+        _categorieID = await res.body.data._id;
         expect(res.status).to.equal(201);
         expect(res.body).to.have.property('data');
 
     });
 
-    it('Show List All Products' , async () => {
+    it('Show List All Categories' , async () => {
 
-       const res = await request
-           .get('/api/products/')
-           .set('Authorization', `Bearer ${token}`)
+        const res = await request
+            .get('/api/categories/')
+            .set('Authorization', `Bearer ${token}`)
 
-       expect(res.status).to.equal(201);
-       expect(res.body).to.have.property("data");
-
+        expect(res.status).to.equal(201);
+        expect(res.body).to.have.property("data");
 
     });
 
-    it("Should Update a Product with ID" ,async () => {
+    it("Should Update a Categorie with ID" ,async () => {
 
         const res = await request
-            .put(`/api/products/update/${_productID}`)
+            .put(`/api/categories/update/${_categorieID}`)
             .set('Authorization' , `Bearer ${token}`)
             .send({
-                "title": "Product Updated",
-                "description": "sportif updated",
-                "prix": 30.99,
-                "stock": 30,
-                "categories": [_idCategorie],
-                "imageUrl": "https://exemple.com/image.jpg"
+                "name" : "Electronique 4 (Updated)",
+                "description" : "lorem eckrnv ckwejnc cjwibec cwbeicbwe ciwubhc (Updated)"
             });
 
         expect(res.status).to.equal(201);
@@ -134,10 +111,10 @@ describe('Products API Tests', function () {
 
     });
 
-    it("Should Delete a Product with ID" ,async () => {
+    it("Should Delete a Categories with ID" ,async () => {
 
         const res = await request
-            .delete(`/api/products/delete/${_productID}`)
+            .delete(`/api/categories/delete/${_categorieID}`)
             .set('Authorization' , `Bearer ${token}`);
 
         expect(res.status).to.equal(201);
