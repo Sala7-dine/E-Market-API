@@ -30,7 +30,7 @@ app.use(cookieParser());
 app.use(loggerMiddleware);
 app.use('/images', express.static('public/images'));
 
-await connectDB(MongoUri);
+// await connectDB(MongoUri);
 app.get('/', (req, res) => {
     res.redirect('/api-docs');
 });
@@ -39,7 +39,11 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, { explore
 
 app.use('/api/auth', authRoutes);
 
-app.use('/api/products' , authenticate , productRoutes);
+if (process.env.NODE_ENV === 'test') {
+    app.use('/api/products', authenticate , productRoutes);
+} else {
+    app.use('/api/products', authenticate, productRoutes);
+}
 
 app.use('/api/users' , userRoutes);
 
@@ -48,6 +52,11 @@ app.use('/api/categories' , categorieRoute);
 app.use(notFound);
 app.use(errorHandler);
 
-app.listen(Port , () => {
-    logger.info(`Server successfully connected to http://localhost:${Port}`);
-});
+if (process.env.NODE_ENV !== 'test') {
+    await connectDB(MongoUri);
+    app.listen(Port, () => {
+        logger.info(`Server successfully connected to http://localhost:${Port}`);
+    });
+}
+
+export default app;
