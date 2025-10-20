@@ -57,25 +57,30 @@ export async function refresh(token) {
     let payload;
     try {
         payload = verifyRefreshToken(token);
-    } catch (e) {
-        // Normalize JWT errors to a generic message
+    } catch {
         throw new Error('Refresh token invalide');
     }
 
     const stored = await RefreshToken.findOne({ jti: payload.jti });
     if (!stored) throw new Error('Refresh token invalide');
+    if (stored.revoked) throw new Error('Refresh token invalide');
+    if (stored.expiresAt && Date.now() >= stored.expiresAt.getTime()) {
+        throw new Error('Refresh token invalide');
+    }
 
     const isMatch = await bcrypt.compare(token, stored.tokenHash);
     if (!isMatch) throw new Error('Refresh token invalide');
 
-    // Optionally include roles in the new access token
     return signAccessToken({ sub: payload.sub });
 }
 
 export async function logout(token) {
     try {
         const decoded = verifyRefreshToken(token);
-        await RefreshToken.findOneAndDelete({ token });
+
+        // Invalidate the stored refresh token by its jti
+        await RefreshToken.findOneAndDelete({ jti: decoded.jti });
+
         logger.info(`User logged out: ${decoded.sub}`);
         return { message: 'Déconnexion réussie' };
     } catch (err) {

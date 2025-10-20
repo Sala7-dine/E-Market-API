@@ -4,7 +4,7 @@
   "description": "L’entreprise souhaite concevoir une **plateforme e-commerce** évolutive, capable de gérer des produits, des utilisateurs et des commandes.",
   "main": "server.js",
   "scripts": {
-    "test": "NODE_ENV=test mocha --timeout 10000",
+    "test": "NODE_ENV=test mocha --exit --timeout 10000",
     "start": "bun server.js",
     "dev": "bun --hot server.js"
   },
@@ -23,6 +23,7 @@
   "dependencies": {
     "bcryptjs": "^3.0.2",
     "chai-http": "^5.1.2",
+    "chalk": "^5.6.2",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
