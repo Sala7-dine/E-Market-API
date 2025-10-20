@@ -5,14 +5,17 @@ import dotenv from "dotenv";
 import productRoutes from "./routes/productRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import categorieRoute from "./routes/categoryRoutes.js";
-import  logger from "./middlewares/logger.js"
-import  notFound from "./middlewares/notFound.js"
+import loggerMiddleware from "./middlewares/logger.js";
+import notFound from "./middlewares/notFound.js";
 import errorHandler from "./middlewares/errorHandler.js";
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import authRoutes from './routes/auth.js';
 import { authenticate } from './middlewares/authMiddleware.js';
+import logger from './config/logger.js';
 import cartRoutes from "./routes/cartRouter.js"
+import couponRoutes from "./routes/couponRouter.js";
+
 import orderRoutes from "./routes/orderRouter.js"
 const app = express();
 
@@ -24,9 +27,13 @@ const MongoUri = process.env.MONGO_URI;
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
-app.use(logger);
+app.use(loggerMiddleware);
+app.use('/images', express.static('public/images'));
 
 await connectDB(MongoUri);
+app.get('/', (req, res) => {
+    res.redirect('/api-docs');
+});
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, { explorer: true }));
 
@@ -37,6 +44,7 @@ app.use('/api/products' , authenticate , productRoutes);
 app.use('/api/users' , userRoutes);
 app.use('/api/carts' , authenticate,cartRoutes);
 app.use('/api/orders' , authenticate,orderRoutes);
+app.use('/api/coupons' , authenticate,couponRoutes);
 
 app.use('/api/categories' , categorieRoute);
 
@@ -44,6 +52,5 @@ app.use(notFound);
 app.use(errorHandler);
 
 app.listen(Port , () => {
-    console.log(" server successfully connect to http://localhost:3000");
-
+    logger.info(`Server successfully connected to http://localhost:${Port}`);
 });
