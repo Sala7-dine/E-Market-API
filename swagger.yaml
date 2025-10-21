@@ -20,6 +20,8 @@ tags:
     description: Gestion des utilisateurs
   - name: Categories
     description: Gestion des catégories
+  - name: Cart
+    description: Gestion du panier
 
 components:
   securitySchemes:
@@ -51,9 +53,11 @@ components:
         category:
           type: string
           example: "Électronique"
-        imageUrl:
-          type: string
-          example: "https://example.com/image.jpg"
+        images:
+          type: array
+          items:
+            type: string
+          example: ["/images/products/product-1234567890.jpg", "/images/products/product-1234567891.jpg"]
         createdAt:
           type: string
           format: date-time
@@ -102,6 +106,39 @@ components:
         description:
           type: string
           example: "Tous les accessoires électroniques"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    Cart:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: "68e7b5010bf901dfd66d774a"
+        userId:
+          type: string
+          example: "68e7b5010bf901dfd66d774a"
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              productId:
+                type: string
+                example: "68e7b5010bf901dfd66d774a"
+              quantity:
+                type: integer
+                example: 2
+              price:
+                type: number
+                example: 3599
+        totalPrice:
+          type: number
+          example: 7198
         createdAt:
           type: string
           format: date-time
@@ -276,15 +313,15 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               required:
                 - title
                 - description
-                - price
+                - prix
                 - stock
-                - category
+                - categories
               properties:
                 title:
                   type: string
@@ -292,19 +329,22 @@ paths:
                 description:
                   type: string
                   example: "Casque antibruit haut de gamme avec autonomie de 30h."
-                price:
+                prix:
                   type: number
                   example: 3599
                 stock:
                   type: integer
                   example: 12
-                category:
+                categories:
                   type: string
-                  example: "Électronique"
-                imageUrl:
-                  type: string
-                  format: uri
-                  example: "https://example.com/sony-xm5.jpg"
+                  example: '["categoryId1", "categoryId2"]'
+                  description: "JSON array of category IDs"
+                images:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                  description: "Product images (max 5, formats: jpg, jpeg, png, gif, max 5MB each)"
       responses:
         '201':
           description: Produit créé avec succès
@@ -330,7 +370,7 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               properties:
@@ -338,15 +378,20 @@ paths:
                   type: string
                 description:
                   type: string
-                price:
+                prix:
                   type: number
                 stock:
                   type: integer
-                category:
+                categories:
                   type: string
-                imageUrl:
-                  type: string
-                  format: uri
+                  example: '["categoryId1", "categoryId2"]'
+                  description: "JSON array of category IDs"
+                images:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                  description: "Product images (max 5, formats: jpg, jpeg, png, gif, max 5MB each)"
       responses:
         '200':
           description: Produit mis à jour
@@ -669,3 +714,107 @@ paths:
           description: Catégorie supprimée
         '404':
           description: Catégorie non trouvée
+
+  /api/cart/addtocart:
+    post:
+      tags: [Cart]
+      summary: Ajouter un produit au panier
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - productId
+                - quantity
+              properties:
+                productId:
+                  type: string
+                  example: "68e7b5010bf901dfd66d774a"
+                quantity:
+                  type: integer
+                  example: 1
+      responses:
+        '200':
+          description: Produit ajouté au panier
+        '401':
+          description: Non authentifié
+
+  /api/cart/getcarts:
+    get:
+      tags: [Cart]
+      summary: Récupérer tous les paniers
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Liste des paniers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cart'
+        '401':
+          description: Non authentifié
+
+  /api/cart/deleteProduct/{productId}:
+    delete:
+      tags: [Cart]
+      summary: Supprimer un produit du panier
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+          example: "68e7b5010bf901dfd66d774a"
+      responses:
+        '200':
+          description: Produit supprimé du panier
+        '401':
+          description: Non authentifié
+        '404':
+          description: Produit non trouvé
+
+  /api/cart/updateCart/{id}:
+    put:
+      tags: [Cart]
+      summary: Mettre à jour le panier
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          example: "68e7b5010bf901dfd66d774a"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                items:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      productId:
+                        type: string
+                      quantity:
+                        type: integer
+      responses:
+        '200':
+          description: Panier mis à jour
+        '401':
+          description: Non authentifié
+        '404':
+          description: Panier non trouvé

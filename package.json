@@ -41,6 +41,7 @@
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^8.19.1",
     "multer": "^2.0.2",
+    "sharp": "^0.34.4",
     "swagger-ui-express": "^5.0.1",
     "uuid": "^9.0.0",
     "winston": "^3.18.3",
@@ -52,7 +53,6 @@
     "chai": "^6.2.0",
     "mocha": "^11.7.4",
     "mongodb-memory-server": "^10.1.4",
-    "nyc": "^17.1.0",
     "supertest": "^7.1.4"
   }
 }

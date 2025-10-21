@@ -1,6 +1,6 @@
 import express from "express";
 
-import {handleAddOrder, handleGetOrder, updateOrderStatus } from "../controllers/orderController";
+import {handleAddOrder, handleGetOrder, updateOrderStatus } from "../controllers/orderController.js";
 
 const router = express.Router();
 

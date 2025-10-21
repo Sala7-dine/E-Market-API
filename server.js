@@ -13,6 +13,8 @@ import cors from 'cors';
 import authRoutes from './routes/auth.js';
 import { authenticate } from './middlewares/authMiddleware.js';
 import cartRoutes from "./routes/cartRouter.js"
+import couponRoutes from "./routes/couponRouter.js";
+
 import orderRoutes from "./routes/orderRouter.js"
 import logger from './config/logger.js';
 
@@ -48,10 +50,13 @@ if (process.env.NODE_ENV === 'test') {
 }
 
 app.use('/api/users' , userRoutes);
-app.use('/api/carts' , authenticate,cartRoutes);
+
 app.use('/api/orders' , authenticate,orderRoutes);
+app.use('/api/coupons' , authenticate,couponRoutes);
 
 app.use('/api/categories' , categorieRoute);
+
+app.use('/api/cart', authenticate, cartRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
