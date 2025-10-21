@@ -11,4 +11,5 @@ const connectDB = async (uri) => {
     }
 };
 
+export { mongoose };
 export default connectDB;
