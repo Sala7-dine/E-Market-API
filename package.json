@@ -5,7 +5,13 @@
   "main": "server.js",
   "scripts": {
     "test": "NODE_ENV=test mocha --exit --timeout 10000",
-    "seed": "node scripts/seed.js",
+    "seed": "bun seeders/index.js --all",
+    "seed:users": "bun seeders/index.js --users",
+    "seed:categories": "bun seeders/index.js --categories",
+    "seed:products": "bun seeders/index.js --products",
+    "seed:carts": "bun seeders/index.js --carts",
+    "seed:orders": "bun seeders/index.js --orders",
+    "seed:all": "bun seeders/index.js --all",
     "reset": "node scripts/reset.js",
     "start": "bun server.js",
     "dev": "bun --hot server.js"
