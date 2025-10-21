@@ -24,7 +24,10 @@ const orderSchema = new mongoose.Schema(
       enum: ["pending", "paid", "shipped", "delivered", "cancelled"],
       default: "pending",
     },
-    updatedAt: { type: Date, default: Date.now },
+    coupon: { type: mongoose.Schema.Types.ObjectId, ref: "Coupon" },
+    discount: { type: Number, default: 0 },
+    finalTotal: { type: Number, default: 0 },
+    updatedAt: { type: Date, default: Date.now }, 
   },
 
   { timestamps: true }
