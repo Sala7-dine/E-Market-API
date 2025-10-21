@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import productRoutes from "./routes/productRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import categorieRoute from "./routes/categoryRoutes.js";
+import cartRoutes from "./routes/cartRouter.js";
 import loggerMiddleware from "./middlewares/logger.js";
 import notFound from "./middlewares/notFound.js";
 import errorHandler from "./middlewares/errorHandler.js";
@@ -12,11 +13,15 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import authRoutes from './routes/auth.js';
 import { authenticate } from './middlewares/authMiddleware.js';
-import logger from './config/logger.js';
 import cartRoutes from "./routes/cartRouter.js"
 import couponRoutes from "./routes/couponRouter.js";
 
 import orderRoutes from "./routes/orderRouter.js"
+import logger from './config/logger.js';
+
+
+
+
 const app = express();
 
 dotenv.config();
@@ -51,6 +56,8 @@ app.use('/api/orders' , authenticate,orderRoutes);
 app.use('/api/coupons' , authenticate,couponRoutes);
 
 app.use('/api/categories' , categorieRoute);
+
+app.use('/api/cart', authenticate, cartRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
