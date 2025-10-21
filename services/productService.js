@@ -1,6 +1,8 @@
 import Product from "../models/Product.js";
 import Category from "../models/Categorie.js";
 import logger from '../config/logger.js';
+import fs from 'fs/promises';
+import path from 'path';
 
 export async function getAllProducts() {
     try {
@@ -32,22 +34,41 @@ export async function createProduct(productData) {
     }
 }
 
-export async function updateProduct(id , product) {
-
+export async function updateProduct(id, productUpdate, userId, userRole, newImagePaths) {
     try {
-
-        if(!id) {
-            throw new Error("L'id et require");
+        if (!id) {
+            throw new Error("L'id est requis");
         }
 
-        return await Product.findByIdAndUpdate(id , product , { new : true });
+        const existingProduct = await Product.findById(id);
+        if (!existingProduct) {
+            throw new Error("Produit introuvable");
+        }
 
-    }catch (err) {
+        if (existingProduct.createdBy.toString() !== userId.toString() && userRole !== 'admin') {
+            throw new Error("Non autorisé");
+        }
 
-        throw new Error(err.message);
+        const updated = await Product.findByIdAndUpdate(id, productUpdate, { new: true });
 
+        if (newImagePaths && existingProduct.images && existingProduct.images.length > 0) {
+            const removePromises = existingProduct.images.map(async (imagePath) => {
+                try {
+                    const fullPath = path.join(process.cwd(), 'public', imagePath.replace(/^\//, ''));
+                    await fs.unlink(fullPath);
+                    logger.info(`Deleted old image: ${imagePath}`);
+                } catch (err) {
+                    logger.warn(`Failed to delete old image ${imagePath}: ${err.message}`);
+                }
+            });
+            await Promise.all(removePromises);
+        }
+
+        return updated;
+    } catch (err) {
+        logger.error(`Error updating product: ${err.message}`);
+        throw err;
     }
-
 }
 
 export async function deleteProduct(id) {
