@@ -27,7 +27,6 @@ const logger = winston.createLogger({
         new winston.transports.MongoDB({
             db: process.env.MONGO_URI,
             collection: 'logs',
-            options: { useUnifiedTopology: true },
             level: 'error'
         })
     ],

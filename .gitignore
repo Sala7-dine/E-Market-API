@@ -10,6 +10,7 @@ public/.*
 public/*.txt
 node_modules
 public/images/users/
+public/images/products/
 public/*.log
 bun.lock
 package-lock.json

@@ -53,9 +53,11 @@ components:
         category:
           type: string
           example: "Électronique"
-        imageUrl:
-          type: string
-          example: "https://example.com/image.jpg"
+        images:
+          type: array
+          items:
+            type: string
+          example: ["/images/products/product-1234567890.jpg", "/images/products/product-1234567891.jpg"]
         createdAt:
           type: string
           format: date-time
@@ -311,15 +313,15 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               required:
                 - title
                 - description
-                - price
+                - prix
                 - stock
-                - category
+                - categories
               properties:
                 title:
                   type: string
@@ -327,19 +329,22 @@ paths:
                 description:
                   type: string
                   example: "Casque antibruit haut de gamme avec autonomie de 30h."
-                price:
+                prix:
                   type: number
                   example: 3599
                 stock:
                   type: integer
                   example: 12
-                category:
+                categories:
                   type: string
-                  example: "Électronique"
-                imageUrl:
-                  type: string
-                  format: uri
-                  example: "https://example.com/sony-xm5.jpg"
+                  example: '["categoryId1", "categoryId2"]'
+                  description: "JSON array of category IDs"
+                images:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                  description: "Product images (max 5, formats: jpg, jpeg, png, gif, max 5MB each)"
       responses:
         '201':
           description: Produit créé avec succès
@@ -365,7 +370,7 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               properties:
@@ -373,15 +378,20 @@ paths:
                   type: string
                 description:
                   type: string
-                price:
+                prix:
                   type: number
                 stock:
                   type: integer
-                category:
+                categories:
                   type: string
-                imageUrl:
-                  type: string
-                  format: uri
+                  example: '["categoryId1", "categoryId2"]'
+                  description: "JSON array of category IDs"
+                images:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                  description: "Product images (max 5, formats: jpg, jpeg, png, gif, max 5MB each)"
       responses:
         '200':
           description: Produit mis à jour
