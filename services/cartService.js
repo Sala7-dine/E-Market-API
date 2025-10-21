@@ -1,7 +1,7 @@
 import Cart from "../models/Cart.js";
 import Product from "../models/Product.js";
 
-// get all carts :
+// get user's cart :
 export async function getCarts(userId) {
   const allCart = await Cart.find({ userId });
   console.log(JSON.stringify(allCart, null, 2));
@@ -52,7 +52,7 @@ export async function deleteproduct(userId, productId) {
   return await cart.save();
 }
 
-// update update Product Quantity and total price in the cart :
+// update Product Quantity and total price in the cart :
 export async function updateProductQuantity(userId, productId, quantity) {
   let cart = await Cart.findOne({ userId });
   if (!cart) {
