@@ -3,5 +3,13 @@
 .vscode
 build
 .env
-public/logs.txt
+public/logs*.log
+public/exceptions*.log
+public/rejections*.log
+public/.*
+public/*.txt
 node_modules
+public/images/users/
+public/*.log
+bun.lock
+package-lock.json

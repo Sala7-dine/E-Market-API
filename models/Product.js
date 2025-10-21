@@ -16,7 +16,7 @@ const productSchema = new mongoose.Schema(
             min : [0 , "le prix ne peut pas etre negatif"]
         },
         stock: {
-            type: String,
+            type: Number,
             required: [true, "Le stock est obligatoire"],
             min: [0, "Le stock ne peut pas être négatif"],
         },

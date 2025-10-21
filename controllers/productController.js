@@ -25,8 +25,6 @@ export const GetProducts = async (req , res) => {
 
 export const CreateProduct = async (req , res , next) => {
 
-        console.log("chi l3ba : " ,  req.body);
-
     try{
         const productData = req.body;
 
