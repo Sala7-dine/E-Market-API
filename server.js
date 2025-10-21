@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import productRoutes from "./routes/productRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import categorieRoute from "./routes/categoryRoutes.js";
+import cartRoutes from "./routes/cartRouter.js";
 import loggerMiddleware from "./middlewares/logger.js";
 import notFound from "./middlewares/notFound.js";
 import errorHandler from "./middlewares/errorHandler.js";
@@ -48,6 +49,8 @@ if (process.env.NODE_ENV === 'test') {
 app.use('/api/users' , userRoutes);
 
 app.use('/api/categories' , categorieRoute);
+
+app.use('/api/cart', authenticate, cartRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
