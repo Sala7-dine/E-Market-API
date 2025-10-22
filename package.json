@@ -13,7 +13,7 @@
     "seed:orders": "bun seeders/index.js --orders",
     "seed:all": "bun seeders/index.js --all",
     "reset": "node scripts/reset.js",
-    "start": "bun server.js",
+    "start": "node server.js",
     "dev": "bun --hot server.js"
   },
   "repository": {
