@@ -20,9 +20,9 @@ const productSchema = new mongoose.Schema(
             required: [true, "Le stock est obligatoire"],
             min: [0, "Le stock ne peut pas être négatif"],
         },
-        imageUrl: {
-            type: String,
-            default: "",
+        images: {
+            type: [String],
+            default: [],
         },
         isDelete: {
             type : Boolean,
@@ -32,7 +32,12 @@ const productSchema = new mongoose.Schema(
         categories: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: "Categorie"
-        }]
+        }],
+        createdBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: true
+        }
     },
 
     { timestamps: true }
