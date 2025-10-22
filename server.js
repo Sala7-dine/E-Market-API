@@ -13,7 +13,7 @@ import cors from 'cors';
 import authRoutes from './routes/auth.js';
 import { authenticate } from './middlewares/authMiddleware.js';
 import couponRoutes from "./routes/couponRouter.js";
-
+import cartRoutes from "./routes/cartRouter.js"
 import orderRoutes from "./routes/orderRouter.js"
 import logger from './config/logger.js';
 import {cacheMiddleware } from "./middlewares/cacheMiddleware.js";
