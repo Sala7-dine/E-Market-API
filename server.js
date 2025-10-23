@@ -19,9 +19,6 @@ import cors from 'cors';
 import orderRoutes from "./routes/orderRouter.js"
 import logger from './config/logger.js';
 
-
-
-
 const app = express();
 
 dotenv.config();
@@ -31,6 +28,8 @@ const MongoUri = process.env.MONGO_URI;
 
 app.use(cors());
 app.use(express.json());
+
+// secure headers
 app.use(helmet());
 app.use(cookieParser());
 app.use(loggerMiddleware);
