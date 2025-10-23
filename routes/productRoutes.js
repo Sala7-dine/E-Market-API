@@ -1,11 +1,13 @@
 import express from "express";
 import { CreateProduct, GetProducts, DeleteProduct , UpdateProduct , SearchProducts } from "../controllers/productController.js";
+import { AddReview, GetReviews } from "../controllers/reviewController.js";
 import { validate } from "../middlewares/validate.js";
 import { createProductSchema, updateProductSchema } from "../validations/product.validations.js";
 import multer from "multer";
 import { compressImages } from "../middlewares/imageCompression.js";
 import { productLimiter } from "../middlewares/rateLimiterMiddleware.js";
 import product from "../models/Product.js";
+import {authenticate} from "../middlewares/authMiddleware.js";
 
 const upload = multer({
     storage: multer.memoryStorage(),
@@ -38,5 +40,8 @@ router.put('/update/:id', productLimiter , upload.array('images', 5), compressIm
 router.delete('/delete/:id' , productLimiter ,   DeleteProduct);
 
 router.get('/search' , productLimiter , SearchProducts);
+
+router.post('/:productId/reviews', authenticate, AddReview);
+router.get('/:productId/reviews', authenticate, GetReviews);
 
 export default router;

@@ -1,0 +1,19 @@
+services:
+  api:
+    build: .
+    container_name: emarket-api
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/Market?retryWrites=true&w=majority
+      - JWT_ACCESS_SECRET=your_access_secret_here
+      - JWT_REFRESH_SECRET=your_refresh_secret_here
+      - ACCESS_TOKEN_EXP=15m
+      - REFRESH_TOKEN_EXP=30d
+      - COOKIE_DOMAIN=localhost
+      - NODE_ENV=development
+    volumes:
+      - .:/app
+      - /app/node_modules
+    restart: unless-stopped
