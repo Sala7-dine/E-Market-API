@@ -146,6 +146,27 @@ components:
           type: string
           format: date-time
 
+    Review:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: "68e7b5010bf901dfd66d774a"
+        user:
+          type: string
+          example: "68e7b5010bf901dfd66d774a"
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+          example: 5
+        comment:
+          type: string
+          example: "Excellent produit!"
+        createdAt:
+          type: string
+          format: date-time
+
     Error:
       type: object
       properties:
@@ -452,6 +473,75 @@ paths:
       responses:
         '200':
           description: Résultats de recherche
+
+  /api/products/{productId}/reviews:
+    post:
+      tags: [Products]
+      summary: Ajouter un avis sur un produit
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+            pattern: '^[0-9a-fA-F]{24}$'
+          example: "68e7b5010bf901dfd66d774a"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - rating
+                - comment
+              properties:
+                rating:
+                  type: integer
+                  minimum: 1
+                  maximum: 5
+                  example: 5
+                comment:
+                  type: string
+                  example: "Excellent produit, très satisfait!"
+      responses:
+        '201':
+          description: Avis ajouté
+        '400':
+          description: Données invalides ou avis déjà existant
+        '401':
+          description: Non authentifié
+        '404':
+          description: Produit non trouvé
+    get:
+      tags: [Products]
+      summary: Récupérer les avis d'un produit
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+            pattern: '^[0-9a-fA-F]{24}$'
+          example: "68e7b5010bf901dfd66d774a"
+      responses:
+        '200':
+          description: Liste des avis
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Review'
+        '404':
+          description: Produit non trouvé
 
   /api/users:
     get:

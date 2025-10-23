@@ -14,3 +14,4 @@ public/images/products/
 public/*.log
 bun.lock
 package-lock.json
+docker-compose.yml
