@@ -3,7 +3,7 @@ import { register, login, refresh , logout } from '../controllers/authController
 import { authenticate } from '../middlewares/authMiddleware.js';
 import { authorizeRoles } from '../middlewares/roleMiddleware.js';
 import dotenv from 'dotenv';
-
+import { loginLimiter , registerLimiter } from "../middlewares/rateLimiterMiddleware.js";
 
 dotenv.config();
 const router = express.Router();
@@ -20,8 +20,8 @@ const router = express.Router();
 //     res.cookie('refreshToken', token, cookieOptions);
 // }
 
-router.post('/register', register);
-router.post('/login', login);
+router.post('/register', registerLimiter , register);
+router.post('/login', loginLimiter ,login);
 router.post('/refresh', refresh);
 
 router.post('/logout', logout);

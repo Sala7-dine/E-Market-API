@@ -5,9 +5,11 @@ import { validate } from "../middlewares/validate.js";
 import { createProductSchema, updateProductSchema } from "../validations/product.validations.js";
 import multer from "multer";
 import { compressImages } from "../middlewares/imageCompression.js";
+import { productLimiter } from "../middlewares/rateLimiterMiddleware.js";
+import product from "../models/Product.js";
 import {authenticate} from "../middlewares/authMiddleware.js";
 
-const upload = multer({ 
+const upload = multer({
     storage: multer.memoryStorage(),
     limits: { fileSize: 10 * 1024 * 1024 },
     fileFilter: (req, file, cb) => {
@@ -29,16 +31,15 @@ const parseFormData = (req, res, next) => {
 const router = express.Router();
 
 
-router.get('/' , GetProducts);
+router.get('/' , productLimiter , GetProducts);
 
-router.post('/create', upload.array('images', 5), compressImages('images/products'), parseFormData, validate(createProductSchema), CreateProduct);
+router.post('/create', productLimiter , upload.array('images', 5), compressImages('images/products'), parseFormData , validate(createProductSchema), CreateProduct);
 
-router.put('/update/:id', upload.array('images', 5), compressImages('images/products'), parseFormData, validate(updateProductSchema), UpdateProduct);
+router.put('/update/:id', productLimiter , upload.array('images', 5), compressImages('images/products'), parseFormData, validate(updateProductSchema), UpdateProduct);
 
-router.delete('/delete/:id' , DeleteProduct);
+router.delete('/delete/:id' , productLimiter ,   DeleteProduct);
 
-
-router.get('/search' , SearchProducts);
+router.get('/search' , productLimiter , SearchProducts);
 
 router.post('/:productId/reviews', authenticate, AddReview);
 router.get('/:productId/reviews', authenticate, GetReviews);
