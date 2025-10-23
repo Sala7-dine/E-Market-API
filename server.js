@@ -9,13 +9,16 @@ import loggerMiddleware from "./middlewares/logger.js";
 import notFound from "./middlewares/notFound.js";
 import errorHandler from "./middlewares/errorHandler.js";
 import cookieParser from 'cookie-parser';
-import cors from 'cors';
 import authRoutes from './routes/auth.js';
 import { authenticate } from './middlewares/authMiddleware.js';
 import couponRoutes from "./routes/couponRouter.js";
+import helmet from 'helmet';
+import cors from 'cors';
+
 import cartRoutes from "./routes/cartRouter.js"
 import orderRoutes from "./routes/orderRouter.js"
 import logger from './config/logger.js';
+
 import {cacheMiddleware } from "./middlewares/cacheMiddleware.js";
 
 
@@ -29,6 +32,9 @@ const MongoUri = process.env.MONGO_URI;
 
 app.use(cors());
 app.use(express.json());
+
+// secure headers
+app.use(helmet());
 app.use(cookieParser());
 app.use(loggerMiddleware);
 app.use('/images', express.static('public/images'));
