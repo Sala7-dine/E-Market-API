@@ -1,159 +1,230 @@
-# 📊 E-MARKET API
+# 🛒 E-Market API
 
-## 📖 Contexte du Projet
+Une API RESTful complète pour une plateforme e-commerce avec gestion des utilisateurs, produits, commandes, coupons et notifications.
 
-L’entreprise souhaite concevoir une **plateforme e-commerce** évolutive, capable de gérer des produits, des utilisateurs et des commandes.
+## 🎯 Objectifs du Projet
 
-Avant d’aborder la logique métier complète, il faut d’abord **établir les fondations techniques du backend** :
+- Concevoir une API RESTful sécurisée avec Node.js/Express/MongoDB
+- Implémenter l'authentification JWT et la gestion des rôles
+- Gérer panier, commandes, réductions et avis produits
+- Upload sécurisé d'images avec compression
+- Système de notifications asynchrone avec EventEmitter
+- Logging avancé avec Winston
+- Tests unitaires et d'intégration
 
-- Un **serveur Express** fonctionnel,
-- Une **connexion à la base MongoDB**,
-- Et les **routes initiales** pour les produits et les utilisateurs.
+## 🚀 Technologies Utilisées
 
-Ce premier projet marque le passage vers un vrai développement **backend orienté API REST**, avec une première approche de la **persistance de données** et de la **structuration professionnelle du code** (routes, contrôleurs, modèles, middlewares).
+- **Backend**: Node.js, Express.js
+- **Base de données**: MongoDB, Mongoose
+- **Authentification**: JWT, bcrypt
+- **Upload & Images**: Multer, Sharp
+- **Logging**: Winston, winston-daily-rotate-file, winston-mongodb
+- **Email**: Nodemailer (Mailgun/Mailpit)
+- **Sécurité**: Helmet, CORS, express-rate-limit
+- **Validation**: Yup
+- **Tests**: Mocha, Chai, Supertest
+- **Documentation**: Swagger/OpenAPI
 
-L’objectif est de disposer d’un **serveur stable et modulaire** qui servira de base aux fonctionnalités plus avancées (CRUD complet, authentification JWT, gestion des commandes, etc.) prévues dans les briefs suivants du sprint.
+## 📦 Installation
 
----
+```bash
+# Cloner le dépôt
+git clone https://github.com/Sala7-dine/E-Market-API.git
+cd E-Market-API
 
-## 🛠️ Installation et Configuration
+# Installer les dépendances
+npm install
 
-### Prérequis
-- Node.js (version 14 ou supérieure)
-- MongoDB (installé localement ou via un service cloud comme MongoDB Atlas)
-- Un éditeur de code (ex. : VS Code)
+# Configurer les variables d'environnement
+cp .env.example .env
+# Éditer .env avec vos configurations
 
-### Étapes d'Installation
-1. **Cloner le dépôt** :
-   ```
-   git clone https://github.com/Sala7-dine/E-Market-API.git
-   cd E-Market-API
-   ```
+# Lancer le serveur
+npm start
 
-2. **Installer les dépendances** :
-   ```
-   npm install
-   ```
+# Mode développement
+npm run dev
+```
 
-3. **Configurer les variables d'environnement** :
-   Créez un fichier `.env` à la racine du projet avec les variables suivantes :
-   ```
-   PORT=3000
-   MONGO_URI=mongodb://localhost:27017/emarketdb
-   ```
+## 🔧 Configuration
 
-4. **Lancer le serveur** :
-   ```
-   npm start
-   ```
-   Le serveur sera accessible à `http://localhost:3000`.
+Créer un fichier `.env` à la racine :
 
-5. **Documentation Swagger** :
-   Accédez à la documentation de l'API via `http://localhost:3000/api-docs`.
+```env
+PORT=3000
+MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/Market
+JWT_ACCESS_SECRET=your_access_secret
+JWT_REFRESH_SECRET=your_refresh_secret
+ACCESS_TOKEN_EXP=15m
+REFRESH_TOKEN_EXP=30d
+NODE_ENV=development
 
----
+# Email
+EMAIL_FROM=noreply@emarket.com
+MAILGUN_SMTP_HOST=smtp.mailgun.org
+MAILGUN_SMTP_USER=your_user
+MAILGUN_SMTP_PASS=your_pass
+```
 
-## 📦 Fonctionnalités Minimales
+## 📚 Documentation API
 
-### 🛍️ Gestion des Produits (`/products`)
+Accéder à la documentation Swagger : `http://localhost:3000/api-docs`
 
-Les produits sont les éléments centraux de la plateforme. Chaque produit est stocké dans MongoDB avec les champs suivants :
+## 🏗️ Architecture
 
-| Champ       | Type    | Obligatoire | Description                          |
-|-------------|---------|-------------|--------------------------------------|
-| `title`     | String  | ✅          | Nom du produit                       |
-| `description` | String | ✅          | Brève description du produit         |
-| `price`     | Number  | ✅          | Prix du produit (en DH)              |
-| `stock`     | Number  | ✅          | Quantité disponible                  |
-| `category`  | String  | ✅          | Catégorie du produit (ex : "Électronique", "Mode") |
-| `imageUrl`  | String  | ❌          | Lien de l’image du produit           |
-| `createdAt` | Date    | Auto       | Date de création (gérée par Mongoose)|
+```
+E-Market-API/
+├── config/          # Configuration (DB, logger, mailer, swagger)
+├── controllers/     # Logique des routes
+├── events/          # EventEmitter pour notifications
+├── middlewares/     # Auth, validation, logging, cache, compression
+├── models/          # Schémas Mongoose
+├── routes/          # Définition des endpoints
+├── services/        # Logique métier
+├── validations/     # Schémas de validation Yup
+├── public/          # Images et logs
+└── test/            # Tests unitaires et d'intégration
+```
 
-#### Routes pour les Produits
-| Méthode | Route             | Description                          |
-|---------|-------------------|--------------------------------------|
-| GET     | `/products`       | Renvoie la liste de tous les produits |
-| GET     | `/products/:id`   | Renvoie les détails d’un produit spécifique |
-| POST    | `/products`       | Ajoute un nouveau produit (avec validation) |
-| PUT     | `/products/:id`   | Met à jour un produit existant       |
-| DELETE  | `/products/:id`   | Supprime un produit                  |
+## 🔐 Fonctionnalités
 
-**Règles et Validations** :
-- Vérification des types (`price` et `stock` doivent être numériques).
-- Erreurs gérées proprement (produit non trouvé, champ manquant, id invalide).
-- Pas de persistance d’image réelle pour l’instant (simple URL simulée).
+### 1️⃣ Gestion des Utilisateurs
+- Inscription et connexion avec JWT
+- Profil utilisateur avec photo
+- Rôles : `user`, `seller`, `admin`
+- Routes : `/api/auth/*`, `/api/users/*`
 
-### 👥 Gestion des Utilisateurs (`/users`)
+### 2️⃣ Gestion des Produits
+- CRUD complet pour les produits
+- Upload multiple d'images (compression avec Sharp)
+- Recherche et filtrage
+- Avis et notes
+- Routes : `/api/products/*`
 
-Les utilisateurs sont enregistrés dans la base pour simuler les comptes de la future plateforme e-commerce.
+### 3️⃣ Panier et Commandes
+- Gestion du panier utilisateur
+- Création et suivi de commandes
+- Statuts : pending, paid, shipped, delivered, cancelled
+- Routes : `/api/cart/*`, `/api/orders/*`
 
-| Champ       | Type    | Obligatoire | Description                          |
-|-------------|---------|-------------|--------------------------------------|
-| `fullname`  | String  | ✅          | Nom complet de l’utilisateur         |
-| `email`     | String  | ✅          | Email unique                         |
-| `password`  | String  | ✅          | Mot de passe (non chiffré pour l’instant) |
-| `role`      | String  | ❌          | Valeur par défaut : `"user"` (peut être `"admin"`) |
-| `createdAt` | Date    | Auto       | Date d’inscription                   |
+### 4️⃣ Système de Coupons
+- Création et gestion de coupons
+- Réduction en pourcentage ou montant fixe
+- Validation et application
+- Routes : `/api/coupons/*`
 
-#### Routes pour les Utilisateurs
-| Méthode | Route             | Description                          |
-|---------|-------------------|--------------------------------------|
-| GET     | `/users`          | Renvoie la liste des utilisateurs    |
-| GET     | `/users/:id`      | Renvoie les informations d’un utilisateur spécifique |
-| POST    | `/users`          | Crée un utilisateur après vérification de l’unicité de l’email |
-| DELETE  | `/users/:id`      | Supprime un utilisateur (optionnel, bonus) |
+### 5️⃣ Avis Produits
+- Notation et commentaires
+- Un avis par utilisateur par produit
+- Routes : `/api/products/:id/reviews`
 
-**Règles et Validations** :
-- Vérification que `email` n’existe pas déjà avant insertion.
-- Champs obligatoires : `fullname`, `email`, `password`.
-- Structure prête pour intégrer le chiffrement et l’authentification JWT dans le **brief suivant**.
+### 6️⃣ Notifications
+- Système asynchrone avec EventEmitter
+- Notifications email (Mailgun/Mailpit)
+- Événements : productCreated, orderCreated, orderUpdated
+- Routes : `/api/notifications/*`
 
---- 
+### 7️⃣ Sécurité
+- JWT avec refresh tokens
+- Helmet pour headers sécurisés
+- CORS configuré
+- Validation des données
+- Gestion globale des erreurs
 
-- **Relation entre Produits et Catégories** : Création d'une collection `categories` séparée, avec association via `ObjectId`.
+### 8️⃣ Logging
+- Winston avec rotation quotidienne
+- Logs : requêtes, erreurs, exceptions, rejections
+- Stockage MongoDB pour erreurs
+- Fichiers : `public/logs-*.log`
 
-  | Champ       | Type    | Obligatoire | Description                          |
-      |-------------|---------|-------------|--------------------------------------|
-  | `name`      | String  | ✅          | Nom de la catégorie                  |
-  | `description` | String | ❌         | Description de la catégorie          |
+## 🧪 Tests
 
-  Routes CRUD pour les catégories :
-  | Méthode | Route             | Description                          |
-  |---------|-------------------|--------------------------------------|
-  | GET     | `/categories`     | Liste des catégories                 |
-  | POST    | `/categories`     | Ajoute une catégorie                 |
-  | PUT     | `/categories/:id` | Met à jour une catégorie             |
-  | DELETE  | `/categories/:id` | Supprime une catégorie               |
+```bash
+# Lancer les tests
+npm test
 
-- **Recherche Filtrée** : Route `GET /products/search` avec critères (catégorie, nom, prix min/max).
+# Avec couverture
+npm run test:coverage
+```
 
+## 📊 Scripts Disponibles
 
----
+```bash
+npm start          # Démarrer le serveur
+npm run dev        # Mode développement avec hot reload
+npm test           # Lancer les tests
+npm run seed       # Générer des données de test
+npm run reset-db   # Réinitialiser la base
+```
 
-## ⚙️ Middlewares et Structure
+## 🔑 Endpoints Principaux
 
-- **Middleware `logger`** : Journalise la méthode, l’URL et la date de chaque requête.
-- **Middleware `errorHandler`** : Capture et renvoie les erreurs au format JSON.
-- **Middleware `notFound`** : Message JSON standard pour les routes inexistantes.
+### Authentification
+- `POST /api/auth/register` - Inscription
+- `POST /api/auth/login` - Connexion
+- `POST /api/auth/refresh` - Renouveler le token
+- `POST /api/auth/logout` - Déconnexion
 
-Le projet suit une architecture MVC simplifiée :
-- **Modèles** : Définition des schémas Mongoose (ex. : `Product.js`, `User.js`).
-- **Contrôleurs** : Logique métier (ex. : `productController.js`).
-- **Routes** : Définition des endpoints (ex. : `productRoutes.js`).
+### Utilisateurs
+- `GET /api/users/me` - Profil utilisateur
+- `PATCH /api/users/me` - Modifier profil (avec avatar)
 
----
+### Produits
+- `GET /api/products` - Liste des produits
+- `POST /api/products/create` - Créer un produit (multipart/form-data)
+- `PUT /api/products/update/:id` - Modifier un produit
+- `DELETE /api/products/delete/:id` - Supprimer un produit
+- `GET /api/products/search` - Rechercher des produits
+- `POST /api/products/:id/reviews` - Ajouter un avis
+- `GET /api/products/:id/reviews` - Voir les avis
 
-## 🚨 Contraintes et Exigences Techniques
+### Panier
+- `POST /api/cart/addtocart` - Ajouter au panier
+- `GET /api/cart/getcarts` - Voir le panier
+- `PUT /api/cart/updateCart/:id` - Modifier le panier
+- `DELETE /api/cart/deleteProduct/:id` - Retirer du panier
 
-### Technologies Utilisées
-| Technologie | Description                          |
-|-------------|--------------------------------------|
-| Node.js     | Runtime JavaScript                   |
-| Express.js  | Framework web pour API REST          |
-| MongoDB     | Base de données NoSQL                |
-| Mongoose    | ODM pour MongoDB                     |
-| Dotenv      | Gestion des variables d’environnement|
-| Swagger     | Documentation API (OpenAPI)          |
+### Commandes
+- `POST /api/orders/addOrder/:cartId` - Créer une commande
+- `GET /api/orders/getOrder` - Voir ses commandes
+- `PUT /api/orders/updateStatus/:id` - Modifier le statut
 
+### Notifications
+- `GET /api/notifications` - Liste des notifications
+- `PATCH /api/notifications/:id/read` - Marquer comme lu
 
----
+## 🐳 Docker
+
+```bash
+# Copier l'exemple
+cp docker-compose.example.yml docker-compose.yml
+
+# Éditer avec vos configurations
+nano docker-compose.yml
+
+# Lancer
+docker-compose up -d
+```
+
+## 📝 Améliorations Futures
+
+- [ ] Versioning API (/api/v1, /api/v2)
+- [ ] Cache Redis
+- [ ] Paiement réel (Stripe)
+- [ ] WebSocket pour notifications temps réel
+- [ ] Elasticsearch pour recherche avancée
+- [ ] CI/CD avec GitHub Actions
+
+## 👥 Équipe
+
+Projet réalisé en squad dans le cadre de la formation YouCode.
+
+## 📄 Licence
+
+GPL-3.0 License
+
+## 🔗 Liens Utiles
+
+- [Documentation Swagger](http://localhost:3000/api-docs)
+- [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
+- [Mailpit (Dev)](http://localhost:8025)
