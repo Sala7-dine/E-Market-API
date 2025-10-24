@@ -17,6 +17,7 @@ import cors from 'cors';
 
 import cartRoutes from "./routes/cartRoutes.js"
 import orderRoutes from "./routes/orderRoutes.js"
+import notificationRoutes from "./routes/notificationRoutes.js"
 import logger from './config/logger.js';
 
 import {cacheMiddleware } from "./middlewares/cacheMiddleware.js";
@@ -60,6 +61,8 @@ app.use('/api/orders' ,cacheMiddleware, authenticate,orderRoutes);
 app.use('/api/coupons' ,cacheMiddleware, authenticate,couponRoutes);
 
 app.use('/api/categories' , categorieRoute);
+
+app.use('/api/notifications', notificationRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

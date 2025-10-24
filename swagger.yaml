@@ -22,6 +22,10 @@ tags:
     description: Gestion des catégories
   - name: Cart
     description: Gestion du panier
+  - name: Orders
+    description: Gestion des commandes
+  - name: Coupons
+    description: Gestion des coupons
 
 components:
   securitySchemes:
@@ -163,6 +167,62 @@ components:
         comment:
           type: string
           example: "Excellent produit!"
+        createdAt:
+          type: string
+          format: date-time
+
+    Order:
+      type: object
+      properties:
+        _id:
+          type: string
+        userId:
+          type: string
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              productId:
+                type: string
+              quantity:
+                type: integer
+              price:
+                type: number
+        totalPrice:
+          type: number
+        status:
+          type: string
+          enum: [pending, paid, shipped, delivered, cancelled]
+        discount:
+          type: number
+        finalTotal:
+          type: number
+        createdAt:
+          type: string
+          format: date-time
+
+    Coupon:
+      type: object
+      properties:
+        _id:
+          type: string
+        code:
+          type: string
+          example: "SAVE20"
+        type:
+          type: string
+          enum: [percentage, fixed]
+        value:
+          type: number
+          example: 20
+        expirationDate:
+          type: string
+          format: date-time
+        minOrderAmount:
+          type: number
+        isActive:
+          type: boolean
         createdAt:
           type: string
           format: date-time
@@ -908,3 +968,186 @@ paths:
           description: Non authentifié
         '404':
           description: Panier non trouvé
+
+  /api/orders/addOrder/{cartId}:
+    post:
+      tags: [Orders]
+      summary: Créer une commande depuis le panier
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: cartId
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Commande créée
+        '401':
+          description: Non authentifié
+
+  /api/orders/getOrder:
+    get:
+      tags: [Orders]
+      summary: Récupérer les commandes de l'utilisateur
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Liste des commandes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+        '401':
+          description: Non authentifié
+
+  /api/orders/updateStatus/{orderId}:
+    put:
+      tags: [Orders]
+      summary: Mettre à jour le statut d'une commande
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: orderId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [pending, paid, shipped, delivered, cancelled]
+      responses:
+        '200':
+          description: Statut mis à jour
+        '401':
+          description: Non authentifié
+
+  /api/coupons/createCoupon:
+    post:
+      tags: [Coupons]
+      summary: Créer un coupon
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - code
+                - type
+                - value
+                - expirationDate
+              properties:
+                code:
+                  type: string
+                  example: "SAVE20"
+                type:
+                  type: string
+                  enum: [percentage, fixed]
+                value:
+                  type: number
+                  example: 20
+                expirationDate:
+                  type: string
+                  format: date-time
+                minOrderAmount:
+                  type: number
+      responses:
+        '201':
+          description: Coupon créé
+        '401':
+          description: Non authentifié
+
+  /api/coupons/getAllCoupon:
+    get:
+      tags: [Coupons]
+      summary: Récupérer tous les coupons
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Liste des coupons
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Coupon'
+
+  /api/coupons/getAllUserCoupon:
+    get:
+      tags: [Coupons]
+      summary: Récupérer les coupons de l'utilisateur
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Liste des coupons utilisateur
+
+  /api/coupons/deleteCoupon/{couponId}:
+    delete:
+      tags: [Coupons]
+      summary: Supprimer un coupon
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: couponId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Coupon supprimé
+        '401':
+          description: Non authentifié
+
+  /api/coupons/updateCoupon/{couponId}:
+    put:
+      tags: [Coupons]
+      summary: Mettre à jour un coupon
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: couponId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+                type:
+                  type: string
+                  enum: [percentage, fixed]
+                value:
+                  type: number
+                expirationDate:
+                  type: string
+                  format: date-time
+                isActive:
+                  type: boolean
+      responses:
+        '200':
+          description: Coupon mis à jour
+        '401':
+          description: Non authentifié
