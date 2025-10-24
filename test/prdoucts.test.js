@@ -12,6 +12,10 @@ dotenv.config();
 
 // Ensure test mode before loading the app module
 process.env.NODE_ENV = 'test';
+process.env.JWT_ACCESS_SECRET = 'test-access-secret-key-for-testing';
+process.env.JWT_REFRESH_SECRET = 'test-refresh-secret-key-for-testing';
+process.env.ACCESS_TOKEN_EXP = '15m';
+process.env.REFRESH_TOKEN_EXP = '30d';
 
 const { expect } = chai;
 chai.use(chaiHttp);

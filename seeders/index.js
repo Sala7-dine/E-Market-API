@@ -15,7 +15,9 @@ const seedType = args.find(arg => arg.startsWith('--')) || '--all';
 
 async function runSeeders() {
     try {
-        await connectDB(process.env.MONGO_URI);
+        const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/Market';
+        console.log('Using MONGO_URI:', mongoUri);
+        await connectDB(mongoUri);
          logger.info('Connecté à MongoDB');
 
         switch (seedType) {
