@@ -9,14 +9,14 @@ import loggerMiddleware from "./middlewares/logger.js";
 import notFound from "./middlewares/notFound.js";
 import errorHandler from "./middlewares/errorHandler.js";
 import cookieParser from 'cookie-parser';
-import authRoutes from './routes/auth.js';
+import authRoutes from './routes/authRoutes.js';
 import { authenticate } from './middlewares/authMiddleware.js';
-import couponRoutes from "./routes/couponRouter.js";
+import couponRoutes from "./routes/couponRoutes.js";
 import helmet from 'helmet';
 import cors from 'cors';
 
-import cartRoutes from "./routes/cartRouter.js"
-import orderRoutes from "./routes/orderRouter.js"
+import cartRoutes from "./routes/cartRoutes.js"
+import orderRoutes from "./routes/orderRoutes.js"
 import logger from './config/logger.js';
 
 import {cacheMiddleware } from "./middlewares/cacheMiddleware.js";
