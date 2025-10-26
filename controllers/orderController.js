@@ -9,10 +9,10 @@ export const handleAddOrder = async (req, res, next) => {
 
     const orderAdded = await addOrder(userId, cartId, couponCode);
 
-    res.status(200).json({
-      success : true,
-      message : "order created",
-      data : orderAdded
+    res.status(201).json({
+      success: true,
+      message: "order created",
+      data: orderAdded,
     });
   } catch (err) {
     next(err);
@@ -39,9 +39,15 @@ export const updateOrderStatus = async (req, res, next) => {
     const orderUpdated = await updateStatus(orderId, status);
     // Paiement Simulation :
     if (status === "paid") {
-      res.status(200).json({ message: "paiement done"});
+      res.status(200).json({
+        message: "paiement done",
+        data: orderUpdated,
+      });
     }
-    res.status(200).json({ message: "Statut updated", orderUpdated });
+      res.status(200).json({
+        message: "Statut updated",
+        data: orderUpdated,
+      });
   } catch (err) {
     next(err);
   }
