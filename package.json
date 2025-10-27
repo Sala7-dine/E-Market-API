@@ -5,6 +5,9 @@
   "main": "server.js",
   "scripts": {
     "test": "NODE_ENV=test mocha --exit --timeout 10000",
+    "coverage": "NODE_ENV=test nyc mocha --exit --timeout 10000",
+    "coverage:html": "NODE_ENV=test nyc --reporter=html mocha --exit --timeout 10000",
+    "coverage:json": "NODE_ENV=test nyc --reporter=json mocha --exit --timeout 10000",
     "seed": "bun seeders/index.js --all",
     "seed:users": "bun seeders/index.js --users",
     "seed:categories": "bun seeders/index.js --categories",
@@ -12,8 +15,8 @@
     "seed:carts": "bun seeders/index.js --carts",
     "seed:orders": "bun seeders/index.js --orders",
     "seed:all": "bun seeders/index.js --all",
-    "reset": "node scripts/reset.js",
-    "start": "bun server.js",
+    "reset": "bug scripts/reset.js",
+    "start": "node server.js",
     "dev": "bun --hot server.js"
   },
   "repository": {
@@ -37,11 +40,14 @@
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
+    "express-rate-limit": "^8.1.0",
+    "helmet": "^8.1.0",
     "js-yaml": "^4.1.0",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^8.19.1",
     "multer": "^2.0.2",
     "node-cache": "^5.1.2",
+    "nodemailer": "^7.0.10",
     "sharp": "^0.34.4",
     "swagger-ui-express": "^5.0.1",
     "uuid": "^9.0.0",
@@ -54,6 +60,35 @@
     "chai": "^6.2.0",
     "mocha": "^11.7.4",
     "mongodb-memory-server": "^10.1.4",
+    "nyc": "^17.1.0",
     "supertest": "^7.1.4"
+  },
+  "nyc": {
+    "include": [
+      "controllers/**/*.js",
+      "services/**/*.js",
+      "middlewares/**/*.js",
+      "models/**/*.js",
+      "routes/**/*.js",
+      "utils/**/*.js"
+    ],
+    "exclude": [
+      "test/**/*.js",
+      "seeders/**/*.js",
+      "scripts/**/*.js",
+      "config/**/*.js",
+      "node_modules/**"
+    ],
+    "reporter": [
+      "text",
+      "html",
+      "lcov"
+    ],
+    "report-dir": "coverage",
+    "check-coverage": true,
+    "lines": 80,
+    "functions": 80,
+    "branches": 70,
+    "statements": 80
   }
 }

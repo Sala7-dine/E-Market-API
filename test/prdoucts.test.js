@@ -12,6 +12,10 @@ dotenv.config();
 
 // Ensure test mode before loading the app module
 process.env.NODE_ENV = 'test';
+process.env.JWT_ACCESS_SECRET = 'test-access-secret-key-for-testing';
+process.env.JWT_REFRESH_SECRET = 'test-refresh-secret-key-for-testing';
+process.env.ACCESS_TOKEN_EXP = '15m';
+process.env.REFRESH_TOKEN_EXP = '30d';
 
 const { expect } = chai;
 chai.use(chaiHttp);
@@ -84,23 +88,29 @@ describe('Products API Tests', function () {
     });
 
 
-    it('Should create new product', async () => {
+    it('Should create product with multiple images', async () => {
         const res = await request
             .post('/api/products/create')
             .set('Authorization', `Bearer ${token}`)
-            .send({
-                "title": "Nike T-shirt",
-                "description": "sportif",
-                "prix": 30.99,
-                "stock": 30,
-                "categories": [_idCategorie],
-                "imageUrl": "https://exemple.com/image.jpg"
-            });
+            .field('title', 'Product with Images')
+            .field('description', 'Product with multiple compressed images')
+            .field('prix', '45.99')
+            .field('stock', '25')
+            .field('categories', JSON.stringify([_idCategorie]))
+            .field('images'  , JSON.stringify([
+                {
+                    "url": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+                },
+                {
+                    "url": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+                }
+            ]));
 
         _productID = await res.body.data._id;
         expect(res.status).to.equal(201);
         expect(res.body).to.have.property('data');
-
+        expect(res.body.data).to.have.property('images');
+        expect(res.body.data.images).to.be.an('array');
     });
 
     it('Show List All Products' , async () => {
@@ -120,19 +130,26 @@ describe('Products API Tests', function () {
         const res = await request
             .put(`/api/products/update/${_productID}`)
             .set('Authorization' , `Bearer ${token}`)
-            .send({
-                "title": "Product Updated",
-                "description": "sportif updated",
-                "prix": 30.99,
-                "stock": 30,
-                "categories": [_idCategorie],
-                "imageUrl": "https://exemple.com/image.jpg"
-            });
+            .field('title', 'Update Product with Images')
+            .field('description', 'Update Product with multiple compressed images')
+            .field('prix', '45.99')
+            .field('stock', '25')
+            .field('categories', JSON.stringify([_idCategorie]))
+            .field('images'  , JSON.stringify([
+                {
+                    "url": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+                },
+                {
+                    "url": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+                }
+            ]));
 
-        expect(res.status).to.equal(201);
+        expect(res.status).to.equal(200);
         expect(res.body).to.have.property("data");
 
     });
+
+
 
     it("Should Delete a Product with ID" ,async () => {
 

@@ -1,6 +1,7 @@
 import { createProduct , getAllProducts ,  deleteProduct , updateProduct , searchProducts} from "../services/productService.js";
 import mongoose from "mongoose";
 import logger from '../config/logger.js';
+import notificationHandler from '../events/notificationHandler.js';
 
 export const GetProducts = async (req , res) => {
 
@@ -34,6 +35,12 @@ export const CreateProduct = async (req , res , next) => {
             });
         }
         const newProduct = await createProduct(productData);
+        
+        notificationHandler.emit('productCreated', {
+            userId: req.user._id,
+            productTitle: newProduct.title
+        });
+        
         res.status(201).json({
             success : true,
             message : "Produit cree avec succes",
