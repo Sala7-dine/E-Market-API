@@ -9,14 +9,18 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3 # Use a newer checkout version
         with:
           fetch-depth: 0
 
+      - name: Install Heroku CLI
+        run: |
+          curl https://cli-assets.heroku.com/install.sh | sh
+
       - name: Deploy to Heroku
-        uses: akhileshns/heroku-deploy # Use a specific version
+        uses: akhileshns/heroku-deploy@v3.14.15 # Use the specific version from your reference
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: ${{secrets.HEROKU_APP_NAME}}
-          heroku_email: ${{secrets.HEROKU_EMAIL}} # Add your Heroku account email as a secret
-          branch: "dev" # This specifies the source branch (dev) to push to Heroku's main branch
+          heroku_email: ${{secrets.HEROKU_EMAIL}}
+          branch: "dev" # Branch to deploy from
