@@ -13,7 +13,19 @@ services:
       - REFRESH_TOKEN_EXP=30d
       - COOKIE_DOMAIN=localhost
       - NODE_ENV=development
+      - MAILPIT_HOST=mailpit
+      - MAILPIT_PORT=1025
     volumes:
       - .:/app
       - /app/node_modules
+    depends_on:
+      - mailpit
+    restart: unless-stopped
+
+  mailpit:
+    image: axllent/mailpit
+    container_name: emarket-mailpit
+    ports:
+      - "1025:1025"
+      - "8025:8025"
     restart: unless-stopped
