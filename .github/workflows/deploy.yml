@@ -14,7 +14,7 @@ jobs:
           fetch-depth: 0
 
       - name: Deploy to Heroku
-        uses: akhileshns/heroku-deploy@v3 # Use a specific version
+        uses: akhileshns/heroku-deploy # Use a specific version
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: ${{secrets.HEROKU_APP_NAME}}
