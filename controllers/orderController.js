@@ -57,15 +57,16 @@ export const updateOrderStatus = async (req, res, next) => {
     
     // Paiement Simulation :
     if (status === "paid") {
-      res.status(200).json({
+      return res.status(200).json({
         message: "paiement done",
         data: orderUpdated,
       });
     }
-      res.status(200).json({
-        message: "Statut updated",
-        data: orderUpdated,
-      });
+    
+    res.status(200).json({
+      message: "Statut updated",
+      data: orderUpdated,
+    });
   } catch (err) {
     next(err);
   }
