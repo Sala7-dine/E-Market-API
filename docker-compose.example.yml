@@ -16,4 +16,14 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
+    depends_on:
+      - mailpit
+    restart: unless-stopped
+
+  mailpit:
+    image: axllent/mailpit
+    container_name: emarket-mailpit
+    ports:
+      - "1025:1025"
+      - "8025:8025"
     restart: unless-stopped

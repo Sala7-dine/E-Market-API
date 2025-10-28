@@ -1,6 +1,8 @@
 import User from "../models/User.js";
 import fs from "fs";
 import logger from '../config/logger.js';
+import bcrypt from 'bcryptjs';  // Add this import at the top
+
 
 export async function getAllUsers() {
     try {
@@ -13,15 +15,24 @@ export async function getAllUsers() {
     }
 }
 
+
 export async function createUser(userData) {
     try {
-        const {fullName , email , password} = userData;
+        const {fullName, email, password} = userData;
 
-        if(!fullName || !email || !password) {
+        if (!fullName || !email || !password) {
             throw new Error("Tous les champs obligatoires doivent être remplis.");
         }
 
-        const user = await User.create(userData);
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+
+        const user = await User.create({
+            ...userData,
+            password: hashedPassword
+        });
+
         logger.info(`User created: ${email}`);
         return user;
 

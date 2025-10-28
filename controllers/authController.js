@@ -2,8 +2,8 @@ import * as authService from '../services/authService.js';
 
 export async function register(req, res) {
     try {
-        const user = await authService.register(req.body);
-        res.status(201).json({ message: 'Utilisateur créé', user });
+        const { user, accessToken, refreshToken } = await authService.register(req.body);
+        res.status(201).json({ user, accessToken, refreshToken });
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
