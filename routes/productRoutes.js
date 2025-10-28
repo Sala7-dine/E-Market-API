@@ -6,8 +6,8 @@ import { createProductSchema, updateProductSchema } from "../validations/product
 import multer from "multer";
 import { compressImages } from "../middlewares/imageCompression.js";
 import { productLimiter } from "../middlewares/rateLimiterMiddleware.js";
-import product from "../models/Product.js";
-import {authenticate} from "../middlewares/authMiddleware.js";
+import { authenticate } from "../middlewares/authMiddleware.js";
+import { requireSellerOrAdmin, requireProductOwnerOrAdmin } from "../middlewares/roleMiddleware.js";
 
 const upload = multer({
     storage: multer.memoryStorage(),
@@ -17,7 +17,6 @@ const upload = multer({
         allowedTypes.includes(file.mimetype) ? cb(null, true) : cb(new Error('Type de fichier non autorisé'));
     }
 });
-
 
 const parseFormData = (req, res, next) => {
     if (req.body.categories && typeof req.body.categories === 'string') {
@@ -30,17 +29,39 @@ const parseFormData = (req, res, next) => {
 
 const router = express.Router();
 
+// Routes publiques (accessible à tous les utilisateurs authentifiés)
+router.get('/', productLimiter, GetProducts);
+router.get('/search', productLimiter, SearchProducts);
 
-router.get('/' , productLimiter , GetProducts);
+// Routes pour sellers et admins (création de produits)
+router.post('/create', 
+    productLimiter, 
+    requireSellerOrAdmin,
+    upload.array('images', 5), 
+    compressImages('images/products'), 
+    parseFormData, 
+    validate(createProductSchema), 
+    CreateProduct
+);
 
-router.post('/create', productLimiter , upload.array('images', 5), compressImages('images/products'), parseFormData , validate(createProductSchema), CreateProduct);
+// Routes pour propriétaire du produit ou admin (modification/suppression)
+router.put('/update/:id', 
+    productLimiter, 
+    requireProductOwnerOrAdmin,
+    upload.array('images', 5), 
+    compressImages('images/products'), 
+    parseFormData, 
+    validate(updateProductSchema), 
+    UpdateProduct
+);
 
-router.put('/update/:id', productLimiter , upload.array('images', 5), compressImages('images/products'), parseFormData, validate(updateProductSchema), UpdateProduct);
+router.delete('/delete/:id', 
+    productLimiter, 
+    requireProductOwnerOrAdmin, 
+    DeleteProduct
+);
 
-router.delete('/delete/:id' , productLimiter ,   DeleteProduct);
-
-router.get('/search' , productLimiter , SearchProducts);
-
+// Routes pour les avis (tous les utilisateurs authentifiés)
 router.post('/:productId/reviews', authenticate, AddReview);
 router.get('/:productId/reviews', authenticate, GetReviews);
 

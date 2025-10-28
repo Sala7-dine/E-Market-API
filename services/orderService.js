@@ -59,7 +59,7 @@ export async function addOrder(userId, cartId, couponCode = null) {
 
 // get user's orders :
 export async function getOrder(userId) {
-  const order = await Order.findOne({ userId });
+  const order = await Order.find({ userId });
   if (!order) {
     throw new Error("no order");
   }
