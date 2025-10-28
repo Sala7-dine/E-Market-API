@@ -11,10 +11,7 @@ export const GetCategories = async (req , res) => {
             throw new Error('aucun data dans database');
         }
 
-        res.status(201).json({
-            success : true,
-            data : data
-        });
+        res.status(200).json(data);
 
     }catch (err) {
         throw new Error(err.message);
@@ -28,11 +25,7 @@ export const CreateCategorie = async (req , res , next) => {
         const categorieData = req.body;
         const newCategorie = await createCategorie(categorieData);
 
-        res.status(201).json({
-            success : true,
-            message : "Categorie cree avec succes",
-            data : newCategorie
-        });
+        res.status(201).json(newCategorie);
 
     }catch(err){
         throw new Error(err.message);
@@ -54,10 +47,9 @@ export const UpdateCategorie = async (req , res) => {
 
         const data = await updateCategorie(id , categorie);
 
-        res.status(201).json({
-            success : true,
-            message : "le categorie modifier avec succee",
-            data : data
+        res.status(200).json({
+            message: "categorie updated",
+            data: data
         });
 
 
@@ -78,10 +70,7 @@ export const DeleteCategorie = async (req , res) => {
 
         const newCategorie = await deleteCategorie(id);
 
-        res.status(201).json({
-            success : true,
-            data : newCategorie
-        });
+        res.status(200).json({ message: "Categorie supprimée", data: newCategorie });
 
     }catch(err){
         throw new Error(err.message);

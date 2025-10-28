@@ -1,8 +1,8 @@
 import rateLimit from 'express-rate-limit';
 
 export const loginRateLimiter = rateLimit({
-    windowMs: 1 * 60 * 5000,
-    max: 5,
+    windowMs: 15 * 60 * 1000,
+    max: 100,
     message: {
         status: 429,
         error: 'Trop de tentatives de connexion. Réessayez plus tart.',
@@ -12,8 +12,8 @@ export const loginRateLimiter = rateLimit({
 });
 
 export const registerRateLimiter = rateLimit({
-    windowMs: 1 * 60 * 2000,
-    max: 10,
+    windowMs: 15 * 60 * 1000,
+    max: 50,
     message: {
         status: 429,
         error: 'Trop de tentatives de création de compte. Réessayez plus tart.',
@@ -23,8 +23,8 @@ export const registerRateLimiter = rateLimit({
 });
 
 export const productRateLimiter = rateLimit({
-    windowMs: 1 * 60 * 1000,
-    max: 10,
+    windowMs: 15 * 60 * 1000,
+    max: 100,
     message: {
         status: 429,
         error: 'Trop de tentatives de création de produit. Réessayez plus tart.',
@@ -34,8 +34,8 @@ export const productRateLimiter = rateLimit({
 });
 
 export const categoryRateLimiter = rateLimit({
-    windowMs: 1 * 60 * 1000,
-    max: 10,
+    windowMs: 15 * 60 * 1000,
+    max: 100,
     message: {
         status: 429,
         error: 'Trop de tentatives de création de categorie. Réessayez plus tart.',

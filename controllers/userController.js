@@ -78,8 +78,9 @@ export const DeleteUser = async (req , res) => {
 
         const newProduit = await deleteUser(id);
 
-        res.status(201).json({
+        res.status(200).json({
             success : true,
+            message : "Produit supprime avec succee",
             data : newProduit
         });
 
@@ -109,7 +110,7 @@ export const UpdateProfile = async (req, res) => {
         }
         const updatedUser = await UpdateProfileService(userId, updateData, userRole);
         const { password, ...userWithoutPassword } = updatedUser.toObject();
-        res.json({ success: true, data: userWithoutPassword });
+        res.json({ success: true, message: "Profile updated", data: userWithoutPassword });
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
