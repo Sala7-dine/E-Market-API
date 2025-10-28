@@ -17,8 +17,22 @@ export async function register({ email, password, fullName, roles }) {
     const user = new User({ email, fullName, roles });
     await user.setPassword(password);
     await user.save();
+    
+    const jti = generateJti();
+    const refreshToken = signRefreshToken({ sub: user._id, jti });
+    const tokenHash = await bcrypt.hash(refreshToken, 10);
+    const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+
+    await RefreshToken.create({
+      user: user._id,
+      jti,
+      tokenHash,
+      expiresAt,
+    });
+
+    const accessToken = signAccessToken({ sub: user._id, roles: user.roles });
     logger.info(`User registered: ${email}`);
-    return user;
+    return { user, accessToken, refreshToken };
   } catch (err) {
     logger.error(`Registration error: ${err.message}`);
     throw err;
