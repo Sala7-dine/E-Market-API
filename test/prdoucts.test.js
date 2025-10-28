@@ -74,7 +74,7 @@ describe('Products API Tests', function () {
         if (access_token.status === 200) {
             token = access_token._body.accessToken;
 
-            // get Categorie Id
+            // get Categorie Id - Fix: use _id directly, not data._id
             const categorie_data = await request
                 .post('/api/categories/create')
                 .send({
@@ -82,8 +82,8 @@ describe('Products API Tests', function () {
                     "description" : "lorem eckrnv ckwejnc cjwibec cwbeicbwe ciwubhc"
                 });
 
-            if (categorie_data.body && categorie_data.body.data) {
-                _idCategorie = categorie_data.body.data._id;
+            if (categorie_data.body && categorie_data.body._id) {
+                _idCategorie = categorie_data.body._id;
             }
         }
 
@@ -99,6 +99,7 @@ describe('Products API Tests', function () {
 
     it('Should create product with multiple images', async function() {
         if (!token || !_idCategorie) {
+            console.log('Skipping - missing token or category ID');
             return this.skip();
         }
 
@@ -111,11 +112,12 @@ describe('Products API Tests', function () {
             .field('stock', '25')
             .field('categories', JSON.stringify([_idCategorie]));
 
-        if (res.status === 201 && res.body.data) {
-            _productID = res.body.data._id;
-            expect(res.body).to.have.property('data');
-        }
         expect([201, 400, 403, 429]).to.include(res.status);
+        
+        if (res.status === 201 && res.body && res.body._id) {
+            _productID = res.body._id;
+            expect(res.body).to.have.property('title');
+        }
     });
 
     it('Show List All Products' , async function() {
@@ -136,6 +138,7 @@ describe('Products API Tests', function () {
 
     it("Should Update a Product with ID" , async function() {
         if (!_productID || !token || !_idCategorie) {
+            console.log('Skipping - missing productID, token or category ID');
             return this.skip();
         }
 
@@ -157,6 +160,7 @@ describe('Products API Tests', function () {
 
     it("Should Delete a Product with ID" , async function() {
         if (!_productID || !token) {
+            console.log('Skipping - missing productID or token');
             return this.skip();
         }
 
