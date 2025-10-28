@@ -57,14 +57,8 @@
             },
             "url": {
               "raw": "{{baseURL}}/api/auth/register",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "auth",
-                "register"
-              ]
+              "host": ["{{baseURL}}"],
+              "path": ["api", "auth", "register"]
             }
           },
           "response": []
@@ -75,9 +69,7 @@
             {
               "listen": "prerequest",
               "script": {
-                "exec": [
-                  ""
-                ],
+                "exec": [""],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -135,14 +127,8 @@
             },
             "url": {
               "raw": "{{baseURL}}/api/auth/login",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "auth",
-                "login"
-              ]
+              "host": ["{{baseURL}}"],
+              "path": ["api", "auth", "login"]
             }
           },
           "response": []
@@ -192,14 +178,8 @@
             },
             "url": {
               "raw": "{{baseURL}}/api/auth/refresh",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "auth",
-                "refresh"
-              ]
+              "host": ["{{baseURL}}"],
+              "path": ["api", "auth", "refresh"]
             }
           },
           "response": []
@@ -221,14 +201,8 @@
             "header": [],
             "url": {
               "raw": "{{baseURL}}/api/users/me",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "users",
-                "me"
-              ]
+              "host": ["{{baseURL}}"],
+              "path": ["api", "users", "me"]
             }
           },
           "response": []
@@ -284,14 +258,8 @@
             },
             "url": {
               "raw": "{{baseURL}}/api/auth/logout",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "auth",
-                "logout"
-              ]
+              "host": ["{{baseURL}}"],
+              "path": ["api", "auth", "logout"]
             }
           },
           "response": []
@@ -360,14 +328,8 @@
             },
             "url": {
               "raw": "{{baseURL}}/api/categories/create",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "categories",
-                "create"
-              ]
+              "host": ["{{baseURL}}"],
+              "path": ["api", "categories", "create"]
             }
           },
           "response": []
@@ -429,14 +391,8 @@
             },
             "url": {
               "raw": "{{baseURL}}/api/categories/",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "categories",
-                ""
-              ]
+              "host": ["{{baseURL}}"],
+              "path": ["api", "categories", ""]
             },
             "description": "## Get Categories\n\nThis endpoint retrieves a list of all product categories available in the system.\n\n### Endpoint\n```\nGET {{baseURL}}/api/categories/\n```\n\n### Description\nThe Categories endpoint returns an array of category objects that can be used for product classification, filtering, and navigation throughout the application. Each category represents a distinct product grouping.\n\n### Parameters\nNo query parameters are required for this endpoint.\n\n### Headers\n- `User-Agent`: Identifies the client making the request (e.g., `insomnia/11.6.1`)\n\n### Response Format\nThe response is a JSON array of category objects. Each category object contains:\n\n```json\n[\n  {\n    \"id\": \"string\",\n    \"name\": \"string\",\n    \"description\": \"string\",\n    \"image\": \"string\" (optional),\n    \"created_at\": \"datetime\",\n    \"updated_at\": \"datetime\"\n  }\n]\n```\n\n### Response Codes\n- `200 OK`: Request successful, categories returned\n- `401 Unauthorized`: Authentication required\n- `403 Forbidden`: Insufficient permissions to access categories\n- `500 Internal Server Error`: Server-side error\n\n### Usage Examples\nThis endpoint can be used to:\n- Populate category dropdown menus\n- Build navigation structures\n- Filter products by category\n- Display category information on product listings\n\n### Notes\n- Categories are returned in alphabetical order by default\n- The response may be cached to improve performance"
           },
@@ -497,15 +453,8 @@
             },
             "url": {
               "raw": "{{baseURL}}/api/categories/update/{{categoryId}}",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "categories",
-                "update",
-                "{{categoryId}}"
-              ]
+              "host": ["{{baseURL}}"],
+              "path": ["api", "categories", "update", "{{categoryId}}"]
             }
           },
           "response": []
@@ -552,15 +501,8 @@
             ],
             "url": {
               "raw": "{{baseURL}}/api/categories/delete/{{categoryId}}",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "categories",
-                "delete",
-                "{{categoryId}}"
-              ]
+              "host": ["{{baseURL}}"],
+              "path": ["api", "categories", "delete", "{{categoryId}}"]
             }
           },
           "response": []
@@ -630,14 +572,8 @@
             },
             "url": {
               "raw": "{{baseURL}}/api/users/create",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "users",
-                "create"
-              ]
+              "host": ["{{baseURL}}"],
+              "path": ["api", "users", "create"]
             }
           },
           "response": []
@@ -695,13 +631,8 @@
             ],
             "url": {
               "raw": "{{baseURL}}/api/users",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "users"
-              ]
+              "host": ["{{baseURL}}"],
+              "path": ["api", "users"]
             }
           },
           "response": []
@@ -743,14 +674,8 @@
             "header": [],
             "url": {
               "raw": "{{baseURL}}/api/users/me",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "users",
-                "me"
-              ]
+              "host": ["{{baseURL}}"],
+              "path": ["api", "users", "me"]
             }
           },
           "response": []
@@ -810,15 +735,8 @@
             },
             "url": {
               "raw": "{{baseURL}}/api/users/update/{{userId}}",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "users",
-                "update",
-                "{{userId}}"
-              ]
+              "host": ["{{baseURL}}"],
+              "path": ["api", "users", "update", "{{userId}}"]
             }
           },
           "response": []
@@ -829,9 +747,7 @@
             {
               "listen": "prerequest",
               "script": {
-                "exec": [
-                  ""
-                ],
+                "exec": [""],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -876,14 +792,8 @@
             },
             "url": {
               "raw": "{{baseURL}}/api/users/me",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "users",
-                "me"
-              ]
+              "host": ["{{baseURL}}"],
+              "path": ["api", "users", "me"]
             }
           },
           "response": []
@@ -930,15 +840,8 @@
             ],
             "url": {
               "raw": "{{baseURL}}/api/users/delete/{{userId}}",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "users",
-                "delete",
-                "{{userId}}"
-              ]
+              "host": ["{{baseURL}}"],
+              "path": ["api", "users", "delete", "{{userId}}"]
             }
           },
           "response": []
@@ -1039,14 +942,8 @@
             },
             "url": {
               "raw": "{{baseURL}}/api/products/create",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "products",
-                "create"
-              ]
+              "host": ["{{baseURL}}"],
+              "path": ["api", "products", "create"]
             }
           },
           "response": []
@@ -1057,9 +954,7 @@
             {
               "listen": "prerequest",
               "script": {
-                "exec": [
-                  ""
-                ],
+                "exec": [""],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -1112,14 +1007,8 @@
             ],
             "url": {
               "raw": "{{baseURL}}/api/products/",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "products",
-                ""
-              ]
+              "host": ["{{baseURL}}"],
+              "path": ["api", "products", ""]
             }
           },
           "response": []
@@ -1172,14 +1061,8 @@
             ],
             "url": {
               "raw": "{{baseURL}}/api/products/search?page=2&&limit=2",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "products",
-                "search"
-              ],
+              "host": ["{{baseURL}}"],
+              "path": ["api", "products", "search"],
               "query": [
                 {
                   "key": "page",
@@ -1259,15 +1142,8 @@
             },
             "url": {
               "raw": "{{baseURL}}/api/products/update/{{productId}}",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "products",
-                "update",
-                "{{productId}}"
-              ]
+              "host": ["{{baseURL}}"],
+              "path": ["api", "products", "update", "{{productId}}"]
             }
           },
           "response": []
@@ -1314,15 +1190,8 @@
             },
             "url": {
               "raw": "{{baseURL}}/api/products/:id/reviews",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "products",
-                ":id",
-                "reviews"
-              ],
+              "host": ["{{baseURL}}"],
+              "path": ["api", "products", ":id", "reviews"],
               "variable": [
                 {
                   "key": "id",
@@ -1401,15 +1270,8 @@
             },
             "url": {
               "raw": "{{baseURL}}/api/products/:id/reviews",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "products",
-                ":id",
-                "reviews"
-              ],
+              "host": ["{{baseURL}}"],
+              "path": ["api", "products", ":id", "reviews"],
               "variable": [
                 {
                   "key": "id",
@@ -1462,15 +1324,8 @@
             ],
             "url": {
               "raw": "{{baseURL}}/api/products/delete/:id",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "products",
-                "delete",
-                ":id"
-              ],
+              "host": ["{{baseURL}}"],
+              "path": ["api", "products", "delete", ":id"],
               "variable": [
                 {
                   "key": "id",
@@ -1534,9 +1389,7 @@
             "type": "text/javascript",
             "packages": {},
             "requests": {},
-            "exec": [
-              ""
-            ]
+            "exec": [""]
           }
         }
       ]
@@ -1595,14 +1448,8 @@
             },
             "url": {
               "raw": "{{baseURL}}/api/carts/addtocart",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "carts",
-                "addtocart"
-              ]
+              "host": ["{{baseURL}}"],
+              "path": ["api", "carts", "addtocart"]
             }
           },
           "response": []
@@ -1651,14 +1498,8 @@
             ],
             "url": {
               "raw": "{{baseURL}}/api/carts/getcarts",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "carts",
-                "getcarts"
-              ]
+              "host": ["{{baseURL}}"],
+              "path": ["api", "carts", "getcarts"]
             }
           },
           "response": []
@@ -1710,15 +1551,8 @@
             },
             "url": {
               "raw": "{{baseURL}}/api/carts/updateCart/{{productId}}",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "carts",
-                "updateCart",
-                "{{productId}}"
-              ]
+              "host": ["{{baseURL}}"],
+              "path": ["api", "carts", "updateCart", "{{productId}}"]
             }
           },
           "response": []
@@ -1811,15 +1645,8 @@
             ],
             "url": {
               "raw": "{{baseURL}}/api/orders/addOrder/{{cartId}}",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "orders",
-                "addOrder",
-                "{{cartId}}"
-              ]
+              "host": ["{{baseURL}}"],
+              "path": ["api", "orders", "addOrder", "{{cartId}}"]
             }
           },
           "response": []
@@ -1853,14 +1680,8 @@
             "header": [],
             "url": {
               "raw": "{{baseURL}}/api/orders/getOrder",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "orders",
-                "getOrder"
-              ]
+              "host": ["{{baseURL}}"],
+              "path": ["api", "orders", "getOrder"]
             }
           },
           "response": []
@@ -1910,15 +1731,8 @@
             },
             "url": {
               "raw": "{{baseURL}}/api/orders/updateStatus/{{orderId}}",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "orders",
-                "updateStatus",
-                "{{orderId}}"
-              ]
+              "host": ["{{baseURL}}"],
+              "path": ["api", "orders", "updateStatus", "{{orderId}}"]
             }
           },
           "response": []
@@ -1975,14 +1789,8 @@
             },
             "url": {
               "raw": "{{baseURL}}/api/coupons/createCoupon",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "coupons",
-                "createCoupon"
-              ]
+              "host": ["{{baseURL}}"],
+              "path": ["api", "coupons", "createCoupon"]
             }
           },
           "response": []
@@ -2026,14 +1834,8 @@
             "header": [],
             "url": {
               "raw": "{{baseURL}}/api/coupons/getAllCoupon",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "coupons",
-                "getAllCoupon"
-              ]
+              "host": ["{{baseURL}}"],
+              "path": ["api", "coupons", "getAllCoupon"]
             }
           },
           "response": []
@@ -2084,14 +1886,8 @@
             },
             "url": {
               "raw": "{{baseURL}}/api/coupons/getAllUserCoupon",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "coupons",
-                "getAllUserCoupon"
-              ]
+              "host": ["{{baseURL}}"],
+              "path": ["api", "coupons", "getAllUserCoupon"]
             }
           },
           "response": []
@@ -2137,15 +1933,8 @@
             },
             "url": {
               "raw": "{{baseURL}}/api/coupons/updateCoupon/{{couponId}}",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "coupons",
-                "updateCoupon",
-                "{{couponId}}"
-              ]
+              "host": ["{{baseURL}}"],
+              "path": ["api", "coupons", "updateCoupon", "{{couponId}}"]
             }
           },
           "response": []
@@ -2167,15 +1956,8 @@
             "header": [],
             "url": {
               "raw": "{{baseURL}}/api/coupons/deleteCoupon/:id",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "coupons",
-                "deleteCoupon",
-                ":id"
-              ],
+              "host": ["{{baseURL}}"],
+              "path": ["api", "coupons", "deleteCoupon", ":id"],
               "variable": [
                 {
                   "key": "id",
@@ -2231,13 +2013,8 @@
             "header": [],
             "url": {
               "raw": "{{baseURL}}/api/notifications",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "notifications"
-              ]
+              "host": ["{{baseURL}}"],
+              "path": ["api", "notifications"]
             }
           },
           "response": []
@@ -2249,15 +2026,8 @@
             "header": [],
             "url": {
               "raw": "{{baseURL}}/api/notifications/:id/read",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "notifications",
-                ":id",
-                "read"
-              ],
+              "host": ["{{baseURL}}"],
+              "path": ["api", "notifications", ":id", "read"],
               "variable": [
                 {
                   "key": "id",

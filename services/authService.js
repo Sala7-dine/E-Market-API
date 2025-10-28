@@ -17,7 +17,7 @@ export async function register({ email, password, fullName, roles }) {
     const user = new User({ email, fullName, roles });
     await user.setPassword(password);
     await user.save();
-    
+
     const jti = generateJti();
     const refreshToken = signRefreshToken({ sub: user._id, jti });
     const tokenHash = await bcrypt.hash(refreshToken, 10);

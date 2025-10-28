@@ -25,7 +25,7 @@ export async function addToCart(userId, productId, quantity = 1) {
     });
   } else {
     const isExistItem = cart.items.find(
-      (item) => item.productId.toString() === productId
+      (item) => item.productId.toString() === productId,
     );
 
     if (isExistItem) {
@@ -35,7 +35,7 @@ export async function addToCart(userId, productId, quantity = 1) {
     }
     cart.totalPrice = cart.items.reduce(
       (sum, item) => sum + item.price * item.quantity,
-      0
+      0,
     );
   }
   await cart.save();
@@ -46,7 +46,7 @@ export async function addToCart(userId, productId, quantity = 1) {
 export async function deleteproduct(userId, productId) {
   let cart = await Cart.findOne({ userId });
   const updatedcart = cart.items.filter(
-    (item) => item.productId.toString() !== productId
+    (item) => item.productId.toString() !== productId,
   );
   cart.items = updatedcart;
   return await cart.save();
@@ -69,7 +69,7 @@ export async function updateProductQuantity(userId, productId, quantity) {
   //   update the total price:
   cart.totalPrice = cart.items.reduce(
     (sum, item) => sum + item.price * item.quantity,
-    0
+    0,
   );
   await cart.save();
   return cart;

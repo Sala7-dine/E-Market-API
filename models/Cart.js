@@ -20,6 +20,6 @@ const cartSchema = new mongoose.Schema(
     totalPrice: { type: Number, default: 0 },
     updatedAt: { type: Date, default: Date.now },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 export default mongoose.model("Cart", cartSchema);

@@ -1,20 +1,20 @@
-import * as chai from 'chai';
-import chaiHttp from 'chai-http';
-import supertest from 'supertest';
-import mongoose from 'mongoose';
-import { MongoMemoryServer } from 'mongodb-memory-server';
-import Categorie from '../models/Categorie.js';
-import User from '../models/User.js'
+import * as chai from "chai";
+import chaiHttp from "chai-http";
+import supertest from "supertest";
+import mongoose from "mongoose";
+import { MongoMemoryServer } from "mongodb-memory-server";
+import Categorie from "../models/Categorie.js";
+import User from "../models/User.js";
 import dotenv from "dotenv";
 
 dotenv.config();
 
 // Ensure test mode before loading the app module
-process.env.NODE_ENV = 'test';
-process.env.JWT_ACCESS_SECRET = 'test-access-secret-key-for-testing';
-process.env.JWT_REFRESH_SECRET = 'test-refresh-secret-key-for-testing';
-process.env.ACCESS_TOKEN_EXP = '15m';
-process.env.REFRESH_TOKEN_EXP = '30d';
+process.env.NODE_ENV = "test";
+process.env.JWT_ACCESS_SECRET = "test-access-secret-key-for-testing";
+process.env.JWT_REFRESH_SECRET = "test-refresh-secret-key-for-testing";
+process.env.ACCESS_TOKEN_EXP = "15m";
+process.env.REFRESH_TOKEN_EXP = "30d";
 
 const { expect } = chai;
 chai.use(chaiHttp);
@@ -22,128 +22,94 @@ chai.use(chaiHttp);
 let app;
 let request;
 
-describe('Categories API Tests', function () {
-    this.timeout(20000);
+describe("Categories API Tests", function () {
+  this.timeout(20000);
 
-    let mongod;
-    let token;
-    let _categorieID;
-    
-    before(async () => {
-        // Start in-memory MongoDB and connect Mongoose
-        mongod = await MongoMemoryServer.create();
-        const uri = mongod.getUri();
-        await mongoose.connect(uri);
+  let mongod;
+  let token;
+  let _categorieID;
+  before(async () => {
+    // Start in-memory MongoDB and connect Mongoose
+    mongod = await MongoMemoryServer.create();
+    const uri = mongod.getUri();
+    await mongoose.connect(uri);
 
-        // Dynamically import the app AFTER NODE_ENV is set to 'test'
-        const mod = await import('../server.js');
-        app = mod.default;
-        request = supertest(app);
-        await Categorie.deleteMany({});
-        await User.deleteMany({});
+    // Dynamically import the app AFTER NODE_ENV is set to 'test'
+    const mod = await import("../server.js");
+    app = mod.default;
+    request = supertest(app);
+    await Categorie.deleteMany({});
+    await User.deleteMany({});
 
-        // register
-        const user_data = await request
-            .post('/api/auth/register')
-            .send({
-                "fullName" : "exemple name",
-                "email" : "test@gmail.com",
-                "password" : "salah1234"
-            });
-
-        // get access Token
-        const access_token = await request
-            .post('/api/auth/login')
-            .send({
-                "email" : "test@gmail.com",
-                "password" : "salah1234"
-            });
-
-        expect([200, 429]).to.include(access_token.status);
-        
-        if (access_token.status === 200) {
-            token = access_token._body.accessToken;
-        }
+    // register
+    await request.post("/api/auth/register").send({
+      fullName: "exemple name",
+      email: "test@gmail.com",
+      password: "salah1234",
     });
 
-    after(async () => {
-        await mongoose.connection.dropDatabase();
-        await mongoose.connection.close();
-        if (mongod) {
-            await mongod.stop();
-        }
-    });
+    // get access Token
+    const access_token = await request
+      .post("/api/auth/login")
+      .send({
+        email: "test@gmail.com",
+        password: "salah1234",
+      })
+      .expect(200);
 
-    it('Should create new categorie', async function() {
-        if (!token) {
-            return this.skip();
-        }
+    token = await access_token._body.accessToken;
+  });
 
-        const res = await request
-            .post('/api/categories/create')
-            .set('Authorization', `Bearer ${token}`)
-            .send({
-                "name" : "Electronique 4",
-                "description" : "lorem eckrnv ckwejnc cjwibec cwbeicbwe ciwubhc"
-            });
+  after(async () => {
+    await mongoose.connection.dropDatabase();
+    await mongoose.connection.close();
+    if (mongod) {
+      await mongod.stop();
+    }
+  });
 
-        expect([201, 400, 401, 429]).to.include(res.status);
-        
-        if (res.status === 201 && res.body && res.body._id) {
-            _categorieID = res.body._id;
-            expect(res.body).to.have.property('name');
-        }
-    });
+  it("Should create new categorie", async () => {
+    const res = await request
+      .post("/api/categories/create")
+      .set("Authorization", `Bearer ${token}`)
+      .send({
+        name: "Electronique 4",
+        description: "lorem eckrnv ckwejnc cjwibec cwbeicbwe ciwubhc",
+      });
 
-    it('Show List All Categories', async function() {
-        if (!token) {
-            return this.skip();
-        }
+    _categorieID = await res.body.data._id;
+    expect(res.status).to.equal(201);
+    expect(res.body).to.have.property("data");
+  });
 
-        const res = await request
-            .get('/api/categories/')
-            .set('Authorization', `Bearer ${token}`);
+  it("Show List All Categories", async () => {
+    const res = await request
+      .get("/api/categories/")
+      .set("Authorization", `Bearer ${token}`);
 
-        expect([200, 401, 429]).to.include(res.status);
-        
-        if (res.status === 200) {
-            expect(res.body).to.be.an('array');
-        }
-    });
+    expect(res.status).to.equal(201);
+    expect(res.body).to.have.property("data");
+  });
 
-    it("Should Update a Categorie with ID", async function() {
-        if (!token || !_categorieID) {
-            return this.skip();
-        }
+  it("Should Update a Categorie with ID", async () => {
+    const res = await request
+      .put(`/api/categories/update/${_categorieID}`)
+      .set("Authorization", `Bearer ${token}`)
+      .send({
+        name: "Electronique 4 (Updated)",
+        description: "lorem eckrnv ckwejnc cjwibec cwbeicbwe ciwubhc (Updated)",
+      });
 
-        const res = await request
-            .put(`/api/categories/update/${_categorieID}`)
-            .set('Authorization' , `Bearer ${token}`)
-            .send({
-                "name" : "Electronique 4 (Updated)",
-                "description" : "lorem eckrnv ckwejnc cjwibec cwbeicbwe ciwubhc (Updated)"
-            });
+    expect(res.status).to.equal(201);
+    expect(res.body).to.have.property("data");
+  });
 
-        expect([200, 400, 401, 404, 429]).to.include(res.status);
-        
-        if (res.status === 200) {
-            expect(res.body).to.have.property("data");
-        }
-    });
+  it("Should Delete a Categories with ID", async () => {
+    const res = await request
+      .delete(`/api/categories/delete/${_categorieID}`)
+      .set("Authorization", `Bearer ${token}`);
 
-    it("Should Delete a Categories with ID", async function() {
-        if (!token || !_categorieID) {
-            return this.skip();
-        }
-
-        const res = await request
-            .delete(`/api/categories/delete/${_categorieID}`)
-            .set('Authorization' , `Bearer ${token}`);
-
-        expect([200, 400, 401, 404, 429]).to.include(res.status);
-        
-        if (res.status === 200) {
-            expect(res.body).to.have.property("data");
-        }
-    });
+    expect(res.status).to.equal(201);
+    expect(res.body).to.have.property("data");
+  });
 });
