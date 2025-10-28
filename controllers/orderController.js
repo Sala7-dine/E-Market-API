@@ -1,5 +1,5 @@
 import { addOrder, getOrder, updateStatus } from "../services/orderService.js";
-import notificationHandler from '../events/notificationHandler.js';
+import notificationHandler from "../events/notificationHandler.js";
 
 // add an order :
 export const handleAddOrder = async (req, res, next) => {
@@ -10,15 +10,15 @@ export const handleAddOrder = async (req, res, next) => {
 
     const orderAdded = await addOrder(userId, cartId, couponCode);
 
-    notificationHandler.emit('orderCreated', {
+    notificationHandler.emit("orderCreated", {
       userId,
-      orderId: orderAdded._id
+      orderId: orderAdded._id,
     });
 
     res.status(200).json({
-      success : true,
-      message : "order created",
-      data : orderAdded
+      success: true,
+      message: "order created",
+      data: orderAdded,
     });
   } catch (err) {
     next(err);
@@ -43,13 +43,13 @@ export const updateOrderStatus = async (req, res, next) => {
     const orderId = req.params.orderId;
 
     const orderUpdated = await updateStatus(orderId, status);
-    
-    notificationHandler.emit('orderUpdated', {
+
+    notificationHandler.emit("orderUpdated", {
       userId: orderUpdated.userId,
       orderId,
-      status
+      status,
     });
-    
+
     // Paiement Simulation :
     if (status === "paid") {
       return res.status(200).json({
@@ -57,7 +57,7 @@ export const updateOrderStatus = async (req, res, next) => {
         data: orderUpdated,
       });
     }
-    
+
     res.status(200).json({
       message: "Statut updated",
       data: orderUpdated,

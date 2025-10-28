@@ -89,12 +89,14 @@ E-Market-API/
 ## 🔐 Fonctionnalités
 
 ### 1️⃣ Gestion des Utilisateurs
+
 - Inscription et connexion avec JWT
 - Profil utilisateur avec photo
 - Rôles : `user`, `seller`, `admin`
 - Routes : `/api/auth/*`, `/api/users/*`
 
 ### 2️⃣ Gestion des Produits
+
 - CRUD complet pour les produits
 - Upload multiple d'images (compression avec Sharp)
 - Recherche et filtrage
@@ -102,29 +104,34 @@ E-Market-API/
 - Routes : `/api/products/*`
 
 ### 3️⃣ Panier et Commandes
+
 - Gestion du panier utilisateur
 - Création et suivi de commandes
 - Statuts : pending, paid, shipped, delivered, cancelled
 - Routes : `/api/cart/*`, `/api/orders/*`
 
 ### 4️⃣ Système de Coupons
+
 - Création et gestion de coupons
 - Réduction en pourcentage ou montant fixe
 - Validation et application
 - Routes : `/api/coupons/*`
 
 ### 5️⃣ Avis Produits
+
 - Notation et commentaires
 - Un avis par utilisateur par produit
 - Routes : `/api/products/:id/reviews`
 
 ### 6️⃣ Notifications
+
 - Système asynchrone avec EventEmitter
 - Notifications email (Mailgun/Mailpit)
 - Événements : productCreated, orderCreated, orderUpdated
 - Routes : `/api/notifications/*`
 
 ### 7️⃣ Sécurité
+
 - JWT avec refresh tokens
 - Helmet pour headers sécurisés
 - CORS configuré
@@ -132,6 +139,7 @@ E-Market-API/
 - Gestion globale des erreurs
 
 ### 8️⃣ Logging
+
 - Winston avec rotation quotidienne
 - Logs : requêtes, erreurs, exceptions, rejections
 - Stockage MongoDB pour erreurs
@@ -160,16 +168,19 @@ npm run reset-db   # Réinitialiser la base
 ## 🔑 Endpoints Principaux
 
 ### Authentification
+
 - `POST /api/auth/register` - Inscription
 - `POST /api/auth/login` - Connexion
 - `POST /api/auth/refresh` - Renouveler le token
 - `POST /api/auth/logout` - Déconnexion
 
 ### Utilisateurs
+
 - `GET /api/users/me` - Profil utilisateur
 - `PATCH /api/users/me` - Modifier profil (avec avatar)
 
 ### Produits
+
 - `GET /api/products` - Liste des produits
 - `POST /api/products/create` - Créer un produit (multipart/form-data)
 - `PUT /api/products/update/:id` - Modifier un produit
@@ -179,17 +190,20 @@ npm run reset-db   # Réinitialiser la base
 - `GET /api/products/:id/reviews` - Voir les avis
 
 ### Panier
+
 - `POST /api/cart/addtocart` - Ajouter au panier
 - `GET /api/cart/getcarts` - Voir le panier
 - `PUT /api/cart/updateCart/:id` - Modifier le panier
 - `DELETE /api/cart/deleteProduct/:id` - Retirer du panier
 
 ### Commandes
+
 - `POST /api/orders/addOrder/:cartId` - Créer une commande
 - `GET /api/orders/getOrder` - Voir ses commandes
 - `PUT /api/orders/updateStatus/:id` - Modifier le statut
 
 ### Notifications
+
 - `GET /api/notifications` - Liste des notifications
 - `PATCH /api/notifications/:id/read` - Marquer comme lu
 

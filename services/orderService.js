@@ -29,7 +29,7 @@ export async function addOrder(userId, cartId, couponCode = null) {
     // Ensure order meets coupon minimum :
     if (cart.totalPrice < coupon.minOrderAmount) {
       throw new Error(
-        `Minimum order amount for this coupon is ${coupon.minOrderAmount}`
+        `Minimum order amount for this coupon is ${coupon.minOrderAmount}`,
       );
     }
     // check the coupon 's type :

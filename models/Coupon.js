@@ -25,7 +25,7 @@ const couponSchema = new mongoose.Schema(
     },
     minOrderAmount: {
       type: Number,
-      default: 0, 
+      default: 0,
     },
     isActive: {
       type: Boolean,
@@ -33,10 +33,10 @@ const couponSchema = new mongoose.Schema(
     },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User", 
+      ref: "User",
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export default mongoose.model("Coupon", couponSchema);

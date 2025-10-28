@@ -17,7 +17,9 @@
     "seed:all": "bun seeders/index.js --all",
     "reset": "bug scripts/reset.js",
     "start": "node server.js",
-    "dev": "bun --hot server.js"
+    "dev": "bun --hot server.js",
+    "format": "prettier --write .",
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
@@ -39,6 +41,7 @@
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
+    "eslint": "^9.38.0",
     "express": "^5.1.0",
     "express-rate-limit": "^8.1.0",
     "helmet": "^8.1.0",
@@ -48,6 +51,7 @@
     "multer": "^2.0.2",
     "node-cache": "^5.1.2",
     "nodemailer": "^7.0.10",
+    "prettier": "^3.6.2",
     "sharp": "^0.34.4",
     "swagger-ui-express": "^5.0.1",
     "uuid": "^9.0.0",

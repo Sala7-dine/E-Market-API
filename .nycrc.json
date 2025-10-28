@@ -15,11 +15,7 @@
     "node_modules/**",
     "coverage/**"
   ],
-  "reporter": [
-    "text",
-    "html",
-    "lcov"
-  ],
+  "reporter": ["text", "html", "lcov"],
   "report-dir": "coverage",
   "check-coverage": true,
   "lines": 80,

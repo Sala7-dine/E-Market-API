@@ -1,9 +1,15 @@
-import express from 'express';
-import { register, login, refresh , logout } from '../controllers/authController.js';
-import { authenticate } from '../middlewares/authMiddleware.js';
-import { authorizeRoles } from '../middlewares/roleMiddleware.js';
-import dotenv from 'dotenv';
-import { loginLimiter , registerLimiter } from "../middlewares/rateLimiterMiddleware.js";
+import express from "express";
+import {
+  register,
+  login,
+  refresh,
+  logout,
+} from "../controllers/authController.js";
+import dotenv from "dotenv";
+import {
+  loginLimiter,
+  registerLimiter,
+} from "../middlewares/rateLimiterMiddleware.js";
 
 dotenv.config();
 const router = express.Router();
@@ -20,13 +26,11 @@ const router = express.Router();
 //     res.cookie('refreshToken', token, cookieOptions);
 // }
 
-router.post('/register', registerLimiter , register);
-router.post('/login', loginLimiter ,login);
-router.post('/refresh', refresh);
+router.post("/register", registerLimiter, register);
+router.post("/login", loginLimiter, login);
+router.post("/refresh", refresh);
 
-router.post('/logout', logout);
-
-
+router.post("/logout", logout);
 
 // // Protected example routes
 // router.get('/profile', authenticate, (req, res) => {
@@ -41,7 +45,5 @@ router.post('/logout', logout);
 // router.get('/seller', authenticate, authorizeRoles('seller'), (req, res) => {
 //     res.json({ message: 'Bienvenue vendeur' });
 // });
-
-
 
 export default router;
