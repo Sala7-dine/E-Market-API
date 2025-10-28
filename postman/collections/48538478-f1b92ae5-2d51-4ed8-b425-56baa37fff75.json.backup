@@ -8,944 +8,6 @@
   },
   "item": [
     {
-      "name": "Authentification",
-      "item": [
-        {
-          "name": "Register",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Status code is 201\", () => pm.response.to.have.status(201));",
-                  "pm.test(\"Response has accessToken\", () => pm.expect(pm.response.json()).to.have.property('accessToken'));",
-                  "pm.test(\"Response has refreshToken\", () => pm.expect(pm.response.json()).to.have.property('refreshToken'));",
-                  "pm.test(\"Response has user object\", () => pm.expect(pm.response.json()).to.have.property('user'));",
-                  "pm.test(\"Response time < 2s\", () => pm.expect(pm.response.responseTime).to.be.below(2000));"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "protocolProfileBehavior": {
-            "followRedirects": true,
-            "disableUrlEncoding": false,
-            "disableCookies": false
-          },
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "User-Agent",
-                "value": "insomnia/11.6.1"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n\t\"fullName\" : \"Nizar Beriane\",\n    \"email\" : \"nizarberiane@proton.me\",\n\t\"password\" : \"nizar123\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{baseURL}}/api/auth/register",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "auth",
-                "register"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Login",
-          "event": [
-            {
-              "listen": "prerequest",
-              "script": {
-                "exec": [
-                  ""
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            },
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
-                  "pm.test(\"Response has accessToken\", () => {",
-                  "    const json = pm.response.json();",
-                  "    pm.expect(json).to.have.property('accessToken');",
-                  "    pm.environment.set('accessToken', json.accessToken);",
-                  "    pm.environment.set('refreshToken', json.refreshToken); // Store refreshToken in environment variable for future use",
-                  "});",
-                  "pm.test(\"Response has refreshToken\", () => pm.expect(pm.response.json()).to.have.property('refreshToken'));",
-                  "pm.test(\"User has valid role\", () => {",
-                  "    const user = pm.response.json().user;",
-                  "    pm.expect(['user', 'seller', 'admin']).to.include(user.role);",
-                  "});",
-                  "pm.test(\"Response time < 2s\", () => pm.expect(pm.response.responseTime).to.be.below(2000));"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "protocolProfileBehavior": {
-            "followRedirects": true,
-            "disableUrlEncoding": false,
-            "disableCookies": false
-          },
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "User-Agent",
-                "value": "insomnia/11.6.1"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"email\": \"nizarberiane@proton.me\",\n    \"password\": \"nizar123\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{baseURL}}/api/auth/login",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "auth",
-                "login"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Refresh accessToken",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
-                  "pm.test(\"New accessToken received\", () => {",
-                  "    const json = pm.response.json();",
-                  "    pm.expect(json).to.have.property('accessToken');",
-                  "    pm.environment.set('accessToken', json.accessToken);",
-                  "});",
-                  "pm.test(\"Response time < 1s\", () => pm.expect(pm.response.responseTime).to.be.below(1000));"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{accessToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"refreshToken\": \"{{refreshToken}}\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{baseURL}}/api/auth/refresh",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "auth",
-                "refresh"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Current User Info",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{accessToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseURL}}/api/users/me",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "users",
-                "me"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Logout",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
-                  "pm.test(\"Success message received\", () => pm.expect(pm.response.json()).to.have.property('message'));",
-                  "pm.test(\"Response time < 1s\", () => pm.expect(pm.response.responseTime).to.be.below(1000));"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "protocolProfileBehavior": {
-            "followRedirects": true,
-            "disableUrlEncoding": false,
-            "disableCookies": false
-          },
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{accessToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "POST",
-            "header": [
-              {
-                "key": "User-Agent",
-                "value": "insomnia/11.6.1"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2OGVlMjgxZDA5NzczMjhkYWE0ODY2ZGIiLCJqdGkiOiI1YTZkMGMwMy04ZmI3LTQ4NTctYWUzNy04NjZlZWJmMDJmNmEiLCJpYXQiOjE3NjA0Mzg2NjQsImV4cCI6MTc2MzAzMDY2NH0.uvzYRMPAdPegIN-Ynaxt80m1Rv57wuDUiA6QcZkQRuw\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{baseURL}}/api/auth/logout",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "auth",
-                "logout"
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Category Management",
-      "item": [
-        {
-          "name": "Create Categorie",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Status code is 201\", () => pm.response.to.have.status(201));",
-                  "pm.test(\"Category created with ID\", () => {",
-                  "    const json = pm.response.json();",
-                  "    pm.expect(json).to.have.property('_id');",
-                  "    pm.environment.set('categoryId', json._id);",
-                  "});",
-                  "pm.test(\"Response time < 1s\", () => pm.expect(pm.response.responseTime).to.be.below(1000));"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "protocolProfileBehavior": {
-            "followRedirects": true,
-            "disableUrlEncoding": false,
-            "disableCookies": false
-          },
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{accessToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "User-Agent",
-                "value": "insomnia/11.6.1"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n\t\"name\" : \"Electronique 4\",\n\t\"description\" : \"lorem eckrnv ckwejnc cjwibec cwbeicbwe ciwubhc\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{baseURL}}/api/categories/create",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "categories",
-                "create"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Categories",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
-                  "pm.test(\"Response is array\", () => pm.expect(pm.response.json()).to.be.an('array'));",
-                  "pm.test(\"Categories have name\", () => {",
-                  "    const categories = pm.response.json();",
-                  "    if (categories.length > 0) {",
-                  "        pm.expect(categories[0]).to.have.property('name');",
-                  "    }",
-                  "});",
-                  "pm.test(\"Response time < 1s\", () => pm.expect(pm.response.responseTime).to.be.below(1000));"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "protocolProfileBehavior": {
-            "followRedirects": true,
-            "disableUrlEncoding": false,
-            "disableCookies": false
-          },
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{accessToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [
-              {
-                "key": "User-Agent",
-                "value": "insomnia/11.6.1"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{baseURL}}/api/categories/",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "categories",
-                ""
-              ]
-            },
-            "description": "## Get Categories\n\nThis endpoint retrieves a list of all product categories available in the system.\n\n### Endpoint\n```\nGET {{baseURL}}/api/categories/\n```\n\n### Description\nThe Categories endpoint returns an array of category objects that can be used for product classification, filtering, and navigation throughout the application. Each category represents a distinct product grouping.\n\n### Parameters\nNo query parameters are required for this endpoint.\n\n### Headers\n- `User-Agent`: Identifies the client making the request (e.g., `insomnia/11.6.1`)\n\n### Response Format\nThe response is a JSON array of category objects. Each category object contains:\n\n```json\n[\n  {\n    \"id\": \"string\",\n    \"name\": \"string\",\n    \"description\": \"string\",\n    \"image\": \"string\" (optional),\n    \"created_at\": \"datetime\",\n    \"updated_at\": \"datetime\"\n  }\n]\n```\n\n### Response Codes\n- `200 OK`: Request successful, categories returned\n- `401 Unauthorized`: Authentication required\n- `403 Forbidden`: Insufficient permissions to access categories\n- `500 Internal Server Error`: Server-side error\n\n### Usage Examples\nThis endpoint can be used to:\n- Populate category dropdown menus\n- Build navigation structures\n- Filter products by category\n- Display category information on product listings\n\n### Notes\n- Categories are returned in alphabetical order by default\n- The response may be cached to improve performance"
-          },
-          "response": []
-        },
-        {
-          "name": "Update Categorie",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
-                  "pm.test(\"Category updated\", () => pm.expect(pm.response.json()).to.have.property('_id'));",
-                  "pm.test(\"Response time < 1s\", () => pm.expect(pm.response.responseTime).to.be.below(1000));"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "protocolProfileBehavior": {
-            "followRedirects": true,
-            "disableUrlEncoding": false,
-            "disableCookies": false
-          },
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{accessToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "User-Agent",
-                "value": "insomnia/11.6.1"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n\t\"name\" : \"Neuvoux cc\",\n\t\"description\" : \"updated categorie\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{baseURL}}/api/categories/update/{{categoryId}}",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "categories",
-                "update",
-                "{{categoryId}}"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Delete Categorie",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
-                  "pm.test(\"Delete confirmation\", () => pm.expect(pm.response.json()).to.have.property('message'));",
-                  "pm.test(\"Response time < 1s\", () => pm.expect(pm.response.responseTime).to.be.below(1000));"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "protocolProfileBehavior": {
-            "followRedirects": true,
-            "disableUrlEncoding": false,
-            "disableCookies": false
-          },
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{accessToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "DELETE",
-            "header": [
-              {
-                "key": "User-Agent",
-                "value": "insomnia/11.6.1"
-              }
-            ],
-            "url": {
-              "raw": "{{baseURL}}/api/categorie/delete/{{categoryId}}",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "categorie",
-                "delete",
-                "{{categoryId}}"
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "User Management",
-      "item": [
-        {
-          "name": "Create User",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Status code is 201\", () => pm.response.to.have.status(201));",
-                  "pm.test(\"User created with ID\", () => {",
-                  "    const json = pm.response.json();",
-                  "    pm.expect(json).to.have.property('_id');",
-                  "    pm.environment.set('userId', json._id);",
-                  "});",
-                  "pm.test(\"Password not exposed\", () => pm.expect(pm.response.json()).to.not.have.property('password'));",
-                  "pm.test(\"Response time < 2s\", () => pm.expect(pm.response.responseTime).to.be.below(2000));"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "protocolProfileBehavior": {
-            "followRedirects": true,
-            "disableUrlEncoding": false,
-            "disableCookies": false
-          },
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{accessToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "User-Agent",
-                "value": "insomnia/11.6.1"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n\t\"fullName\" : \"adil\",\n\t\"email\" : \"adil@gmail.com\",\n\t\"password\" : \"12341234\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{baseURL}}/api/users/create",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "users",
-                "create"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Usrers",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
-                  "pm.test(\"Response is array\", () => pm.expect(pm.response.json()).to.be.an('array'));",
-                  "pm.test(\"Users have required fields\", () => {",
-                  "    const users = pm.response.json();",
-                  "    if (users.length > 0) {",
-                  "        pm.expect(users[0]).to.have.property('email');",
-                  "        pm.expect(users[0]).to.have.property('role');",
-                  "    }",
-                  "});",
-                  "pm.test(\"Response time < 1s\", () => pm.expect(pm.response.responseTime).to.be.below(1000));"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "protocolProfileBehavior": {
-            "followRedirects": true,
-            "disableUrlEncoding": false,
-            "disableCookies": false
-          },
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{accessToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "User-Agent",
-                "value": "insomnia/11.6.1"
-              }
-            ],
-            "url": {
-              "raw": "{{baseURL}}/api/users",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "users"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Current User",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
-                  "pm.test(\"User profile returned\", () => {",
-                  "    const user = pm.response.json();",
-                  "    pm.expect(user).to.have.property('email');",
-                  "    pm.expect(user).to.have.property('role');",
-                  "});",
-                  "pm.test(\"Password not exposed\", () => pm.expect(pm.response.json()).to.not.have.property('password'));",
-                  "pm.test(\"Response time < 1s\", () => pm.expect(pm.response.responseTime).to.be.below(1000));"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{accessToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseURL}}/api/users/me",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "users",
-                "me"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Update User",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
-                  "pm.test(\"User updated\", () => pm.expect(pm.response.json()).to.have.property('_id'));",
-                  "pm.test(\"Response time < 1s\", () => pm.expect(pm.response.responseTime).to.be.below(1000));"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "protocolProfileBehavior": {
-            "followRedirects": true,
-            "disableUrlEncoding": false,
-            "disableCookies": false
-          },
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{accessToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "User-Agent",
-                "value": "insomnia/11.6.1"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n\t\"fullName\" : \"ayoub\",\n\t\"email\" : \"ayoub@gmail.com\",\n\t\"password\" : \"salah1234\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{baseURL}}/api/users/update/{{userId}}",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "users",
-                "update",
-                "{{userId}}"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Patch User",
-          "event": [
-            {
-              "listen": "prerequest",
-              "script": {
-                "exec": [
-                  ""
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            },
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
-                  "pm.test(\"Profile updated\", () => pm.expect(pm.response.json()).to.have.property('message'));",
-                  "pm.test(\"Response time < 2s\", () => pm.expect(pm.response.responseTime).to.be.below(2000));"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{accessToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "PATCH",
-            "header": [],
-            "body": {
-              "mode": "formdata",
-              "formdata": [
-                {
-                  "key": "avatar",
-                  "type": "file",
-                  "src": "/home/nizar/Downloads/1759833951065.png"
-                }
-              ]
-            },
-            "url": {
-              "raw": "{{baseURL}}/api/users/me",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "users",
-                "me"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Delete User",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
-                  "pm.test(\"Delete confirmation\", () => pm.expect(pm.response.json()).to.have.property('message'));",
-                  "pm.test(\"Response time < 1s\", () => pm.expect(pm.response.responseTime).to.be.below(1000));"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "protocolProfileBehavior": {
-            "followRedirects": true,
-            "disableUrlEncoding": false,
-            "disableCookies": false
-          },
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{accessToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "DELETE",
-            "header": [
-              {
-                "key": "User-Agent",
-                "value": "insomnia/11.6.1"
-              }
-            ],
-            "url": {
-              "raw": "{{baseURL}}/api/users/delete/{{userId}}",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "users",
-                "delete",
-                "{{userId}}"
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
       "name": "Product Managment",
       "item": [
         {
@@ -1125,6 +187,141 @@
           "response": []
         },
         {
+          "name": "Delete Product",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Delete confirmation\", () => pm.expect(pm.response.json()).to.have.property('message'));",
+                  "pm.test(\"Response time < 1s\", () => pm.expect(pm.response.responseTime).to.be.below(1000));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "followRedirects": true,
+            "disableUrlEncoding": false,
+            "disableCookies": false
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "User-Agent",
+                "value": "insomnia/11.6.1"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/api/products/delete/:id",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "products",
+                "delete",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "68ee55f05fb10627400639f2"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Product",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Product updated\", () => pm.expect(pm.response.json()).to.have.property('_id'));",
+                  "pm.test(\"Response time < 2s\", () => pm.expect(pm.response.responseTime).to.be.below(2000));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "followRedirects": true,
+            "disableUrlEncoding": false,
+            "disableCookies": false
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "User-Agent",
+                "value": "insomnia/11.6.1"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "images",
+                  "type": "file",
+                  "src": [
+                    "/home/nizar/Pictures/screenshot-2025-10-15_09-51-04.png",
+                    "/home/nizar/Pictures/screenshot-2025-10-14_11-34-46.png",
+                    "/home/nizar/Pictures/screenshot-2025-10-08_17-02-44.png",
+                    "/home/nizar/Pictures/screenshot-2025-10-08_17-02-30.png"
+                  ]
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/products/update/68f75a801289782df366d420",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "products",
+                "update",
+                "68f75a801289782df366d420"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Search Products",
           "event": [
             {
@@ -1199,80 +396,6 @@
           "response": []
         },
         {
-          "name": "Update Product",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
-                  "pm.test(\"Product updated\", () => pm.expect(pm.response.json()).to.have.property('_id'));",
-                  "pm.test(\"Response time < 2s\", () => pm.expect(pm.response.responseTime).to.be.below(2000));"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "protocolProfileBehavior": {
-            "followRedirects": true,
-            "disableUrlEncoding": false,
-            "disableCookies": false
-          },
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{accessToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "User-Agent",
-                "value": "insomnia/11.6.1"
-              }
-            ],
-            "body": {
-              "mode": "formdata",
-              "formdata": [
-                {
-                  "key": "images",
-                  "type": "file",
-                  "src": [
-                    "/home/nizar/Pictures/screenshot-2025-10-15_09-51-04.png",
-                    "/home/nizar/Pictures/screenshot-2025-10-14_11-34-46.png",
-                    "/home/nizar/Pictures/screenshot-2025-10-08_17-02-44.png",
-                    "/home/nizar/Pictures/screenshot-2025-10-08_17-02-30.png"
-                  ]
-                }
-              ]
-            },
-            "url": {
-              "raw": "{{baseURL}}/api/products/update/{{productId}}",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "products",
-                "update",
-                "{{productId}}"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
           "name": "Review Product",
           "event": [
             {
@@ -1326,7 +449,7 @@
               "variable": [
                 {
                   "key": "id",
-                  "value": "{{productId}}"
+                  "value": "68ee55f05fb10627400639f2"
                 }
               ]
             }
@@ -1413,68 +536,7 @@
               "variable": [
                 {
                   "key": "id",
-                  "value": "{{productId}}"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Delete Product",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
-                  "pm.test(\"Delete confirmation\", () => pm.expect(pm.response.json()).to.have.property('message'));",
-                  "pm.test(\"Response time < 1s\", () => pm.expect(pm.response.responseTime).to.be.below(1000));"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "protocolProfileBehavior": {
-            "followRedirects": true,
-            "disableUrlEncoding": false,
-            "disableCookies": false
-          },
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{accessToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "DELETE",
-            "header": [
-              {
-                "key": "User-Agent",
-                "value": "insomnia/11.6.1"
-              }
-            ],
-            "url": {
-              "raw": "{{baseURL}}/api/products/delete/:id",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "products",
-                "delete",
-                ":id"
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "{{productId}}"
+                  "value": "68ee55f05fb10627400639f2"
                 }
               ]
             }
@@ -1538,6 +600,965 @@
               ""
             ]
           }
+        }
+      ]
+    },
+    {
+      "name": "User Management",
+      "item": [
+        {
+          "name": "Get Usrers",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Response is array\", () => pm.expect(pm.response.json()).to.be.an('array'));",
+                  "pm.test(\"Users have required fields\", () => {",
+                  "    const users = pm.response.json();",
+                  "    if (users.length > 0) {",
+                  "        pm.expect(users[0]).to.have.property('email');",
+                  "        pm.expect(users[0]).to.have.property('role');",
+                  "    }",
+                  "});",
+                  "pm.test(\"Response time < 1s\", () => pm.expect(pm.response.responseTime).to.be.below(1000));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "followRedirects": true,
+            "disableUrlEncoding": false,
+            "disableCookies": false
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "User-Agent",
+                "value": "insomnia/11.6.1"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/api/users",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", () => pm.response.to.have.status(201));",
+                  "pm.test(\"User created with ID\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('_id');",
+                  "    pm.environment.set('userId', json._id);",
+                  "});",
+                  "pm.test(\"Password not exposed\", () => pm.expect(pm.response.json()).to.not.have.property('password'));",
+                  "pm.test(\"Response time < 2s\", () => pm.expect(pm.response.responseTime).to.be.below(2000));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "followRedirects": true,
+            "disableUrlEncoding": false,
+            "disableCookies": false
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "User-Agent",
+                "value": "insomnia/11.6.1"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"fullName\" : \"adil\",\n\t\"email\" : \"adil@gmail.com\",\n\t\"password\" : \"12341234\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/users/create",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "create"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Delete confirmation\", () => pm.expect(pm.response.json()).to.have.property('message'));",
+                  "pm.test(\"Response time < 1s\", () => pm.expect(pm.response.responseTime).to.be.below(1000));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "followRedirects": true,
+            "disableUrlEncoding": false,
+            "disableCookies": false
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "User-Agent",
+                "value": "insomnia/11.6.1"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/api/users/delete/68ee5b270f6cc8d08c66e84b",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "delete",
+                "68ee5b270f6cc8d08c66e84b"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"User updated\", () => pm.expect(pm.response.json()).to.have.property('_id'));",
+                  "pm.test(\"Response time < 1s\", () => pm.expect(pm.response.responseTime).to.be.below(1000));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "followRedirects": true,
+            "disableUrlEncoding": false,
+            "disableCookies": false
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "User-Agent",
+                "value": "insomnia/11.6.1"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"fullName\" : \"ayoub\",\n\t\"email\" : \"ayoub@gmail.com\",\n\t\"password\" : \"salah1234\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/users/update/68ed0b532552bcf9fe0c3390",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "update",
+                "68ed0b532552bcf9fe0c3390"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Patch User",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Profile updated\", () => pm.expect(pm.response.json()).to.have.property('message'));",
+                  "pm.test(\"Response time < 2s\", () => pm.expect(pm.response.responseTime).to.be.below(2000));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "avatar",
+                  "type": "file",
+                  "src": "/home/nizar/Downloads/1759833951065.png"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/users/me",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Current User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"User profile returned\", () => {",
+                  "    const user = pm.response.json();",
+                  "    pm.expect(user).to.have.property('email');",
+                  "    pm.expect(user).to.have.property('role');",
+                  "});",
+                  "pm.test(\"Password not exposed\", () => pm.expect(pm.response.json()).to.not.have.property('password'));",
+                  "pm.test(\"Response time < 1s\", () => pm.expect(pm.response.responseTime).to.be.below(1000));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/users/me",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Category Management",
+      "item": [
+        {
+          "name": "Get Categories",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Response is array\", () => pm.expect(pm.response.json()).to.be.an('array'));",
+                  "pm.test(\"Categories have name\", () => {",
+                  "    const categories = pm.response.json();",
+                  "    if (categories.length > 0) {",
+                  "        pm.expect(categories[0]).to.have.property('name');",
+                  "    }",
+                  "});",
+                  "pm.test(\"Response time < 1s\", () => pm.expect(pm.response.responseTime).to.be.below(1000));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "followRedirects": true,
+            "disableUrlEncoding": false,
+            "disableCookies": false
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "User-Agent",
+                "value": "insomnia/11.6.1"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/categories/",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "categories",
+                ""
+              ]
+            },
+            "description": "## Get Categories\n\nThis endpoint retrieves a list of all product categories available in the system.\n\n### Endpoint\n```\nGET {{baseURL}}/api/categories/\n```\n\n### Description\nThe Categories endpoint returns an array of category objects that can be used for product classification, filtering, and navigation throughout the application. Each category represents a distinct product grouping.\n\n### Parameters\nNo query parameters are required for this endpoint.\n\n### Headers\n- `User-Agent`: Identifies the client making the request (e.g., `insomnia/11.6.1`)\n\n### Response Format\nThe response is a JSON array of category objects. Each category object contains:\n\n```json\n[\n  {\n    \"id\": \"string\",\n    \"name\": \"string\",\n    \"description\": \"string\",\n    \"image\": \"string\" (optional),\n    \"created_at\": \"datetime\",\n    \"updated_at\": \"datetime\"\n  }\n]\n```\n\n### Response Codes\n- `200 OK`: Request successful, categories returned\n- `401 Unauthorized`: Authentication required\n- `403 Forbidden`: Insufficient permissions to access categories\n- `500 Internal Server Error`: Server-side error\n\n### Usage Examples\nThis endpoint can be used to:\n- Populate category dropdown menus\n- Build navigation structures\n- Filter products by category\n- Display category information on product listings\n\n### Notes\n- Categories are returned in alphabetical order by default\n- The response may be cached to improve performance"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Categorie",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", () => pm.response.to.have.status(201));",
+                  "pm.test(\"Category created with ID\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('_id');",
+                  "    pm.environment.set('categoryId', json._id);",
+                  "});",
+                  "pm.test(\"Response time < 1s\", () => pm.expect(pm.response.responseTime).to.be.below(1000));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "followRedirects": true,
+            "disableUrlEncoding": false,
+            "disableCookies": false
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "User-Agent",
+                "value": "insomnia/11.6.1"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"name\" : \"Electronique 4\",\n\t\"description\" : \"lorem eckrnv ckwejnc cjwibec cwbeicbwe ciwubhc\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/categories/create",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "categories",
+                "create"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Categorie",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Category updated\", () => pm.expect(pm.response.json()).to.have.property('_id'));",
+                  "pm.test(\"Response time < 1s\", () => pm.expect(pm.response.responseTime).to.be.below(1000));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "followRedirects": true,
+            "disableUrlEncoding": false,
+            "disableCookies": false
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "User-Agent",
+                "value": "insomnia/11.6.1"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"name\" : \"Neuvoux cc\",\n\t\"description\" : \"updated categorie\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/categories/update/68ef67fd1752c33779f27082",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "categories",
+                "update",
+                "68ef67fd1752c33779f27082"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Categorie",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Delete confirmation\", () => pm.expect(pm.response.json()).to.have.property('message'));",
+                  "pm.test(\"Response time < 1s\", () => pm.expect(pm.response.responseTime).to.be.below(1000));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "followRedirects": true,
+            "disableUrlEncoding": false,
+            "disableCookies": false
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "User-Agent",
+                "value": "insomnia/11.6.1"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/api/categorie/delete/68ee4f0942439e37bd8119b3",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "categorie",
+                "delete",
+                "68ee4f0942439e37bd8119b3"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Authentification",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Response has accessToken\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('accessToken');",
+                  "    pm.environment.set('accessToken', json.accessToken);",
+                  "    pm.environment.set('refreshToken', json.refreshToken); // Store refreshToken in environment variable for future use",
+                  "});",
+                  "pm.test(\"Response has refreshToken\", () => pm.expect(pm.response.json()).to.have.property('refreshToken'));",
+                  "pm.test(\"User has valid role\", () => {",
+                  "    const user = pm.response.json().user;",
+                  "    pm.expect(['user', 'seller', 'admin']).to.include(user.role);",
+                  "});",
+                  "pm.test(\"Response time < 2s\", () => pm.expect(pm.response.responseTime).to.be.below(2000));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "followRedirects": true,
+            "disableUrlEncoding": false,
+            "disableCookies": false
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "User-Agent",
+                "value": "insomnia/11.6.1"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"nizarberiane@proton.me\",\n    \"password\": \"nizar123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/auth/login",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", () => pm.response.to.have.status(201));",
+                  "pm.test(\"Response has accessToken\", () => pm.expect(pm.response.json()).to.have.property('accessToken'));",
+                  "pm.test(\"Response has refreshToken\", () => pm.expect(pm.response.json()).to.have.property('refreshToken'));",
+                  "pm.test(\"Response has user object\", () => pm.expect(pm.response.json()).to.have.property('user'));",
+                  "pm.test(\"Response time < 2s\", () => pm.expect(pm.response.responseTime).to.be.below(2000));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "followRedirects": true,
+            "disableUrlEncoding": false,
+            "disableCookies": false
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "User-Agent",
+                "value": "insomnia/11.6.1"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"fullName\" : \"Nizar Beriane\",\n    \"email\" : \"nizarberiane@proton.me\",\n\t\"password\" : \"nizar123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/auth/register",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refrach Token",
+          "protocolProfileBehavior": {
+            "followRedirects": true,
+            "disableUrlEncoding": false,
+            "disableCookies": false
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "User-Agent",
+                "value": "insomnia/11.6.1"
+              }
+            ],
+            "url": {
+              "raw": ""
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Success message received\", () => pm.expect(pm.response.json()).to.have.property('message'));",
+                  "pm.test(\"Response time < 1s\", () => pm.expect(pm.response.responseTime).to.be.below(1000));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "followRedirects": true,
+            "disableUrlEncoding": false,
+            "disableCookies": false
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "User-Agent",
+                "value": "insomnia/11.6.1"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2OGVlMjgxZDA5NzczMjhkYWE0ODY2ZGIiLCJqdGkiOiI1YTZkMGMwMy04ZmI3LTQ4NTctYWUzNy04NjZlZWJmMDJmNmEiLCJpYXQiOjE3NjA0Mzg2NjQsImV4cCI6MTc2MzAzMDY2NH0.uvzYRMPAdPegIN-Ynaxt80m1Rv57wuDUiA6QcZkQRuw\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/auth/logout",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Current User Info",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/users/me",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh accessToken",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"New accessToken received\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('accessToken');",
+                  "    pm.environment.set('accessToken', json.accessToken);",
+                  "});",
+                  "pm.test(\"Response time < 1s\", () => pm.expect(pm.response.responseTime).to.be.below(1000));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"refreshToken\": \"{{refreshToken}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/auth/refresh",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "refresh"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -1664,6 +1685,42 @@
           "response": []
         },
         {
+          "name": "delete product from cart",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Product removed from cart\", () => pm.expect(pm.response.json()).to.have.property('message'));",
+                  "pm.test(\"Response time < 1s\", () => pm.expect(pm.response.responseTime).to.be.below(1000));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": ""
+            }
+          },
+          "response": []
+        },
+        {
           "name": "update Cart",
           "event": [
             {
@@ -1709,7 +1766,7 @@
               }
             },
             "url": {
-              "raw": "{{baseURL}}/api/carts/updateCart/{{productId}}",
+              "raw": "{{baseURL}}/api/carts/updateCart/68ee30cfaac65d37e39b5ce3",
               "host": [
                 "{{baseURL}}"
               ],
@@ -1717,44 +1774,8 @@
                 "api",
                 "carts",
                 "updateCart",
-                "{{productId}}"
+                "68ee30cfaac65d37e39b5ce3"
               ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "delete product from cart",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
-                  "pm.test(\"Product removed from cart\", () => pm.expect(pm.response.json()).to.have.property('message'));",
-                  "pm.test(\"Response time < 1s\", () => pm.expect(pm.response.responseTime).to.be.below(1000));"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{accessToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": ""
             }
           },
           "response": []
@@ -1810,7 +1831,7 @@
               }
             ],
             "url": {
-              "raw": "{{baseURL}}/api/orders/addOrder/{{cartId}}",
+              "raw": "{{baseURL}}/api/orders/addOrder/68ef75e68f8b6d61f4dfb357",
               "host": [
                 "{{baseURL}}"
               ],
@@ -1818,7 +1839,7 @@
                 "api",
                 "orders",
                 "addOrder",
-                "{{cartId}}"
+                "68ef75e68f8b6d61f4dfb357"
               ]
             }
           },
@@ -1909,7 +1930,7 @@
               }
             },
             "url": {
-              "raw": "{{baseURL}}/api/orders/updateStatus/{{orderId}}",
+              "raw": "{{baseURL}}/api/orders/updateStatus/68f11676343a8c2aaf76ed35",
               "host": [
                 "{{baseURL}}"
               ],
@@ -1917,7 +1938,7 @@
                 "api",
                 "orders",
                 "updateStatus",
-                "{{orderId}}"
+                "68f11676343a8c2aaf76ed35"
               ]
             }
           },
@@ -1988,57 +2009,6 @@
           "response": []
         },
         {
-          "name": "get all coupons",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
-                  "pm.test(\"Response is array\", () => pm.expect(pm.response.json()).to.be.an('array'));",
-                  "pm.test(\"Coupons have required fields\", () => {",
-                  "    const coupons = pm.response.json();",
-                  "    if (coupons.length > 0) {",
-                  "        pm.expect(coupons[0]).to.have.property('code');",
-                  "        pm.expect(coupons[0]).to.have.property('discount');",
-                  "    }",
-                  "});",
-                  "pm.test(\"Response time < 1s\", () => pm.expect(pm.response.responseTime).to.be.below(1000));"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{accessToken}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseURL}}/api/coupons/getAllCoupon",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "coupons",
-                "getAllCoupon"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
           "name": "get All User 's Coupons",
           "event": [
             {
@@ -2097,6 +2067,57 @@
           "response": []
         },
         {
+          "name": "get all coupons",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Response is array\", () => pm.expect(pm.response.json()).to.be.an('array'));",
+                  "pm.test(\"Coupons have required fields\", () => {",
+                  "    const coupons = pm.response.json();",
+                  "    if (coupons.length > 0) {",
+                  "        pm.expect(coupons[0]).to.have.property('code');",
+                  "        pm.expect(coupons[0]).to.have.property('discount');",
+                  "    }",
+                  "});",
+                  "pm.test(\"Response time < 1s\", () => pm.expect(pm.response.responseTime).to.be.below(1000));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/coupons/getAllCoupon",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "coupons",
+                "getAllCoupon"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "update coupon",
           "event": [
             {
@@ -2136,7 +2157,7 @@
               }
             },
             "url": {
-              "raw": "{{baseURL}}/api/coupons/updateCoupon/{{couponId}}",
+              "raw": "{{baseURL}}/api/coupons/updateCoupon/6900a2e2a9f41b7dc1fb47b3",
               "host": [
                 "{{baseURL}}"
               ],
@@ -2144,7 +2165,7 @@
                 "api",
                 "coupons",
                 "updateCoupon",
-                "{{couponId}}"
+                "6900a2e2a9f41b7dc1fb47b3"
               ]
             }
           },
@@ -2179,7 +2200,7 @@
               "variable": [
                 {
                   "key": "id",
-                  "value": "{{couponId}}"
+                  "value": "68f63ea6181bd1c304f4a742"
                 }
               ]
             }
