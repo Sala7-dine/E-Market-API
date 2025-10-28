@@ -47,7 +47,10 @@ export const UpdateCategorie = async (req , res) => {
 
         const data = await updateCategorie(id , categorie);
 
-        res.status(200).json(data);
+        res.status(200).json({
+            message: "categorie updated",
+            data: data
+        });
 
 
     }catch (err){

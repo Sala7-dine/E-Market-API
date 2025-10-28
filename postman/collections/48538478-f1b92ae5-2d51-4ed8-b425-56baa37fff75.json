@@ -551,13 +551,13 @@
               }
             ],
             "url": {
-              "raw": "{{baseURL}}/api/categorie/delete/{{categoryId}}",
+              "raw": "{{baseURL}}/api/categories/delete/{{categoryId}}",
               "host": [
                 "{{baseURL}}"
               ],
               "path": [
                 "api",
-                "categorie",
+                "categories",
                 "delete",
                 "{{categoryId}}"
               ]
