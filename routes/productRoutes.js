@@ -36,7 +36,7 @@ router.get('/search', productLimiter, SearchProducts);
 // Routes pour sellers et admins (création de produits)
 router.post('/create', 
     productLimiter, 
-    requireSellerOrAdmin,
+    
     upload.array('images', 5), 
     compressImages('images/products'), 
     parseFormData, 

@@ -15,7 +15,9 @@ export async function getCarts(userId) {
 export async function addToCart(userId, productId, quantity = 1) {
   const product = await Product.findById(productId);
   if (!product) throw new Error("Product not found");
-
+  if(quantity > product.stock){
+    throw new Error("quantity not valid");
+  }
   let cart = await Cart.findOne({ userId });
   if (!cart) {
     cart = new Cart({

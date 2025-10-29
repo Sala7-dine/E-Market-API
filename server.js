@@ -60,7 +60,7 @@ app.use('/api/notifications', authenticate, notificationRoutes);
 if (process.env.NODE_ENV === 'test') {
     app.use('/api/products', authenticate, productRoutes);
 } else {
-    app.use('/api/products', authenticate, requireSellerOrAdmin, productRoutes);
+    app.use('/api/products', authenticate, productRoutes);
 }
 
 // Routes pour admins et sellers (gestion des coupons)
