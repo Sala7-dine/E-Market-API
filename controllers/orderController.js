@@ -1,5 +1,5 @@
 import { addOrder, getOrder, updateStatus } from "../services/orderService.js";
-import notificationHandler from '../events/notificationHandler.js';
+import notificationHandler from "../events/notificationHandler.js";
 
 // add an order :
 export const handleAddOrder = async (req, res, next) => {

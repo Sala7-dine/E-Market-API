@@ -20,7 +20,7 @@ export async function addToCart(userId, productId, quantity = 1) {
 
   // Check if adding this quantity would exceed stock
   const existingItem = cart?.items.find(
-    (item) => item.productId.toString() === productId
+    (item) => item.productId.toString() === productId,
   );
   const totalQuantity = (existingItem?.quantity || 0) + quantity;
 

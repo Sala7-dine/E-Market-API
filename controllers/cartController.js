@@ -4,8 +4,6 @@ import {
   deleteproduct,
   updateProductQuantity,
 } from "../services/cartService.js";
-import Product from "../models/Product.js";
-
 // Add product to the user's cart :
 export const addProductToCard = async (req, res, next) => {
   try {
@@ -14,7 +12,7 @@ export const addProductToCard = async (req, res, next) => {
     const { productId, quantity } = req.body;
     console.log(quantity);
     const cart = await addToCart(userId, productId, parseInt(quantity));
-    console.log(quantity)
+    console.log(quantity);
 
     if (cart === 0) {
       return res
