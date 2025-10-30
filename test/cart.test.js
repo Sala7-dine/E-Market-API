@@ -87,7 +87,21 @@ describe("Cart API Tests", function () {
         quantity: 2,
       });
 
-    expect([200, 201, 401]).to.include(res.status);
+    expect([200, 201]).to.include(res.status);
+    if (res.body.data) {
+      cartItemId = res.body.data._id;
+    }
+  });
+  it("Should get status 400", async () => {
+    const res = await request
+      .post("/api/carts/addtocart")
+      .set("Authorization", `Bearer ${token}`)
+      .send({
+        productId: productId,
+        quantity: 1000,
+      });
+    console.log(res.status);
+    expect(400).to.equal(res.status);
     if (res.body.data) {
       cartItemId = res.body.data._id;
     }
