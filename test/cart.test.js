@@ -87,11 +87,29 @@ describe('Cart API Tests', function () {
                 quantity: 2
             });
 
-        expect([200, 201, 401]).to.include(res.status);
+        expect([200, 201]).to.include(res.status);
         if (res.body.data) {
+
             cartItemId = res.body.data._id;
         }
     });
+    it('Should get status 400', async () => {
+        const res = await request
+            .post('/api/carts/addtocart')
+             .set('Authorization', `Bearer ${token}`)
+             .send({
+                 productId: productId,
+                 quantity: 1000
+             });
+         console.log(res.status);
+         expect(400).to.equal(res.status);
+         if (res.body.data) {
+
+             cartItemId = res.body.data._id;
+         }
+
+     });
+
 
     it('Should get user cart', async () => {
         const res = await request
@@ -125,4 +143,14 @@ describe('Cart API Tests', function () {
 
         expect([200, 201, 401, 404]).to.include(res.status);
     });
+    // it('Should Check quantity of product in cart', async function() {
+    //     const res = await request.post('/api/proudcts/').set('Authorization', `Bearer ${token}`).send({
+    //         productId: productId,
+    //         quantity: 1000
+    //     });
+    //
+    //     console.log(res.status);
+    //     console.log(`this is the body ${res.body}`);
+    //     expect(200).to.equal(res.status);
+    // })
 });
