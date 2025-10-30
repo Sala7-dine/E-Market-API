@@ -27,9 +27,9 @@ const orderSchema = new mongoose.Schema(
     coupon: { type: mongoose.Schema.Types.ObjectId, ref: "Coupon" },
     discount: { type: Number, default: 0 },
     finalTotal: { type: Number, default: 0 },
-    updatedAt: { type: Date, default: Date.now }, 
+    updatedAt: { type: Date, default: Date.now },
   },
 
-  { timestamps: true }
+  { timestamps: true },
 );
 export default mongoose.model("Order", orderSchema);

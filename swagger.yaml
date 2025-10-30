@@ -61,7 +61,11 @@ components:
           type: array
           items:
             type: string
-          example: ["/images/products/product-1234567890.jpg", "/images/products/product-1234567891.jpg"]
+          example:
+            [
+              "/images/products/product-1234567890.jpg",
+              "/images/products/product-1234567891.jpg",
+            ]
         createdAt:
           type: string
           format: date-time
@@ -262,7 +266,7 @@ paths:
                   type: string
                   example: "John Doe"
       responses:
-        '201':
+        "201":
           description: Utilisateur créé avec succès
           content:
             application/json:
@@ -272,13 +276,13 @@ paths:
                   message:
                     type: string
                     example: "user created"
-        '400':
+        "400":
           description: Erreur de validation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-        '500':
+                $ref: "#/components/schemas/Error"
+        "500":
           description: Erreur serveur
 
   /api/auth/login:
@@ -303,7 +307,7 @@ paths:
                   type: string
                   example: "password123"
       responses:
-        '200':
+        "200":
           description: Connexion réussie
           content:
             application/json:
@@ -313,12 +317,12 @@ paths:
                   accessToken:
                     type: string
                     example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-        '400':
+        "400":
           description: Identifiants invalides
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
 
   /api/auth/refresh:
     post:
@@ -334,7 +338,7 @@ paths:
                   type: string
                   example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
       responses:
-        '200':
+        "200":
           description: Token renouvelé
           content:
             application/json:
@@ -343,7 +347,7 @@ paths:
                 properties:
                   accessToken:
                     type: string
-        '401':
+        "401":
           description: Token invalide
 
   /api/auth/logout:
@@ -351,7 +355,7 @@ paths:
       tags: [Authentication]
       summary: Déconnexion utilisateur
       responses:
-        '200':
+        "200":
           description: Déconnexion réussie
           content:
             application/json:
@@ -369,7 +373,7 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        '200':
+        "200":
           description: Liste des produits
           content:
             application/json:
@@ -381,8 +385,8 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Product'
-        '401':
+                      $ref: "#/components/schemas/Product"
+        "401":
           description: Token manquant ou invalide
 
   /api/products/create:
@@ -427,11 +431,11 @@ paths:
                     format: binary
                   description: "Product images (max 5, formats: jpg, jpeg, png, gif, max 5MB each)"
       responses:
-        '201':
+        "201":
           description: Produit créé avec succès
-        '400':
+        "400":
           description: Données invalides
-        '401':
+        "401":
           description: Token manquant ou invalide
 
   /api/products/update/{id}:
@@ -446,7 +450,7 @@ paths:
           required: true
           schema:
             type: string
-            pattern: '^[0-9a-fA-F]{24}$'
+            pattern: "^[0-9a-fA-F]{24}$"
           example: "68e7b5010bf901dfd66d774a"
       requestBody:
         required: true
@@ -474,13 +478,13 @@ paths:
                     format: binary
                   description: "Product images (max 5, formats: jpg, jpeg, png, gif, max 5MB each)"
       responses:
-        '200':
+        "200":
           description: Produit mis à jour
-        '400':
+        "400":
           description: Données invalides
-        '401':
+        "401":
           description: Token manquant ou invalide
-        '404':
+        "404":
           description: Produit non trouvé
 
   /api/products/delete/{id}:
@@ -495,14 +499,14 @@ paths:
           required: true
           schema:
             type: string
-            pattern: '^[0-9a-fA-F]{24}$'
+            pattern: "^[0-9a-fA-F]{24}$"
           example: "68e7b5010bf901dfd66d774a"
       responses:
-        '200':
+        "200":
           description: Produit supprimé
-        '401':
+        "401":
           description: Token manquant ou invalide
-        '404':
+        "404":
           description: Produit non trouvé
 
   /api/products/search:
@@ -531,7 +535,7 @@ paths:
             type: string
           description: Rechercher par nom
       responses:
-        '200':
+        "200":
           description: Résultats de recherche
 
   /api/products/{productId}/reviews:
@@ -546,7 +550,7 @@ paths:
           required: true
           schema:
             type: string
-            pattern: '^[0-9a-fA-F]{24}$'
+            pattern: "^[0-9a-fA-F]{24}$"
           example: "68e7b5010bf901dfd66d774a"
       requestBody:
         required: true
@@ -567,13 +571,13 @@ paths:
                   type: string
                   example: "Excellent produit, très satisfait!"
       responses:
-        '201':
+        "201":
           description: Avis ajouté
-        '400':
+        "400":
           description: Données invalides ou avis déjà existant
-        '401':
+        "401":
           description: Non authentifié
-        '404':
+        "404":
           description: Produit non trouvé
     get:
       tags: [Products]
@@ -584,10 +588,10 @@ paths:
           required: true
           schema:
             type: string
-            pattern: '^[0-9a-fA-F]{24}$'
+            pattern: "^[0-9a-fA-F]{24}$"
           example: "68e7b5010bf901dfd66d774a"
       responses:
-        '200':
+        "200":
           description: Liste des avis
           content:
             application/json:
@@ -599,8 +603,8 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Review'
-        '404':
+                      $ref: "#/components/schemas/Review"
+        "404":
           description: Produit non trouvé
 
   /api/users:
@@ -608,7 +612,7 @@ paths:
       tags: [Users]
       summary: Liste tous les utilisateurs
       responses:
-        '200':
+        "200":
           description: Liste des utilisateurs
           content:
             application/json:
@@ -620,7 +624,7 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/User'
+                      $ref: "#/components/schemas/User"
 
   /api/users/create:
     post:
@@ -649,9 +653,9 @@ paths:
                   minLength: 6
                   example: "password123"
       responses:
-        '201':
+        "201":
           description: Utilisateur créé
-        '400':
+        "400":
           description: Données invalides
 
   /api/users/update/{id}:
@@ -664,7 +668,7 @@ paths:
           required: true
           schema:
             type: string
-            pattern: '^[0-9a-fA-F]{24}$'
+            pattern: "^[0-9a-fA-F]{24}$"
           example: "68e7b5010bf901dfd66d774a"
       requestBody:
         required: true
@@ -681,11 +685,11 @@ paths:
                 password:
                   type: string
       responses:
-        '200':
+        "200":
           description: Utilisateur mis à jour
-        '400':
+        "400":
           description: Données invalides
-        '404':
+        "404":
           description: Utilisateur non trouvé
 
   /api/users/delete/{id}:
@@ -698,12 +702,12 @@ paths:
           required: true
           schema:
             type: string
-            pattern: '^[0-9a-fA-F]{24}$'
+            pattern: "^[0-9a-fA-F]{24}$"
           example: "68e7b5010bf901dfd66d774a"
       responses:
-        '200':
+        "200":
           description: Utilisateur supprimé
-        '404':
+        "404":
           description: Utilisateur non trouvé
 
   /api/users/me:
@@ -713,7 +717,7 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        '200':
+        "200":
           description: Profil utilisateur
           content:
             application/json:
@@ -723,10 +727,10 @@ paths:
                   success:
                     type: boolean
                   data:
-                    $ref: '#/components/schemas/User'
-        '401':
+                    $ref: "#/components/schemas/User"
+        "401":
           description: Token manquant ou invalide
-        '404':
+        "404":
           description: Utilisateur non trouvé
     patch:
       tags: [Users]
@@ -756,7 +760,7 @@ paths:
                   format: binary
                   description: "Image de profil (max 5MB, formats: jpg, jpeg, png, gif)"
       responses:
-        '200':
+        "200":
           description: Profil mis à jour
           content:
             application/json:
@@ -766,10 +770,10 @@ paths:
                   success:
                     type: boolean
                   data:
-                    $ref: '#/components/schemas/User'
-        '400':
+                    $ref: "#/components/schemas/User"
+        "400":
           description: Données invalides ou type de fichier non autorisé
-        '401':
+        "401":
           description: Token manquant ou invalide
 
   /api/categories:
@@ -777,7 +781,7 @@ paths:
       tags: [Categories]
       summary: Liste toutes les catégories
       responses:
-        '200':
+        "200":
           description: Liste des catégories
           content:
             application/json:
@@ -789,7 +793,7 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Category'
+                      $ref: "#/components/schemas/Category"
 
   /api/categories/create:
     post:
@@ -811,9 +815,9 @@ paths:
                   type: string
                   example: "Tous les accessoires électroniques"
       responses:
-        '201':
+        "201":
           description: Catégorie créée
-        '400':
+        "400":
           description: Données invalides
 
   /api/categories/update/{id}:
@@ -826,7 +830,7 @@ paths:
           required: true
           schema:
             type: string
-            pattern: '^[0-9a-fA-F]{24}$'
+            pattern: "^[0-9a-fA-F]{24}$"
           example: "68e7b5010bf901dfd66d774a"
       requestBody:
         required: true
@@ -840,11 +844,11 @@ paths:
                 description:
                   type: string
       responses:
-        '200':
+        "200":
           description: Catégorie mise à jour
-        '400':
+        "400":
           description: Données invalides
-        '404':
+        "404":
           description: Catégorie non trouvée
 
   /api/categories/delete/{id}:
@@ -857,12 +861,12 @@ paths:
           required: true
           schema:
             type: string
-            pattern: '^[0-9a-fA-F]{24}$'
+            pattern: "^[0-9a-fA-F]{24}$"
           example: "68e7b5010bf901dfd66d774a"
       responses:
-        '200':
+        "200":
           description: Catégorie supprimée
-        '404':
+        "404":
           description: Catégorie non trouvée
 
   /api/cart/addtocart:
@@ -888,9 +892,9 @@ paths:
                   type: integer
                   example: 1
       responses:
-        '200':
+        "200":
           description: Produit ajouté au panier
-        '401':
+        "401":
           description: Non authentifié
 
   /api/cart/getcarts:
@@ -900,15 +904,15 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        '200':
+        "200":
           description: Liste des paniers
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Cart'
-        '401':
+                  $ref: "#/components/schemas/Cart"
+        "401":
           description: Non authentifié
 
   /api/cart/deleteProduct/{productId}:
@@ -925,11 +929,11 @@ paths:
             type: string
           example: "68e7b5010bf901dfd66d774a"
       responses:
-        '200':
+        "200":
           description: Produit supprimé du panier
-        '401':
+        "401":
           description: Non authentifié
-        '404':
+        "404":
           description: Produit non trouvé
 
   /api/cart/updateCart/{id}:
@@ -962,11 +966,11 @@ paths:
                       quantity:
                         type: integer
       responses:
-        '200':
+        "200":
           description: Panier mis à jour
-        '401':
+        "401":
           description: Non authentifié
-        '404':
+        "404":
           description: Panier non trouvé
 
   /api/orders/addOrder/{cartId}:
@@ -982,9 +986,9 @@ paths:
           schema:
             type: string
       responses:
-        '201':
+        "201":
           description: Commande créée
-        '401':
+        "401":
           description: Non authentifié
 
   /api/orders/getOrder:
@@ -994,15 +998,15 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        '200':
+        "200":
           description: Liste des commandes
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Order'
-        '401':
+                  $ref: "#/components/schemas/Order"
+        "401":
           description: Non authentifié
 
   /api/orders/updateStatus/{orderId}:
@@ -1028,9 +1032,9 @@ paths:
                   type: string
                   enum: [pending, paid, shipped, delivered, cancelled]
       responses:
-        '200':
+        "200":
           description: Statut mis à jour
-        '401':
+        "401":
           description: Non authentifié
 
   /api/coupons/createCoupon:
@@ -1066,9 +1070,9 @@ paths:
                 minOrderAmount:
                   type: number
       responses:
-        '201':
+        "201":
           description: Coupon créé
-        '401':
+        "401":
           description: Non authentifié
 
   /api/coupons/getAllCoupon:
@@ -1078,14 +1082,14 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        '200':
+        "200":
           description: Liste des coupons
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Coupon'
+                  $ref: "#/components/schemas/Coupon"
 
   /api/coupons/getAllUserCoupon:
     get:
@@ -1094,7 +1098,7 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        '200':
+        "200":
           description: Liste des coupons utilisateur
 
   /api/coupons/deleteCoupon/{couponId}:
@@ -1110,9 +1114,9 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Coupon supprimé
-        '401':
+        "401":
           description: Non authentifié
 
   /api/coupons/updateCoupon/{couponId}:
@@ -1147,7 +1151,7 @@ paths:
                 isActive:
                   type: boolean
       responses:
-        '200':
+        "200":
           description: Coupon mis à jour
-        '401':
+        "401":
           description: Non authentifié

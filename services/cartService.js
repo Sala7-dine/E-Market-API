@@ -17,13 +17,13 @@ export async function addToCart(userId, productId, quantity = 1) {
   if (!product) throw new Error("Product not found");
 
   let cart = await Cart.findOne({ userId });
-  
+
   // Check if adding this quantity would exceed stock
   const existingItem = cart?.items.find(
     (item) => item.productId.toString() === productId
   );
   const totalQuantity = (existingItem?.quantity || 0) + quantity;
-  
+
   if (totalQuantity > product.stock) {
     return 0;
   }
@@ -35,7 +35,7 @@ export async function addToCart(userId, productId, quantity = 1) {
     });
   } else {
     const isExistItem = cart.items.find(
-      (item) => item.productId.toString() === productId
+      (item) => item.productId.toString() === productId,
     );
 
     if (isExistItem) {
@@ -45,7 +45,7 @@ export async function addToCart(userId, productId, quantity = 1) {
     }
     cart.totalPrice = cart.items.reduce(
       (sum, item) => sum + item.price * item.quantity,
-      0
+      0,
     );
   }
   await cart.save();
@@ -56,7 +56,7 @@ export async function addToCart(userId, productId, quantity = 1) {
 export async function deleteproduct(userId, productId) {
   let cart = await Cart.findOne({ userId });
   const updatedcart = cart.items.filter(
-    (item) => item.productId.toString() !== productId
+    (item) => item.productId.toString() !== productId,
   );
   cart.items = updatedcart;
   return await cart.save();
@@ -78,7 +78,7 @@ export async function updateProductQuantity(userId, productId, quantity) {
   //   update the total price:
   cart.totalPrice = cart.items.reduce(
     (sum, item) => sum + item.price * item.quantity,
-    0
+    0,
   );
   await cart.save();
   return cart;

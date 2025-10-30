@@ -2,7 +2,6 @@ import * as chai from "chai";
 import supertest from "supertest";
 import mongoose from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
-import Order from "../models/Order.js";
 import dotenv from "dotenv";
 import Cart from "../models/Cart.js";
 import Product from "../models/Product.js";
@@ -11,10 +10,10 @@ dotenv.config();
 
 // Ensure test mode before loading the app module
 process.env.NODE_ENV = "test";
-process.env.JWT_ACCESS_SECRET = 'test-access-secret-key-for-testing';
-process.env.JWT_REFRESH_SECRET = 'test-refresh-secret-key-for-testing';
-process.env.ACCESS_TOKEN_EXP = '15m';
-process.env.REFRESH_TOKEN_EXP = '30d';
+process.env.JWT_ACCESS_SECRET = "test-access-secret-key-for-testing";
+process.env.JWT_REFRESH_SECRET = "test-refresh-secret-key-for-testing";
+process.env.ACCESS_TOKEN_EXP = "15m";
+process.env.REFRESH_TOKEN_EXP = "30d";
 
 const { expect } = chai;
 
@@ -47,7 +46,9 @@ describe("Order API Tests", function () {
     });
 
     // Fetch user from DB
-    user = await mongoose.model("User").findOne({ email: "testuser@gmail.com" });
+    user = await mongoose
+      .model("User")
+      .findOne({ email: "testuser@gmail.com" });
 
     // Login to get token
     const loginRes = await request.post("/api/auth/login").send({
@@ -73,13 +74,13 @@ describe("Order API Tests", function () {
       stock: 10,
       createdBy: user._id,
     });
-    
+
     const cart = await Cart.create({
       userId: user._id,
       items: [{ productId: product._id, quantity: 2, price: 50 }],
       totalPrice: 100,
     });
-    
+
     const res = await request
       .post(`/api/orders/addOrder/${cart._id}`)
       .set("Authorization", `Bearer ${token}`);

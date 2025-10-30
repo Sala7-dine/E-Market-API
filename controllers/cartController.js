@@ -68,14 +68,16 @@ export const updateCart = async (req, res, next) => {
     const productId = req.params.id;
     const userId = req.user._id;
 
-    const cartUpdated = await updateProductQuantity(userId, productId, quantity);
+    const cartUpdated = await updateProductQuantity(
+      userId,
+      productId,
+      quantity,
+    );
     if (!cartUpdated) {
       return res.status(400).json({ success: false, message: "update failed" });
     }
 
-    res
-      .status(200)
-      .json({ success: true, message: "Product updated" });
+    res.status(200).json({ success: true, message: "Product updated" });
   } catch (err) {
     next(err);
   }
