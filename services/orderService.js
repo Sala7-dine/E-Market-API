@@ -9,10 +9,12 @@ export async function addOrder(userId, cartId, couponCode = null) {
   if (!cart) {
     throw new Error("no cart exist!!!");
   }
+  
+
   let discount = 0;
   let finalTotal = cart.totalPrice;
   let coupon = null;
-
+  
   // check if the user provided the coupon code :
   if (couponCode) {
     coupon = await Coupon.findOne({ code: couponCode, isActive: true });
@@ -59,7 +61,7 @@ export async function addOrder(userId, cartId, couponCode = null) {
 
 // get user's orders :
 export async function getOrder(userId) {
-  const order = await Order.findOne({ userId });
+  const order = await Order.find({ userId });
   if (!order) {
     throw new Error("no order");
   }

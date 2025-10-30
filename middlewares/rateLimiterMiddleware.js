@@ -1,6 +1,16 @@
 import { loginRateLimiter , categoryRateLimiter , productRateLimiter , registerRateLimiter } from '../config/rateLimiter.js';
 
-export const loginLimiter = loginRateLimiter;
-export const registerLimiter = registerRateLimiter;
-export const productLimiter = productRateLimiter;
-export const categoryLimiter = categoryRateLimiter;
+// Middleware qui désactive le rate limiting en mode test
+const skipInTest = (limiter) => {
+    return (req, res, next) => {
+        if (process.env.NODE_ENV === 'test') {
+            return next();
+        }
+        return limiter(req, res, next);
+    };
+};
+
+export const loginLimiter = skipInTest(loginRateLimiter);
+export const registerLimiter = skipInTest(registerRateLimiter);
+export const productLimiter = skipInTest(productRateLimiter);
+export const categoryLimiter = skipInTest(categoryRateLimiter);

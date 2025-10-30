@@ -17,6 +17,16 @@ export async function addToCart(userId, productId, quantity = 1) {
   if (!product) throw new Error("Product not found");
 
   let cart = await Cart.findOne({ userId });
+  
+  // Check if adding this quantity would exceed stock
+  const existingItem = cart?.items.find(
+    (item) => item.productId.toString() === productId
+  );
+  const totalQuantity = (existingItem?.quantity || 0) + quantity;
+  
+  if (totalQuantity > product.stock) {
+    return 0;
+  }
   if (!cart) {
     cart = new Cart({
       userId,
@@ -54,7 +64,6 @@ export async function deleteproduct(userId, productId) {
 
 // update Product Quantity and total price in the cart :
 export async function updateProductQuantity(userId, productId, quantity) {
-  let cart = await Cart.findOne({ userId });
   if (!cart) {
     throw new Error("Cart not found for this user");
   }

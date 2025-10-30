@@ -4,6 +4,7 @@ import {
   deleteproduct,
   updateProductQuantity,
 } from "../services/cartService.js";
+import Product from "../models/Product.js";
 
 // Add product to the user's cart :
 export const addProductToCard = async (req, res, next) => {
@@ -11,7 +12,15 @@ export const addProductToCard = async (req, res, next) => {
     const userId = req.user._id;
     console.log(userId);
     const { productId, quantity } = req.body;
-    const cart = await addToCart(userId, productId, quantity);
+    console.log(quantity);
+    const cart = await addToCart(userId, productId, parseInt(quantity));
+    console.log(quantity)
+
+    if (cart === 0) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Insufficient stock" });
+    }
     res.status(200).json(cart);
   } catch (err) {
     next(err);

@@ -15,10 +15,15 @@ export const handleAddOrder = async (req, res, next) => {
       orderId: orderAdded._id
     });
 
-    res.status(200).json({
-      success : true,
-      message : "order created",
-      data : orderAdded
+    notificationHandler.emit('orderCreated', {
+      userId,
+      orderId: orderAdded._id
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "order created",
+      data: orderAdded,
     });
   } catch (err) {
     next(err);
@@ -52,15 +57,16 @@ export const updateOrderStatus = async (req, res, next) => {
     
     // Paiement Simulation :
     if (status === "paid") {
-      res.status(200).json({
+      return res.status(200).json({
         message: "paiement done",
         data: orderUpdated,
       });
     }
-      res.status(200).json({
-        message: "Statut updated",
-        data: orderUpdated,
-      });
+    
+    res.status(200).json({
+      message: "Statut updated",
+      data: orderUpdated,
+    });
   } catch (err) {
     next(err);
   }
