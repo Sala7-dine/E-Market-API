@@ -1,10 +1,10 @@
-import logger from "../config/logger.js";
+import logger from '../config/logger.js';
 
 const loggerMiddleware = (req, res, next) => {
   const startTime = Date.now();
   const ip = req.ip || req.connection.remoteAddress;
 
-  res.on("finish", () => {
+  res.on('finish', () => {
     const duration = Date.now() - startTime;
     logger.info({
       method: req.method,
@@ -12,7 +12,7 @@ const loggerMiddleware = (req, res, next) => {
       status: res.statusCode,
       duration: `${duration}ms`,
       ip,
-      userAgent: req.get("user-agent"),
+      userAgent: req.get('user-agent'),
     });
   });
 

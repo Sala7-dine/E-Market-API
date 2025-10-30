@@ -1,12 +1,12 @@
-import Cart from "../models/Cart.js";
-import Product from "../models/Product.js";
+import Cart from '../models/Cart.js';
+import Product from '../models/Product.js';
 
 // get user's cart :
 export async function getCarts(userId) {
   const allCart = await Cart.find({ userId });
   console.log(JSON.stringify(allCart, null, 2));
   if (allCart.length === 0) {
-    throw new Error("no carts.");
+    throw new Error('no carts.');
   }
   return allCart;
 }
@@ -14,7 +14,7 @@ export async function getCarts(userId) {
 // add product to cart :
 export async function addToCart(userId, productId, quantity = 1) {
   const product = await Product.findById(productId);
-  if (!product) throw new Error("Product not found");
+  if (!product) throw new Error('Product not found');
 
   let cart = await Cart.findOne({ userId });
 
@@ -65,11 +65,11 @@ export async function deleteproduct(userId, productId) {
 // update Product Quantity and total price in the cart :
 export async function updateProductQuantity(userId, productId, quantity) {
   if (!cart) {
-    throw new Error("Cart not found for this user");
+    throw new Error('Cart not found for this user');
   }
   const item = cart.items.find((i) => i.productId.toString() === productId);
   if (!item) {
-    throw new Error("Product not found in cart");
+    throw new Error('Product not found in cart');
   }
 
   //   update quantity:

@@ -1,8 +1,8 @@
-import { faker } from "@faker-js/faker";
-import Order from "../models/Order.js";
-import User from "../models/User.js";
-import Product from "../models/Product.js";
-import logger from "../config/logger.js";
+import { faker } from '@faker-js/faker';
+import Order from '../models/Order.js';
+import User from '../models/User.js';
+import Product from '../models/Product.js';
+import logger from '../config/logger.js';
 
 export const seedOrders = async () => {
   await Order.deleteMany({});
@@ -18,7 +18,7 @@ export const seedOrders = async () => {
   }
 
   const orders = [];
-  const statuses = ["pending", "paid", "shipped", "delivered", "cancelled"];
+  const statuses = ['pending', 'paid', 'shipped', 'delivered', 'cancelled'];
 
   for (let i = 0; i < 8; i++) {
     const user = faker.helpers.arrayElement(users);
@@ -48,5 +48,5 @@ export const seedOrders = async () => {
   }
 
   await Order.insertMany(orders);
-  logger.info("Orders seeded");
+  logger.info('Orders seeded');
 };

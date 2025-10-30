@@ -1,11 +1,11 @@
-import mongoose from "mongoose";
-import bcrypt from "bcryptjs";
+import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
 
 const UserSchema = new mongoose.Schema(
   {
     fullName: {
       type: String,
-      required: [true, "le nom et prenom est obligatoire"],
+      required: [true, 'le nom et prenom est obligatoire'],
     },
     email: {
       type: String,
@@ -16,12 +16,12 @@ const UserSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: [true, "le password et obligatoire"],
+      required: [true, 'le password et obligatoire'],
     },
     role: {
       type: String,
-      enum: ["admin", "user", "seller"],
-      default: "user",
+      enum: ['admin', 'user', 'seller'],
+      default: 'user',
     },
     profileImage: {
       type: String,
@@ -44,4 +44,4 @@ UserSchema.methods.validatePassword = async function (password) {
   return bcrypt.compare(password, this.password);
 };
 
-export default mongoose.model("User", UserSchema);
+export default mongoose.model('User', UserSchema);

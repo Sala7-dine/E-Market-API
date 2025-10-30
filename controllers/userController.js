@@ -5,15 +5,15 @@ import {
   updateUser,
   getCurrentUser,
   UpdateProfile as UpdateProfileService,
-} from "../services/userService.js";
-import mongoose from "mongoose";
+} from '../services/userService.js';
+import mongoose from 'mongoose';
 
 export const GetUsers = async (req, res) => {
   try {
     const data = await getAllUsers();
 
     if (!data) {
-      throw new Error("aucun data dans database");
+      throw new Error('aucun data dans database');
     }
 
     res.status(200).json(data);
@@ -40,7 +40,7 @@ export const UpdateUser = async (req, res) => {
     const user = req.body;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ message: "ID invalide" });
+      return res.status(400).json({ message: 'ID invalide' });
     }
 
     const data = await updateUser(id, user);
@@ -56,12 +56,12 @@ export const DeleteUser = async (req, res) => {
     const id = req.params.id;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ message: "ID invalide" });
+      return res.status(400).json({ message: 'ID invalide' });
     }
 
     const newProduit = await deleteUser(id);
 
-    res.status(200).json({ message: "Utilisateur supprimé", data: newProduit });
+    res.status(200).json({ message: 'Utilisateur supprimé', data: newProduit });
   } catch (err) {
     throw new Error(err.message);
   }
@@ -91,7 +91,7 @@ export const UpdateProfile = async (req, res) => {
       userRole,
     );
     const { password, ...userWithoutPassword } = updatedUser.toObject();
-    res.json({ message: "Profil mis à jour", user: userWithoutPassword });
+    res.json({ message: 'Profil mis à jour', user: userWithoutPassword });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }

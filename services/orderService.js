@@ -1,13 +1,13 @@
-import Order from "../models/Order.js";
-import Cart from "../models/Cart.js";
-import Product from "../models/Product.js";
-import Coupon from "../models/Coupon.js";
+import Order from '../models/Order.js';
+import Cart from '../models/Cart.js';
+import Product from '../models/Product.js';
+import Coupon from '../models/Coupon.js';
 
 // add order :
 export async function addOrder(userId, cartId, couponCode = null) {
   const cart = await Cart.findOne({ _id: cartId });
   if (!cart) {
-    throw new Error("no cart exist!!!");
+    throw new Error('no cart exist!!!');
   }
 
   let discount = 0;
@@ -19,12 +19,12 @@ export async function addOrder(userId, cartId, couponCode = null) {
     coupon = await Coupon.findOne({ code: couponCode, isActive: true });
     // check if the coupon code exist :
     if (!coupon) {
-      throw new Error("Invalid coupon");
+      throw new Error('Invalid coupon');
     }
 
     // check the expirate date of the coupon :
     if (new Date() > Date(coupon.expirationDate)) {
-      throw new Error("Coupon expired");
+      throw new Error('Coupon expired');
     }
 
     // Ensure order meets coupon minimum :
@@ -34,9 +34,9 @@ export async function addOrder(userId, cartId, couponCode = null) {
       );
     }
     // check the coupon 's type :
-    if (coupon.type === "percentage") {
+    if (coupon.type === 'percentage') {
       discount = (cart.totalPrice * coupon.value) / 100;
-    } else if (coupon.type === "fixed") {
+    } else if (coupon.type === 'fixed') {
       discount = coupon.value;
     }
   }
@@ -62,7 +62,7 @@ export async function addOrder(userId, cartId, couponCode = null) {
 export async function getOrder(userId) {
   const order = await Order.find({ userId });
   if (!order) {
-    throw new Error("no order");
+    throw new Error('no order');
   }
 
   return order;
@@ -72,16 +72,16 @@ export async function getOrder(userId) {
 export async function updateStatus(orderId, status) {
   const order = await Order.findById(orderId);
   if (!order) {
-    throw new Error("no order");
+    throw new Error('no order');
   }
   const orderedProducts = order.items;
 
   // Paiement Simulation :
-  if (status === "paid") {
+  if (status === 'paid') {
     for (const item of orderedProducts) {
       const product = await Product.findById(item.productId);
       if (!product) {
-        throw new Error("no product");
+        throw new Error('no product');
       }
       product.stock -= item.quantity;
       await product.save();

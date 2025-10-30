@@ -1,5 +1,5 @@
-import Notification from "../models/Notification.js";
-import logger from "../config/logger.js";
+import Notification from '../models/Notification.js';
+import logger from '../config/logger.js';
 
 export const getNotifications = async (req, res) => {
   try {
@@ -21,7 +21,7 @@ export const markAsRead = async (req, res) => {
     });
 
     if (!notification) {
-      return res.status(404).json({ error: "Notification non trouvée" });
+      return res.status(404).json({ error: 'Notification non trouvée' });
     }
 
     notification.read = true;

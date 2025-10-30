@@ -1,8 +1,8 @@
-import { faker } from "@faker-js/faker";
-import Cart from "../models/Cart.js";
-import User from "../models/User.js";
-import Product from "../models/Product.js";
-import logger from "../config/logger.js";
+import { faker } from '@faker-js/faker';
+import Cart from '../models/Cart.js';
+import User from '../models/User.js';
+import Product from '../models/Product.js';
+import logger from '../config/logger.js';
 
 export const seedCarts = async () => {
   await Cart.deleteMany({});
@@ -45,5 +45,5 @@ export const seedCarts = async () => {
   }
 
   await Cart.insertMany(carts);
-  logger.info("Carts seeded");
+  logger.info('Carts seeded');
 };

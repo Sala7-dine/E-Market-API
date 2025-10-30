@@ -1,6 +1,6 @@
-import { addReview, getProductReviews } from "../services/reviewService.js";
-import mongoose from "mongoose";
-import logger from "../config/logger.js";
+import { addReview, getProductReviews } from '../services/reviewService.js';
+import mongoose from 'mongoose';
+import logger from '../config/logger.js';
 
 export const AddReview = async (req, res) => {
   try {
@@ -9,7 +9,7 @@ export const AddReview = async (req, res) => {
     const userId = req.user._id;
 
     if (!mongoose.Types.ObjectId.isValid(productId)) {
-      return res.status(400).json({ message: "ID invalide" });
+      return res.status(400).json({ message: 'ID invalide' });
     }
 
     const product = await addReview(productId, userId, rating, comment);
@@ -25,7 +25,7 @@ export const GetReviews = async (req, res) => {
     const { productId } = req.params;
 
     if (!mongoose.Types.ObjectId.isValid(productId)) {
-      return res.status(400).json({ message: "ID invalide" });
+      return res.status(400).json({ message: 'ID invalide' });
     }
 
     const reviews = await getProductReviews(productId);

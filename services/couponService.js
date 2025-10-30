@@ -1,4 +1,4 @@
-import Coupon from "../models/Coupon.js";
+import Coupon from '../models/Coupon.js';
 
 // create coupon :
 export async function creatCoupon(
@@ -11,7 +11,7 @@ export async function creatCoupon(
 ) {
   const isCouponExist = await Coupon.findOne({ code });
   if (isCouponExist) {
-    throw new Error("this code already exist!!");
+    throw new Error('this code already exist!!');
   }
 
   const newCoupon = await Coupon.create({
@@ -48,7 +48,7 @@ export async function updateCoupon(
     { new: true },
   );
   if (!coupon) {
-    throw new Error("coupon not found");
+    throw new Error('coupon not found');
   }
   return coupon;
 }
@@ -57,7 +57,7 @@ export async function updateCoupon(
 export async function deleteCoupon(couponId) {
   const deletedCoupon = await Coupon.findByIdAndDelete(couponId);
   if (!deletedCoupon) {
-    throw new Error("coupon not found");
+    throw new Error('coupon not found');
   }
   return deleteCoupon;
 }
@@ -67,7 +67,7 @@ export async function allCoupons() {
   const allCoupons = await Coupon.find();
 
   if (allCoupons.length === 0) {
-    throw new Error("no coupons");
+    throw new Error('no coupons');
   }
   return allCoupons;
 }
@@ -77,7 +77,7 @@ export async function alluserCoupons(createdBy) {
   const allCoupons = await Coupon.find({ createdBy });
 
   if (allCoupons.length === 0) {
-    throw new Error("no coupons");
+    throw new Error('no coupons');
   }
   return allCoupons;
 }
