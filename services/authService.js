@@ -1,18 +1,18 @@
-import User from "../models/User.js";
-import RefreshToken from "../models/RefreshToken.js";
-import bcrypt from "bcryptjs";
+import User from '../models/User.js';
+import RefreshToken from '../models/RefreshToken.js';
+import bcrypt from 'bcryptjs';
 import {
   generateJti,
   signAccessToken,
   signRefreshToken,
   verifyRefreshToken,
-} from "../utils/tokens.js";
-import logger from "../config/logger.js";
+} from '../utils/tokens.js';
+import logger from '../config/logger.js';
 
 export async function register({ email, password, fullName, roles }) {
   try {
     const existing = await User.findOne({ email });
-    if (existing) throw new Error("Email déjà utilisé");
+    if (existing) throw new Error('Email déjà utilisé');
 
     const user = new User({ email, fullName, roles });
     await user.setPassword(password);
@@ -44,7 +44,7 @@ export async function login({ email, password }) {
     const user = await User.findOne({ email });
     if (!user || !(await user.validatePassword(password))) {
       logger.warn(`Failed login attempt for: ${email}`);
-      throw new Error("Email ou mot de passe incorrect");
+      throw new Error('Email ou mot de passe incorrect');
     }
 
     const jti = generateJti();
@@ -70,24 +70,24 @@ export async function login({ email, password }) {
 
 export async function refresh(token) {
   if (!token) {
-    throw new Error("Refresh token requis");
+    throw new Error('Refresh token requis');
   }
   let payload;
   try {
     payload = verifyRefreshToken(token);
   } catch {
-    throw new Error("Refresh token invalide");
+    throw new Error('Refresh token invalide');
   }
 
   const stored = await RefreshToken.findOne({ jti: payload.jti });
-  if (!stored) throw new Error("Refresh token invalide");
-  if (stored.revoked) throw new Error("Refresh token invalide");
+  if (!stored) throw new Error('Refresh token invalide');
+  if (stored.revoked) throw new Error('Refresh token invalide');
   if (stored.expiresAt && Date.now() >= stored.expiresAt.getTime()) {
-    throw new Error("Refresh token invalide");
+    throw new Error('Refresh token invalide');
   }
 
   const isMatch = await bcrypt.compare(token, stored.tokenHash);
-  if (!isMatch) throw new Error("Refresh token invalide");
+  if (!isMatch) throw new Error('Refresh token invalide');
 
   return signAccessToken({ sub: payload.sub });
 }
@@ -100,7 +100,7 @@ export async function logout(token) {
     await RefreshToken.findOneAndDelete({ jti: decoded.jti });
 
     logger.info(`User logged out: ${decoded.sub}`);
-    return { message: "Déconnexion réussie" };
+    return { message: 'Déconnexion réussie' };
   } catch (err) {
     logger.error(`Logout error: ${err.message}`);
     throw err;

@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const categorySchema = new mongoose.Schema(
   {
@@ -12,10 +12,10 @@ const categorySchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-categorySchema.virtual("products", {
-  ref: "Product",
-  localField: "_id",
-  foreignField: "categories",
+categorySchema.virtual('products', {
+  ref: 'Product',
+  localField: '_id',
+  foreignField: 'categories',
 });
 
-export default mongoose.model("Categorie", categorySchema);
+export default mongoose.model('Categorie', categorySchema);

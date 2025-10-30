@@ -4,7 +4,7 @@ import {
   deleteCoupon,
   allCoupons,
   alluserCoupons,
-} from "../services/couponService.js";
+} from '../services/couponService.js';
 
 // add coupon :
 export const handleCreateCoupon = async (req, res, next) => {
@@ -22,7 +22,7 @@ export const handleCreateCoupon = async (req, res, next) => {
     );
     res.status(201).json({
       success: true,
-      message: "coupon created",
+      message: 'coupon created',
       data: coupon,
     });
   } catch (err) {
@@ -47,7 +47,7 @@ export const handleUpdateCoupon = async (req, res, next) => {
     );
     res.status(200).json({
       success: true,
-      message: "Coupon updated successfully",
+      message: 'Coupon updated successfully',
       data: updatedCoupon,
     });
   } catch (err) {
@@ -62,7 +62,7 @@ export const handleDeleteCoupon = async (req, res, next) => {
     await deleteCoupon(couponId);
     res.status(200).json({
       success: true,
-      message: "Coupon deleted successfully",
+      message: 'Coupon deleted successfully',
     });
   } catch (err) {
     next(err);

@@ -1,6 +1,6 @@
-import { faker } from "@faker-js/faker";
-import Categorie from "../models/Categorie.js";
-import logger from "../config/logger.js";
+import { faker } from '@faker-js/faker';
+import Categorie from '../models/Categorie.js';
+import logger from '../config/logger.js';
 
 export const seedCategories = async () => {
   await Categorie.deleteMany({});
@@ -22,5 +22,5 @@ export const seedCategories = async () => {
   }
 
   await Categorie.insertMany(categories);
-  logger.info("Categories seeded");
+  logger.info('Categories seeded');
 };

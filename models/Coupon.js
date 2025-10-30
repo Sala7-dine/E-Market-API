@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const couponSchema = new mongoose.Schema(
   {
@@ -11,7 +11,7 @@ const couponSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ["percentage", "fixed"],
+      enum: ['percentage', 'fixed'],
       required: true,
     },
     value: {
@@ -33,10 +33,10 @@ const couponSchema = new mongoose.Schema(
     },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
     },
   },
   { timestamps: true },
 );
 
-export default mongoose.model("Coupon", couponSchema);
+export default mongoose.model('Coupon', couponSchema);

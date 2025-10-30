@@ -1,5 +1,5 @@
-import Categorie from "../models/Categorie.js";
-import logger from "../config/logger.js";
+import Categorie from '../models/Categorie.js';
+import logger from '../config/logger.js';
 
 export const createCategorie = async (data) => {
   try {

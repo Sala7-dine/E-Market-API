@@ -1,7 +1,7 @@
-import User from "../models/User.js";
-import fs from "fs";
-import logger from "../config/logger.js";
-import bcrypt from "bcryptjs"; // Add this import at the top
+import User from '../models/User.js';
+import fs from 'fs';
+import logger from '../config/logger.js';
+import bcrypt from 'bcryptjs'; // Add this import at the top
 
 export async function getAllUsers() {
   try {
@@ -19,7 +19,7 @@ export async function createUser(userData) {
     const { fullName, email, password } = userData;
 
     if (!fullName || !email || !password) {
-      throw new Error("Tous les champs obligatoires doivent être remplis.");
+      throw new Error('Tous les champs obligatoires doivent être remplis.');
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -61,9 +61,9 @@ export async function deleteUser(id) {
 // gets the current user by ID
 export async function getCurrentUser(userId) {
   try {
-    const user = await User.findById(userId).select("-password");
+    const user = await User.findById(userId).select('-password');
     if (!user || user.isDelete) {
-      throw new Error("Utilisateur non trouvé");
+      throw new Error('Utilisateur non trouvé');
     }
     return user;
   } catch (err) {
@@ -76,7 +76,7 @@ export async function UpdateProfile(userId, updateData, userRole) {
   try {
     const user = await User.findById(userId);
     if (!user || user.isDelete) {
-      throw new Error("Utilisateur non trouvé");
+      throw new Error('Utilisateur non trouvé');
     }
 
     const { fullName, email, password, role, profileImage } = updateData;
@@ -100,8 +100,8 @@ export async function UpdateProfile(userId, updateData, userRole) {
       await user.setPassword(password);
     }
 
-    if (role && userRole !== "admin") {
-      throw new Error("Seul un admin peut modifier le rôle");
+    if (role && userRole !== 'admin') {
+      throw new Error('Seul un admin peut modifier le rôle');
     }
 
     await user.save();
