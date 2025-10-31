@@ -15,7 +15,7 @@
     "seed:carts": "bun seeders/index.js --carts",
     "seed:orders": "bun seeders/index.js --orders",
     "seed:all": "bun seeders/index.js --all",
-    "reset": "bug scripts/reset.js",
+    "reset": "bun scripts/reset.js",
     "start": "node server.js",
     "dev": "bun --hot server.js",
     "format": "prettier --write .",
