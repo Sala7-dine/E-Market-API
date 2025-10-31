@@ -1,4 +1,4 @@
-import * as authService from "../services/authService.js";
+import * as authService from '../services/authService.js';
 
 export async function register(req, res) {
   try {
@@ -36,7 +36,7 @@ export async function logout(req, res) {
   try {
     const token = req.body.refreshToken;
     if (!token) {
-      return res.status(400).json({ error: "refreshToken requis" });
+      return res.status(400).json({ error: 'refreshToken requis' });
     }
 
     const result = await authService.logout(token);

@@ -4,17 +4,17 @@ import {
   deleteProduct,
   updateProduct,
   searchProducts,
-} from "../services/productService.js";
-import mongoose from "mongoose";
-import logger from "../config/logger.js";
-import notificationHandler from "../events/notificationHandler.js";
+} from '../services/productService.js';
+import mongoose from 'mongoose';
+import logger from '../config/logger.js';
+import notificationHandler from '../events/notificationHandler.js';
 
 export const GetProducts = async (req, res) => {
   try {
     const data = await getAllProducts();
 
     if (!data) {
-      throw new Error("aucun data dans database");
+      throw new Error('aucun data dans database');
     }
 
     res.status(201).json({
@@ -39,14 +39,14 @@ export const CreateProduct = async (req, res) => {
     }
     const newProduct = await createProduct(productData);
 
-    notificationHandler.emit("productCreated", {
+    notificationHandler.emit('productCreated', {
       userId: req.user._id,
       productTitle: newProduct.title,
     });
 
     res.status(201).json({
       success: true,
-      message: "Produit cree avec succes",
+      message: 'Produit cree avec succes',
       data: newProduct,
     });
   } catch (err) {
@@ -58,7 +58,7 @@ export const UpdateProduct = async (req, res) => {
   try {
     const id = req.params.id;
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ message: "ID invalide" });
+      return res.status(400).json({ message: 'ID invalide' });
     }
 
     const productUpdate = { ...req.body };
@@ -84,15 +84,15 @@ export const UpdateProduct = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "Le produit a été modifié avec succès",
+      message: 'Le produit a été modifié avec succès',
       data: updated,
     });
   } catch (err) {
     logger.error(`UpdateProduct error: ${err.stack || err.message}`);
     const status =
-      err.message === "Non autorisé"
+      err.message === 'Non autorisé'
         ? 403
-        : err.message === "Produit introuvable"
+        : err.message === 'Produit introuvable'
           ? 404
           : 500;
     return res.status(status).json({ success: false, message: err.message });
@@ -104,7 +104,7 @@ export const DeleteProduct = async (req, res) => {
     const id = req.params.id;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ message: "ID invalide" });
+      return res.status(400).json({ message: 'ID invalide' });
     }
 
     const newProduit = await deleteProduct(id);
@@ -133,11 +133,11 @@ export const SearchProducts = async (req, res) => {
     const filter = {};
 
     if (title) {
-      filter.title = { $regex: title, $options: "i" };
+      filter.title = { $regex: title, $options: 'i' };
     }
 
     if (description) {
-      filter.description = { $regex: description, $options: "i" };
+      filter.description = { $regex: description, $options: 'i' };
     }
 
     if (categories) {

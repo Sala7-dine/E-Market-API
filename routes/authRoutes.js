@@ -1,15 +1,15 @@
-import express from "express";
+import express from 'express';
 import {
   register,
   login,
   refresh,
   logout,
-} from "../controllers/authController.js";
-import dotenv from "dotenv";
+} from '../controllers/authController.js';
+import dotenv from 'dotenv';
 import {
   loginLimiter,
   registerLimiter,
-} from "../middlewares/rateLimiterMiddleware.js";
+} from '../middlewares/rateLimiterMiddleware.js';
 
 dotenv.config();
 const router = express.Router();
@@ -26,11 +26,11 @@ const router = express.Router();
 //     res.cookie('refreshToken', token, cookieOptions);
 // }
 
-router.post("/register", registerLimiter, register);
-router.post("/login", loginLimiter, login);
-router.post("/refresh", refresh);
+router.post('/register', registerLimiter, register);
+router.post('/login', loginLimiter, login);
+router.post('/refresh', refresh);
 
-router.post("/logout", logout);
+router.post('/logout', logout);
 
 // // Protected example routes
 // router.get('/profile', authenticate, (req, res) => {

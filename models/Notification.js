@@ -1,9 +1,9 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const notificationSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: 'User',
     required: true,
   },
   message: {
@@ -12,7 +12,7 @@ const notificationSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ["productCreated", "orderCreated", "orderUpdated"],
+    enum: ['productCreated', 'orderCreated', 'orderUpdated'],
     required: true,
   },
   read: {
@@ -25,4 +25,4 @@ const notificationSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.model("Notification", notificationSchema);
+export default mongoose.model('Notification', notificationSchema);

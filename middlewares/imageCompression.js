@@ -1,6 +1,6 @@
-import sharp from "sharp";
-import path from "path";
-import fs from "fs/promises";
+import sharp from 'sharp';
+import path from 'path';
+import fs from 'fs/promises';
 
 export const compressImages = (
   destination,
@@ -15,18 +15,18 @@ export const compressImages = (
       // Single file
       try {
         const filename = `${Date.now()}-${Math.round(Math.random() * 1e9)}.webp`;
-        const filepath = path.join("public", destination, filename);
+        const filepath = path.join('public', destination, filename);
 
         await sharp(req.file.buffer)
           .resize(maxWidth, maxHeight, {
-            fit: "inside",
+            fit: 'inside',
             withoutEnlargement: true,
           })
           .webp({ quality })
           .toFile(filepath);
 
         req.file.filename = filename;
-        req.file.mimetype = "image/webp";
+        req.file.mimetype = 'image/webp';
         req.file.size = (await fs.stat(filepath)).size;
         next();
       } catch (err) {
@@ -38,11 +38,11 @@ export const compressImages = (
         req.compressedFiles = await Promise.all(
           req.files.map(async (file) => {
             const filename = `${Date.now()}-${Math.round(Math.random() * 1e9)}.webp`;
-            const filepath = path.join("public", destination, filename);
+            const filepath = path.join('public', destination, filename);
 
             await sharp(file.buffer)
               .resize(maxWidth, maxHeight, {
-                fit: "inside",
+                fit: 'inside',
                 withoutEnlargement: true,
               })
               .webp({ quality })
@@ -50,7 +50,7 @@ export const compressImages = (
 
             return {
               filename,
-              mimetype: "image/webp",
+              mimetype: 'image/webp',
               size: (await fs.stat(filepath)).size,
             };
           }),

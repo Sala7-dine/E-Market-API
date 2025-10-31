@@ -1,13 +1,13 @@
-import Product from "../models/Product.js";
-import logger from "../config/logger.js";
-import fs from "fs/promises";
-import path from "path";
+import Product from '../models/Product.js';
+import logger from '../config/logger.js';
+import fs from 'fs/promises';
+import path from 'path';
 
 export async function getAllProducts() {
   try {
     const products = await Product.find()
       .where({ isDelete: false })
-      .populate("categories");
+      .populate('categories');
     logger.info(`Retrieved ${products.length} products`);
     return products;
   } catch (err) {
@@ -21,8 +21,8 @@ export async function createProduct(productData) {
     const { title, description, prix, stock, categories } = productData;
 
     if (!title || !description || !prix || !stock || !categories) {
-      logger.warn("Tous les champs obligatoires doivent être remplis.");
-      throw new Error("Tous les champs obligatoires doivent être remplis.");
+      logger.warn('Tous les champs obligatoires doivent être remplis.');
+      throw new Error('Tous les champs obligatoires doivent être remplis.');
     }
 
     const product = await Product.create(productData);
@@ -48,14 +48,14 @@ export async function updateProduct(
 
     const existingProduct = await Product.findById(id);
     if (!existingProduct) {
-      throw new Error("Produit introuvable");
+      throw new Error('Produit introuvable');
     }
 
     if (
       existingProduct.createdBy.toString() !== userId.toString() &&
-      userRole !== "admin"
+      userRole !== 'admin'
     ) {
-      throw new Error("Non autorisé");
+      throw new Error('Non autorisé');
     }
 
     const updated = await Product.findByIdAndUpdate(id, productUpdate, {
@@ -71,8 +71,8 @@ export async function updateProduct(
         try {
           const fullPath = path.join(
             process.cwd(),
-            "public",
-            imagePath.replace(/^\//, ""),
+            'public',
+            imagePath.replace(/^\//, ''),
           );
           await fs.unlink(fullPath);
           logger.info(`Deleted old image: ${imagePath}`);

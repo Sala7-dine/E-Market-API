@@ -1,26 +1,26 @@
-import { EventEmitter } from "events";
-import Notification from "../models/Notification.js";
-import logger from "../config/logger.js";
-import { sendEmail } from "../config/mailer.js";
-import User from "../models/User.js";
+import { EventEmitter } from 'events';
+import Notification from '../models/Notification.js';
+import logger from '../config/logger.js';
+import { sendEmail } from '../config/mailer.js';
+import User from '../models/User.js';
 
 class NotificationHandler extends EventEmitter {}
 
 const notificationHandler = new NotificationHandler();
 
-notificationHandler.on("productCreated", async ({ userId, productTitle }) => {
+notificationHandler.on('productCreated', async ({ userId, productTitle }) => {
   try {
     await Notification.create({
       userId,
       message: `Nouveau produit créé: ${productTitle}`,
-      type: "productCreated",
+      type: 'productCreated',
     });
 
     const user = await User.findById(userId);
     if (user) {
       await sendEmail({
         to: user.email,
-        subject: "Nouveau produit créé",
+        subject: 'Nouveau produit créé',
         text: `Votre produit "${productTitle}" a été créé avec succès.`,
         html: `<p>Votre produit <strong>${productTitle}</strong> a été créé avec succès.</p>`,
       });
@@ -32,19 +32,19 @@ notificationHandler.on("productCreated", async ({ userId, productTitle }) => {
   }
 });
 
-notificationHandler.on("orderCreated", async ({ userId, orderId }) => {
+notificationHandler.on('orderCreated', async ({ userId, orderId }) => {
   try {
     await Notification.create({
       userId,
       message: `Nouvelle commande créée: ${orderId}`,
-      type: "orderCreated",
+      type: 'orderCreated',
     });
 
     const user = await User.findById(userId);
     if (user) {
       await sendEmail({
         to: user.email,
-        subject: "Commande confirmée",
+        subject: 'Commande confirmée',
         text: `Votre commande ${orderId} a été créée avec succès.`,
         html: `<p>Votre commande <strong>${orderId}</strong> a été créée avec succès.</p>`,
       });
@@ -56,19 +56,19 @@ notificationHandler.on("orderCreated", async ({ userId, orderId }) => {
   }
 });
 
-notificationHandler.on("orderUpdated", async ({ userId, orderId, status }) => {
+notificationHandler.on('orderUpdated', async ({ userId, orderId, status }) => {
   try {
     await Notification.create({
       userId,
       message: `Commande ${orderId} mise à jour: ${status}`,
-      type: "orderUpdated",
+      type: 'orderUpdated',
     });
 
     const user = await User.findById(userId);
     if (user) {
       await sendEmail({
         to: user.email,
-        subject: "Mise à jour de commande",
+        subject: 'Mise à jour de commande',
         text: `Votre commande ${orderId} a été mise à jour: ${status}`,
         html: `<p>Votre commande <strong>${orderId}</strong> a été mise à jour: <strong>${status}</strong></p>`,
       });

@@ -1,11 +1,11 @@
-import rateLimit from "express-rate-limit";
+import rateLimit from 'express-rate-limit';
 
 export const loginRateLimiter = rateLimit({
   windowMs: 5 * 60 * 1000,
   max: 5,
   message: {
     status: 429,
-    error: "Trop de tentatives de connexion. Réessayez plus tart.",
+    error: 'Trop de tentatives de connexion. Réessayez plus tart.',
   },
   standardHeaders: true, // ajoute les headers RateLimit
   legacyHeaders: false, // désactive les anciens headers
@@ -16,7 +16,7 @@ export const registerRateLimiter = rateLimit({
   max: 50,
   message: {
     status: 429,
-    error: "Trop de tentatives de création de compte. Réessayez plus tart.",
+    error: 'Trop de tentatives de création de compte. Réessayez plus tart.',
   },
   standardHeaders: true,
   legacyHeaders: false,
@@ -27,7 +27,7 @@ export const productRateLimiter = rateLimit({
   max: 100,
   message: {
     status: 429,
-    error: "Trop de tentatives de création de produit. Réessayez plus tart.",
+    error: 'Trop de tentatives de création de produit. Réessayez plus tart.',
   },
   standardHeaders: true,
   legacyHeaders: false,
@@ -38,7 +38,7 @@ export const categoryRateLimiter = rateLimit({
   max: 100,
   message: {
     status: 429,
-    error: "Trop de tentatives de création de categorie. Réessayez plus tart.",
+    error: 'Trop de tentatives de création de categorie. Réessayez plus tart.',
   },
   standardHeaders: true,
   legacyHeaders: false,

@@ -1,4 +1,4 @@
-import logger from "../config/logger.js";
+import logger from '../config/logger.js';
 
 const errorHandler = (err, req, res) => {
   logger.error({
@@ -11,8 +11,8 @@ const errorHandler = (err, req, res) => {
 
   res.status(err.status || 500).json({
     success: false,
-    message: err.message || "Erreur serveur",
-    ...(process.env.NODE_ENV === "development" && { stack: err.stack }),
+    message: err.message || 'Erreur serveur',
+    ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
   });
 };
 

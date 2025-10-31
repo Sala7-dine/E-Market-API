@@ -1,24 +1,24 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const productSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      required: [true, "le titre du produit est obligatoire"],
+      required: [true, 'le titre du produit est obligatoire'],
     },
     description: {
       type: String,
-      required: [true, "le description de produit est obligatoire"],
+      required: [true, 'le description de produit est obligatoire'],
     },
     prix: {
       type: Number,
-      required: [true, "le prix et obligatoire"],
-      min: [0, "le prix ne peut pas etre negatif"],
+      required: [true, 'le prix et obligatoire'],
+      min: [0, 'le prix ne peut pas etre negatif'],
     },
     stock: {
       type: Number,
-      required: [true, "Le stock est obligatoire"],
-      min: [0, "Le stock ne peut pas être négatif"],
+      required: [true, 'Le stock est obligatoire'],
+      min: [0, 'Le stock ne peut pas être négatif'],
     },
     images: {
       type: [String],
@@ -32,19 +32,19 @@ const productSchema = new mongoose.Schema(
     categories: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Categorie",
+        ref: 'Categorie',
       },
     ],
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
     },
     reviews: [
       {
         user: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
+          ref: 'User',
           required: true,
         },
         rating: {
@@ -72,4 +72,4 @@ const productSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-export default mongoose.model("Product", productSchema);
+export default mongoose.model('Product', productSchema);

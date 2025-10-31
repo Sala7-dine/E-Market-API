@@ -1,16 +1,16 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 const cartSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
     },
     items: [
       {
         productId: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "Product",
+          ref: 'Product',
           required: true,
         },
         quantity: { type: Number, default: 1 },
@@ -22,4 +22,4 @@ const cartSchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
-export default mongoose.model("Cart", cartSchema);
+export default mongoose.model('Cart', cartSchema);

@@ -1,6 +1,6 @@
-import { faker } from "@faker-js/faker";
-import User from "../models/User.js";
-import logger from "../config/logger.js";
+import { faker } from '@faker-js/faker';
+import User from '../models/User.js';
+import logger from '../config/logger.js';
 
 export const seedUsers = async () => {
   await User.deleteMany({});
@@ -11,10 +11,10 @@ export const seedUsers = async () => {
       fullName: faker.person.fullName(),
       email: faker.internet.email(),
       password: faker.internet.password({ length: 20 }),
-      role: i === 0 ? "admin" : "user",
+      role: i === 0 ? 'admin' : 'user',
     });
   }
 
   await User.insertMany(users);
-  logger.info("Users seeded");
+  logger.info('Users seeded');
 };
