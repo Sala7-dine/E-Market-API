@@ -49,9 +49,9 @@ const parseFormData = (req, res, next) => {
 
 const router = express.Router();
 
-// Routes publiques (accessible à tous les utilisateurs authentifiés)
-router.get('/', productLimiter, GetProducts);
-router.get('/search', productLimiter, SearchProducts);
+// Routes publiques (accessible à tous)
+router.get('/', GetProducts);
+router.get('/search', SearchProducts);
 
 // Routes pour sellers et admins (création de produits)
 router.post(
