@@ -5,6 +5,7 @@ import {
   DeleteProduct,
   UpdateProduct,
   SearchProducts,
+    GetProductById,
 } from '../controllers/productController.js';
 import { AddReview, GetReviews } from '../controllers/reviewController.js';
 import { validate } from '../middlewares/validate.js';
@@ -16,10 +17,7 @@ import multer from 'multer';
 import { compressImages } from '../middlewares/imageCompression.js';
 import { productLimiter } from '../middlewares/rateLimiterMiddleware.js';
 import { authenticate } from '../middlewares/authMiddleware.js';
-import {
-  requireSellerOrAdmin,
-  requireProductOwnerOrAdmin,
-} from '../middlewares/roleMiddleware.js';
+import { requireProductOwnerOrAdmin, requireSellerOrAdmin } from '../middlewares/roleMiddleware.js';
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -56,8 +54,8 @@ router.get('/search', SearchProducts);
 // Routes pour sellers et admins (création de produits)
 router.post(
   '/create',
+  authenticate,
   productLimiter,
-  requireSellerOrAdmin,
   upload.array('images', 5),
   compressImages('images/products'),
   parseFormData,
@@ -65,9 +63,13 @@ router.post(
   CreateProduct,
 );
 
+//get product by id
+router.get('/:id', GetProductById);
+
 // Routes pour propriétaire du produit ou admin (modification/suppression)
 router.put(
   '/update/:id',
+  authenticate,
   productLimiter,
   requireProductOwnerOrAdmin,
   upload.array('images', 5),
@@ -79,6 +81,7 @@ router.put(
 
 router.delete(
   '/delete/:id',
+  authenticate,
   productLimiter,
   requireProductOwnerOrAdmin,
   DeleteProduct,

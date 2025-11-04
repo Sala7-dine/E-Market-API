@@ -4,6 +4,7 @@ import {
   deleteProduct,
   updateProduct,
   searchProducts,
+    getProductById,
 } from '../services/productService.js';
 import mongoose from 'mongoose';
 import logger from '../config/logger.js';
@@ -159,4 +160,17 @@ export const SearchProducts = async (req, res) => {
   } catch (err) {
     throw new Error(err.message);
   }
+
+};
+export const GetProductById = async (req, res) => {
+    try {
+        const productId = req.params.id;
+        const product = await getProductById(productId);
+        res.status(200).json({
+            success: true,
+            data: product,
+        });
+    } catch (err) {
+        throw new Error(err.message);
+    }
 };

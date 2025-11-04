@@ -3,6 +3,17 @@ import logger from '../config/logger.js';
 import fs from 'fs/promises';
 import path from 'path';
 
+export const getProductById = async (id) => {
+    try {
+        const product = await Product.findById(id).populate('categories');
+        if (!product || product.isDelete) {
+            throw new Error('Produit introuvable');
+        }
+        return product;
+    } catch (err) {
+        throw new Error(err.message);
+    }
+};
 export async function getAllProducts() {
   try {
     const products = await Product.find()
@@ -113,4 +124,5 @@ export async function searchProducts(filter) {
   } catch (err) {
     throw new Error(err.message);
   }
+
 }

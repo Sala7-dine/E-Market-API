@@ -31,14 +31,24 @@ dotenv.config();
 const Port = process.env.PORT || 3000;
 const MongoUri = process.env.MONGO_URI;
 
-app.use(cors());
+app.use(
+  cors({
+    origin: '*',
+    credentials: true,
+  }),
+);
 app.use(express.json());
+app.use('/images', express.static('public/images'));
 
 // secure headers
-app.use(helmet());
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+  }),
+);
+
 app.use(cookieParser());
 app.use(loggerMiddleware);
-app.use('/images', express.static('public/images'));
 
 app.get('/', (req, res) => {
   res.redirect('/api-docs');
@@ -60,12 +70,8 @@ app.use('/api/carts', cacheMiddleware, authenticate, cartRoutes);
 app.use('/api/orders', cacheMiddleware, authenticate, orderRoutes);
 app.use('/api/notifications', authenticate, notificationRoutes);
 
-// Routes pour sellers et admins (gestion des produits)
-if (process.env.NODE_ENV === 'test') {
-  app.use('/api/products', authenticate, productRoutes);
-} else {
-  app.use('/api/products', authenticate, requireSellerOrAdmin, productRoutes);
-}
+// Routes produits (authentification gérée au niveau des routes individuelles)
+app.use('/api/products', productRoutes);
 
 // Routes pour admins et sellers (gestion des coupons)
 app.use(

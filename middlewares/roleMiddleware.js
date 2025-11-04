@@ -66,11 +66,8 @@ export const requireProductOwnerOrAdmin = async (req, res, next) => {
       return next();
     }
 
-    // Seller peut seulement modifier ses propres produits
-    if (
-      req.user.role === 'seller' &&
-      product.createdBy.toString() === req.user._id.toString()
-    ) {
+    // Le créateur peut modifier son propre produit
+    if (product.createdBy.toString() === req.user._id.toString()) {
       return next();
     }
 
