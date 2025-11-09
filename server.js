@@ -33,10 +33,12 @@ const MongoUri = process.env.MONGO_URI;
 
 app.use(
   cors({
-    origin: 'http://localhost:5173',
-    credentials: true,
-  }),
+    origin: 'http://localhost:5173', // l'URL exacte de ton frontend
+    credentials: true // permet d'envoyer les cookies HTTP-only
+  })
 );
+
+app.use(cookieParser());
 app.use(express.json());
 app.use('/images', express.static('public/images'));
 
@@ -47,7 +49,6 @@ app.use(
   }),
 );
 
-app.use(cookieParser());
 app.use(loggerMiddleware);
 
 app.get('/', (req, res) => {
