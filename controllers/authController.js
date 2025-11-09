@@ -20,7 +20,7 @@ export async function login(req, res) {
     // Stocker le refreshToken dans un cookie HTTP-only
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', // HTTPS en prod
+      secure: true, // HTTPS en prod
       sameSite: 'None', // obligatoire pour cross-origin
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 jours
     });
