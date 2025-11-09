@@ -11,20 +11,34 @@ export async function register(req, res) {
   }
 }
 
+
+// Login : envoie accessToken dans body, refreshToken dans cookie HTTP-only
 export async function login(req, res) {
   try {
-    const { user, accessToken, refreshToken } = await authService.login(
-      req.body,
-    );
-    res.json({ user, accessToken, refreshToken });
+    const { user, accessToken, refreshToken } = await authService.login(req.body);
+
+    // Stocker le refreshToken dans un cookie HTTP-only
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // HTTPS en prod
+      sameSite: 'None', // obligatoire pour cross-origin
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 jours
+    });
+
+    res.json({ user, accessToken });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
 }
 
+// Refresh : lit le refreshToken depuis le cookie
 export async function refresh(req, res) {
   try {
-    const token = req.body.refreshToken;
+    const token = req.cookies.refreshToken;
+    if (!token) {
+      return res.status(401).json({ error: 'refreshToken manquant' });
+    }
+
     const newAccessToken = await authService.refresh(token);
     res.json({ accessToken: newAccessToken });
   } catch (err) {
@@ -32,15 +46,24 @@ export async function refresh(req, res) {
   }
 }
 
+// Logout : lit le refreshToken depuis le cookie et le supprime
 export async function logout(req, res) {
   try {
-    const token = req.body.refreshToken;
+    const token = req.cookies.refreshToken;
     if (!token) {
       return res.status(400).json({ error: 'refreshToken requis' });
     }
 
-    const result = await authService.logout(token);
-    res.json(result);
+    await authService.logout(token);
+
+    // Supprime le cookie côté client
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'None',
+    });
+
+    res.json({ message: 'Déconnexion réussie' });
   } catch (err) {
     res.status(401).json({ error: err.message });
   }
