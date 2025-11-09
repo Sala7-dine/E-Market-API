@@ -33,7 +33,7 @@ const MongoUri = process.env.MONGO_URI;
 
 app.use(
   cors({
-    origin: '*',
+    origin: 'http://localhost:5173',
     credentials: true,
   }),
 );
