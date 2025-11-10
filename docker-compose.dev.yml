@@ -1,0 +1,24 @@
+services:
+  api:
+    build: .
+    container_name: emarket-api-dev
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    env_file:
+      - .env.development
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - mailpit
+    restart: unless-stopped
+
+  mailpit:
+    image: axllent/mailpit
+    container_name: emarket-mailpit
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    restart: unless-stopped
