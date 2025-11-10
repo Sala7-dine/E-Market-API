@@ -2,6 +2,16 @@ import express from 'express';
 import connectDB from './config/db.js';
 import { swaggerUi, swaggerDocument } from './config/swagger.js';
 import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const envFile = process.env.NODE_ENV === 'production' 
+  ? '.env.production' 
+  : '.env.development';
+
+dotenv.config({ path: path.resolve(__dirname, envFile) });
 import productRoutes from './routes/productRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import categorieRoute from './routes/categoryRoutes.js';
@@ -25,8 +35,6 @@ import logger from './config/logger.js';
 import { cacheMiddleware } from './middlewares/cacheMiddleware.js';
 
 const app = express();
-
-dotenv.config();
 
 const Port = process.env.PORT || 3000;
 const MongoUri = process.env.MONGO_URI;
