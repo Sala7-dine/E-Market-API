@@ -32,7 +32,15 @@ dotenv.config();
 const Port = process.env.PORT || 3000;
 const MongoUri = process.env.MONGO_URI;
 
-app.use(cors());
+app.use(
+  cors({
+    origin: 'http://localhost:5173', // l'URL exacte de ton frontend
+    credentials: true // permet d'envoyer les cookies HTTP-only
+  })
+);
+
+app.use(cookieParser());
+app.use('/images', express.static('public/images'));
 app.use(express.json());
 
 // secure headers
