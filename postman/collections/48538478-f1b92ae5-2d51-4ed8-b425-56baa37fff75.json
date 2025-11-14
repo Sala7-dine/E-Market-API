@@ -2039,6 +2039,203 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "Seller Management",
+      "item": [
+        {
+          "name": "Get Seller Products",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Response has success property\", () => pm.expect(pm.response.json()).to.have.property('success'));",
+                  "pm.test(\"Response has data array\", () => pm.expect(pm.response.json()).to.have.property('data'));",
+                  "pm.test(\"Response has pagination\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('pagination');",
+                  "    pm.expect(json.pagination).to.have.property('currentPage');",
+                  "    pm.expect(json.pagination).to.have.property('totalPages');",
+                  "    pm.expect(json.pagination).to.have.property('totalProducts');",
+                  "});",
+                  "pm.test(\"Products have required fields\", () => {",
+                  "    const products = pm.response.json().data;",
+                  "    if (products.length > 0) {",
+                  "        pm.expect(products[0]).to.have.property('title');",
+                  "        pm.expect(products[0]).to.have.property('prix');",
+                  "        pm.expect(products[0]).to.have.property('stock');",
+                  "        pm.expect(products[0]).to.have.property('createdBy');",
+                  "    }",
+                  "});",
+                  "pm.test(\"Response time < 2s\", () => pm.expect(pm.response.responseTime).to.be.below(2000));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/seller/products?page=1&limit=10",
+              "host": ["{{baseURL}}"],
+              "path": ["api", "seller", "products"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Retrieve all products created by the authenticated seller with pagination support."
+          }
+        },
+        {
+          "name": "Get Seller Statistics",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Response has success property\", () => pm.expect(pm.response.json()).to.have.property('success'));",
+                  "pm.test(\"Response has data object\", () => pm.expect(pm.response.json()).to.have.property('data'));",
+                  "pm.test(\"Stats have required fields\", () => {",
+                  "    const stats = pm.response.json().data;",
+                  "    pm.expect(stats).to.have.property('totalProducts');",
+                  "    pm.expect(stats).to.have.property('outOfStock');",
+                  "    pm.expect(stats).to.have.property('totalOrders');",
+                  "    pm.expect(stats).to.have.property('totalRevenue');",
+                  "    pm.expect(stats).to.have.property('totalItemsSold');",
+                  "});",
+                  "pm.test(\"Stats are numbers\", () => {",
+                  "    const stats = pm.response.json().data;",
+                  "    pm.expect(stats.totalProducts).to.be.a('number');",
+                  "    pm.expect(stats.outOfStock).to.be.a('number');",
+                  "    pm.expect(stats.totalOrders).to.be.a('number');",
+                  "    pm.expect(stats.totalRevenue).to.be.a('number');",
+                  "    pm.expect(stats.totalItemsSold).to.be.a('number');",
+                  "});",
+                  "pm.test(\"Response time < 2s\", () => pm.expect(pm.response.responseTime).to.be.below(2000));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/seller/stats",
+              "host": ["{{baseURL}}"],
+              "path": ["api", "seller", "stats"]
+            },
+            "description": "Get comprehensive statistics for the authenticated seller including products, orders, and revenue data."
+          }
+        },
+        {
+          "name": "Get Seller Orders",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Response has success property\", () => pm.expect(pm.response.json()).to.have.property('success'));",
+                  "pm.test(\"Response has data array\", () => pm.expect(pm.response.json()).to.have.property('data'));",
+                  "pm.test(\"Response has pagination\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('pagination');",
+                  "    pm.expect(json.pagination).to.have.property('currentPage');",
+                  "    pm.expect(json.pagination).to.have.property('totalPages');",
+                  "    pm.expect(json.pagination).to.have.property('totalOrders');",
+                  "});",
+                  "pm.test(\"Orders have required fields\", () => {",
+                  "    const orders = pm.response.json().data;",
+                  "    if (orders.length > 0) {",
+                  "        pm.expect(orders[0]).to.have.property('userId');",
+                  "        pm.expect(orders[0]).to.have.property('user');",
+                  "        pm.expect(orders[0]).to.have.property('status');",
+                  "        pm.expect(orders[0]).to.have.property('items');",
+                  "        pm.expect(orders[0]).to.have.property('orderTotal');",
+                  "    }",
+                  "});",
+                  "pm.test(\"Valid order status\", () => {",
+                  "    const orders = pm.response.json().data;",
+                  "    if (orders.length > 0) {",
+                  "        const validStatuses = ['pending', 'paid', 'shipped', 'delivered', 'cancelled'];",
+                  "        pm.expect(validStatuses).to.include(orders[0].status);",
+                  "    }",
+                  "});",
+                  "pm.test(\"Response time < 2s\", () => pm.expect(pm.response.responseTime).to.be.below(2000));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/seller/orders?page=1&limit=10&status=paid",
+              "host": ["{{baseURL}}"],
+              "path": ["api", "seller", "orders"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "status",
+                  "value": "paid",
+                  "description": "Optional: Filter by order status (pending, paid, shipped, delivered, cancelled)"
+                }
+              ]
+            },
+            "description": "Retrieve all orders containing products from the authenticated seller with optional status filtering and pagination."
+          }
+        }
+      ]
     }
   ],
   "event": [
