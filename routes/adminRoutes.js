@@ -1,6 +1,7 @@
 import express from 'express';
 import { authenticate } from '../middlewares/authMiddleware.js';
 import { requireAdmin } from '../middlewares/roleMiddleware.js';
+import { GetAllReviews, DeleteReview } from '../controllers/reviewController.js';
 import User from '../models/User.js';
 import fs from 'fs';
 import path from 'path';
@@ -88,5 +89,9 @@ router.get('/logs/:filename', authenticate, requireAdmin, (req, res) => {
     res.status(500).json({ error: 'Erreur lors de la lecture du fichier' });
   }
 });
+
+// Gestion des avis
+router.get('/reviews', authenticate, requireAdmin, GetAllReviews);
+router.delete('/reviews/:productId/:reviewId', authenticate, requireAdmin, DeleteReview);
 
 export default router;

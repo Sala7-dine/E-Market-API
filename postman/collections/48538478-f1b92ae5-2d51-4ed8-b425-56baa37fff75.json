@@ -2041,6 +2041,231 @@
       ]
     },
     {
+      "name": "Admin Management",
+      "item": [
+        {
+          "name": "Get All Reviews",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Response has success property\", () => pm.expect(pm.response.json()).to.have.property('success'));",
+                  "pm.test(\"Response has data array\", () => pm.expect(pm.response.json()).to.have.property('data'));",
+                  "pm.test(\"Response has pagination\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('pagination');",
+                  "    pm.expect(json.pagination).to.have.property('currentPage');",
+                  "    pm.expect(json.pagination).to.have.property('totalPages');",
+                  "    pm.expect(json.pagination).to.have.property('totalReviews');",
+                  "});",
+                  "pm.test(\"Reviews have required fields\", () => {",
+                  "    const reviews = pm.response.json().data;",
+                  "    if (reviews.length > 0) {",
+                  "        pm.expect(reviews[0]).to.have.property('_id');",
+                  "        pm.expect(reviews[0]).to.have.property('productId');",
+                  "        pm.expect(reviews[0]).to.have.property('productTitle');",
+                  "        pm.expect(reviews[0]).to.have.property('user');",
+                  "        pm.expect(reviews[0]).to.have.property('rating');",
+                  "        pm.expect(reviews[0]).to.have.property('comment');",
+                  "        pm.expect(reviews[0]).to.have.property('createdAt');",
+                  "    }",
+                  "});",
+                  "pm.test(\"Response time < 2s\", () => pm.expect(pm.response.responseTime).to.be.below(2000));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/admin/reviews?page=1&limit=10",
+              "host": ["{{baseURL}}"],
+              "path": ["api", "admin", "reviews"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Numéro de la page (défaut: 1)"
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Nombre d'avis par page (défaut: 10)"
+                }
+              ]
+            },
+            "description": "Récupérer tous les avis de tous les produits pour l'administration. Nécessite les droits d'administrateur."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Review",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Response has success property\", () => pm.expect(pm.response.json()).to.have.property('success'));",
+                  "pm.test(\"Response has message\", () => pm.expect(pm.response.json()).to.have.property('message'));",
+                  "pm.test(\"Response time < 1s\", () => pm.expect(pm.response.responseTime).to.be.below(1000));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/admin/reviews/:productId/:reviewId",
+              "host": ["{{baseURL}}"],
+              "path": ["api", "admin", "reviews", ":productId", ":reviewId"],
+              "variable": [
+                {
+                  "key": "productId",
+                  "value": "{{productId}}",
+                  "description": "ID du produit contenant l'avis"
+                },
+                {
+                  "key": "reviewId",
+                  "value": "REVIEW_ID_HERE",
+                  "description": "ID de l'avis à supprimer"
+                }
+              ]
+            },
+            "description": "Supprimer un avis spécifique d'un produit. Nécessite les droits d'administrateur."
+          },
+          "response": []
+        },
+        {
+          "name": "Promote User Role",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Response has success property\", () => pm.expect(pm.response.json()).to.have.property('success'));",
+                  "pm.test(\"Response has message\", () => pm.expect(pm.response.json()).to.have.property('message'));",
+                  "pm.test(\"Response has user data\", () => pm.expect(pm.response.json()).to.have.property('data'));",
+                  "pm.test(\"Response time < 1s\", () => pm.expect(pm.response.responseTime).to.be.below(1000));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"role\": \"seller\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/api/admin/users/:userId/promote",
+              "host": ["{{baseURL}}"],
+              "path": ["api", "admin", "users", ":userId", "promote"],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": "{{userId}}",
+                  "description": "ID de l'utilisateur à promouvoir"
+                }
+              ]
+            },
+            "description": "Promouvoir un utilisateur en vendeur ou rétrograder en utilisateur simple. Nécessite les droits d'administrateur."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Application Logs",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Response has success property\", () => pm.expect(pm.response.json()).to.have.property('success'));",
+                  "pm.test(\"Response has logs array\", () => pm.expect(pm.response.json()).to.have.property('logs'));",
+                  "pm.test(\"Response time < 2s\", () => pm.expect(pm.response.responseTime).to.be.below(2000));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/admin/logs",
+              "host": ["{{baseURL}}"],
+              "path": ["api", "admin", "logs"]
+            },
+            "description": "Récupérer la liste des fichiers de logs de l'application. Nécessite les droits d'administrateur."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "Seller Management",
       "item": [
         {

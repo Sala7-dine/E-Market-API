@@ -1,4 +1,4 @@
-import { addReview, getProductReviews } from '../services/reviewService.js';
+import { addReview, getProductReviews, getAllReviews, deleteReview } from '../services/reviewService.js';
 import mongoose from 'mongoose';
 import logger from '../config/logger.js';
 
@@ -32,6 +32,34 @@ export const GetReviews = async (req, res) => {
     res.json({ success: true, data: reviews });
   } catch (err) {
     logger.error(`GetReviews error: ${err.message}`);
+    res.status(400).json({ error: err.message });
+  }
+};
+
+export const GetAllReviews = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const result = await getAllReviews(page, limit);
+    res.json({ success: true, data: result.reviews, pagination: result.pagination });
+  } catch (err) {
+    logger.error(`GetAllReviews error: ${err.message}`);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export const DeleteReview = async (req, res) => {
+  try {
+    const { productId, reviewId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(productId) || !mongoose.Types.ObjectId.isValid(reviewId)) {
+      return res.status(400).json({ message: 'ID invalide' });
+    }
+
+    await deleteReview(productId, reviewId);
+    res.json({ success: true, message: 'Avis supprimé avec succès' });
+  } catch (err) {
+    logger.error(`DeleteReview error: ${err.message}`);
     res.status(400).json({ error: err.message });
   }
 };
