@@ -1,6 +1,6 @@
 import logger from '../config/logger.js';
 
-const errorHandler = (err, req, res) => {
+const errorHandler = (err, req, res, next) => {
   logger.error({
     message: err.message,
     stack: err.stack,
@@ -8,6 +8,11 @@ const errorHandler = (err, req, res) => {
     url: req.originalUrl,
     ip: req.ip,
   });
+
+  // Si les headers sont déjà envoyés, déléguer à Express
+  if (res.headersSent) {
+    return next(err);
+  }
 
   res.status(err.status || 500).json({
     success: false,

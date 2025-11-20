@@ -3,11 +3,31 @@ import fs from 'fs';
 import logger from '../config/logger.js';
 import bcrypt from 'bcryptjs'; // Add this import at the top
 
-export async function getAllUsers() {
+export async function getAllUsers(page = 1, limit = 10) {
   try {
-    const users = await User.find().where({ isDelete: false });
-    logger.info(`Retrieved ${users.length} users`);
-    return users;
+    const skip = (page - 1) * limit;
+    
+    const users = await User.find({ isDelete: false })
+      .select('-password')
+      .sort({ createdAt: -1 })
+      .limit(limit * 1)
+      .skip(skip);
+    
+    const total = await User.countDocuments({ isDelete: false });
+    
+    logger.info(`Retrieved ${users.length} users (page ${page})`);
+    
+    return {
+      success: true,
+      data: users,
+      pagination: {
+        currentPage: parseInt(page),
+        totalPages: Math.ceil(total / limit),
+        totalUsers: total,
+        hasNext: page < Math.ceil(total / limit),
+        hasPrev: page > 1
+      }
+    };
   } catch (err) {
     logger.error(`Error getting all users: ${err.message}`);
     throw new Error(err.message);

@@ -10,7 +10,8 @@ import mongoose from 'mongoose';
 
 export const GetUsers = async (req, res) => {
   try {
-    const data = await getAllUsers();
+    const { page = 1, limit = 10 } = req.query;
+    const data = await getAllUsers(page, limit);
 
     if (!data) {
       throw new Error('aucun data dans database');

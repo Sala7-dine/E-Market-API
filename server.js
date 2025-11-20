@@ -34,20 +34,29 @@ const MongoUri = process.env.MONGO_URI;
 
 app.use(
   cors({
-    origin: 'http://localhost:5173', // l'URL exacte de ton frontend
-    credentials: true // permet d'envoyer les cookies HTTP-only
+    origin: true, // l'URL exacte de ton frontend
+    credentials: true,
+
+
   })
 );
 
 app.use(cookieParser());
-app.use('/images', express.static('public/images'));
 app.use(express.json());
 
 // secure headers
-app.use(helmet());
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" }
+}));
 app.use(cookieParser());
 app.use(loggerMiddleware);
-app.use('/images', express.static('public/images'));
+
+// Middleware pour ajouter les headers cross-origin aux images
+app.use('/images', (req, res, next) => {
+  res.header('Cross-Origin-Resource-Policy', 'cross-origin');
+  res.header('Access-Control-Allow-Origin', '*');
+  next();
+}, express.static('public'));
 
 app.get('/', (req, res) => {
     res.redirect('/api-docs');
@@ -61,15 +70,15 @@ app.use('/api/categories', categorieRoute);
 
 // Routes protégées par authentification
 app.use('/api/users', userRoutes);
-app.use('/api/carts', cacheMiddleware, authenticate, cartRoutes);
-app.use('/api/orders', cacheMiddleware, authenticate, orderRoutes);
+app.use('/api/carts', authenticate, cartRoutes);
+app.use('/api/orders', authenticate, orderRoutes);
 app.use('/api/notifications', authenticate, notificationRoutes);
 
 // Routes pour sellers et admins (gestion des produits)
 if (process.env.NODE_ENV === 'test') {
-    app.use('/api/products', authenticate, productRoutes);
+    app.use('/api/products', productRoutes);
 } else {
-    app.use('/api/products', authenticate, requireSellerOrAdmin, productRoutes);
+    app.use('/api/products', productRoutes);
 }
 
 // Routes pour admins et sellers (gestion des coupons)

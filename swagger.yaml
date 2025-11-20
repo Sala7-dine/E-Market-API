@@ -612,10 +612,23 @@ paths:
   /api/users:
     get:
       tags: [Users]
-      summary: Liste tous les utilisateurs
+      summary: Liste tous les utilisateurs avec pagination
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Numéro de page
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+          description: Nombre d'utilisateurs par page
       responses:
         '200':
-          description: Liste des utilisateurs
+          description: Liste des utilisateurs avec pagination
           content:
             application/json:
               schema:
@@ -623,10 +636,29 @@ paths:
                 properties:
                   success:
                     type: boolean
+                    example: true
                   data:
                     type: array
                     items:
                       $ref: '#/components/schemas/User'
+                  pagination:
+                    type: object
+                    properties:
+                      currentPage:
+                        type: integer
+                        example: 1
+                      totalPages:
+                        type: integer
+                        example: 5
+                      totalUsers:
+                        type: integer
+                        example: 47
+                      hasNext:
+                        type: boolean
+                        example: true
+                      hasPrev:
+                        type: boolean
+                        example: false
 
   /api/users/create:
     post:

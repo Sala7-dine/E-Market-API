@@ -3,7 +3,13 @@ import Product from '../models/Product.js';
 
 // get user's cart :
 export async function getCarts(userId) {
-  const allCart = await Cart.find({ userId });
+  const allCart = await Cart.find({ userId }).populate({
+    path: 'items.productId',
+    populate: {
+      path: 'categories',
+      model: 'Categorie'
+    }
+  });
   console.log(JSON.stringify(allCart, null, 2));
   if (allCart.length === 0) {
     throw new Error('no carts.');
@@ -64,6 +70,7 @@ export async function deleteproduct(userId, productId) {
 
 // update Product Quantity and total price in the cart :
 export async function updateProductQuantity(userId, productId, quantity) {
+  const cart = await Cart.findOne({ userId });
   if (!cart) {
     throw new Error('Cart not found for this user');
   }

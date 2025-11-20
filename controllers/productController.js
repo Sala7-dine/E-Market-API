@@ -27,15 +27,15 @@ export const GetProducts = async (req, res) => {
   }
 };
 
-export const CreateProduct = async (req, res) => {
+export const CreateProduct = async (req, res, next) => {
   try {
     const productData = { ...req.body, createdBy: req.user._id };
     if (req.compressedFiles && req.compressedFiles.length > 0) {
       productData.images = req.compressedFiles.map((file) => {
         logger.info(
-          `Image compressed: ${file.filename}, type: ${file.mimetype}, size: ${(file.size / 1024).toFixed(2)}KB`,
+          `Image uploaded: ${file.filename}, size: ${(file.size / 1024).toFixed(2)}KB`,
         );
-        return `/images/products/${file.filename}`;
+        return file.url;
       });
     }
     const newProduct = await createProduct(productData);
@@ -51,7 +51,7 @@ export const CreateProduct = async (req, res) => {
       data: newProduct,
     });
   } catch (err) {
-    throw new Error(err.message);
+    next(err);
   }
 };
 
@@ -68,9 +68,9 @@ export const UpdateProduct = async (req, res) => {
     if (req.compressedFiles && req.compressedFiles.length > 0) {
       newImagePaths = req.compressedFiles.map((file) => {
         logger.info(
-          `Image compressed for product ${id}: ${file.filename}, type: ${file.mimetype}, size: ${(file.size / 1024).toFixed(2)}KB`,
+          `Image uploaded for product ${id}: ${file.filename}, size: ${(file.size / 1024).toFixed(2)}KB`,
         );
-        return `/images/products/${file.filename}`;
+        return file.url;
       });
       productUpdate.images = newImagePaths;
     }

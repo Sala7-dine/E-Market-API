@@ -8,11 +8,8 @@ import {
 export const addProductToCard = async (req, res, next) => {
   try {
     const userId = req.user._id;
-    console.log(userId);
     const { productId, quantity } = req.body;
-    console.log(quantity);
     const cart = await addToCart(userId, productId, parseInt(quantity));
-    console.log(quantity);
 
     if (cart === 0) {
       return res
@@ -31,7 +28,6 @@ export const getAllCarts = async (req, res, next) => {
     const userId = req.user._id;
 
     const allCarts = await getCarts(userId);
-    console.log('🔪🔪🔪', allCarts);
     res.status(200).json({
       success: true,
       data: allCarts,
