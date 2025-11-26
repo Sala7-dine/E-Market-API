@@ -84,8 +84,10 @@ export const UpdateProfile = async (req, res) => {
     const updateData = { ...req.body };
 
     if (req.file) {
-      updateData.profileImage = `/images/users/${req.file.filename}`;
+      updateData.profileImage = req.file.cloudinaryUrl;
+      updateData.cloudinaryId = req.file.cloudinaryId;
     }
+    
     const updatedUser = await UpdateProfileService(
       userId,
       updateData,

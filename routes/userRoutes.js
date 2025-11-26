@@ -15,7 +15,7 @@ import {
   UpdateProfile,
 } from '../controllers/userController.js';
 import { authenticate } from '../middlewares/authMiddleware.js';
-import { compressImages } from '../middlewares/imageCompression.js';
+import { uploadUserImageToCloudinary } from '../middlewares/userImageUpload.js';
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -47,8 +47,8 @@ router.get('/me', authenticate, GetCurrentUser);
 router.patch(
   '/me',
   authenticate,
-  upload.any(),
-  compressImages('images/users', 800, 800, 85),
+  upload.single('profileImage'),
+  uploadUserImageToCloudinary,
   validate(updateProfileSchema),
   UpdateProfile,
 );

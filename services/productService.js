@@ -14,13 +14,30 @@ export const getProductById = async (id) => {
         throw new Error(err.message);
     }
 };
-export async function getAllProducts() {
+export async function getAllProducts(page = 1, limit = 10) {
   try {
+    const skip = (page - 1) * limit;
+    
     const products = await Product.find()
       .where({ isDelete: false })
-      .populate('categories');
-    logger.info(`Retrieved ${products.length} products`);
-    return products;
+      .populate('categories')
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 });
+      
+    const total = await Product.countDocuments({ isDelete: false });
+    
+    logger.info(`Retrieved ${products.length} products (page ${page})`);
+    
+    return {
+      products,
+      pagination: {
+        currentPage: page,
+        totalPages: Math.ceil(total / limit),
+        totalProducts: total,
+        limit
+      }
+    };
   } catch (err) {
     logger.error(`Error getting all products: ${err.message}`);
     throw new Error(err.message);

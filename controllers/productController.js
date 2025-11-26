@@ -12,15 +12,19 @@ import notificationHandler from '../events/notificationHandler.js';
 
 export const GetProducts = async (req, res) => {
   try {
-    const data = await getAllProducts();
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    
+    const data = await getAllProducts(page, limit);
 
     if (!data) {
       throw new Error('aucun data dans database');
     }
 
-    res.status(201).json({
+    res.status(200).json({
       success: true,
-      data: data,
+      data: data.products,
+      pagination: data.pagination,
     });
   } catch (err) {
     throw new Error(err.message);

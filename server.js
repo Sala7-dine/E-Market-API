@@ -36,8 +36,6 @@ app.use(
   cors({
     origin: true, // l'URL exacte de ton frontend
     credentials: true,
-
-
   })
 );
 

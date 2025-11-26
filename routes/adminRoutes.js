@@ -69,10 +69,12 @@ router.get('/logs', authenticate, requireAdmin, (req, res) => {
   }
 });
 
-// Lire un fichier de log spécifique
+// Lire un fichier de log spécifique avec pagination
 router.get('/logs/:filename', authenticate, requireAdmin, (req, res) => {
   try {
     const { filename } = req.params;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 100;
     const filePath = path.join('public', filename);
 
     if (!fs.existsSync(filePath) || !filename.includes('logs')) {
@@ -80,10 +82,21 @@ router.get('/logs/:filename', authenticate, requireAdmin, (req, res) => {
     }
 
     const content = fs.readFileSync(filePath, 'utf8');
+    const lines = content.split('\n').filter(line => line.trim());
+    const total = lines.length;
+    const skip = (page - 1) * limit;
+    const paginatedLines = lines.slice(skip, skip + limit);
+
     res.json({
       success: true,
       filename,
-      content: content.split('\n').slice(-100), // Dernières 100 lignes
+      content: paginatedLines,
+      pagination: {
+        currentPage: page,
+        totalPages: Math.ceil(total / limit),
+        totalLines: total,
+        limit
+      }
     });
   } catch {
     res.status(500).json({ error: 'Erreur lors de la lecture du fichier' });

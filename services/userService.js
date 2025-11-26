@@ -1,7 +1,7 @@
 import User from '../models/User.js';
-import fs from 'fs';
 import logger from '../config/logger.js';
-import bcrypt from 'bcryptjs'; // Add this import at the top
+import bcrypt from 'bcryptjs';
+import { deleteUserImageFromCloudinary } from '../middlewares/userImageUpload.js';
 
 export async function getAllUsers(page = 1, limit = 10) {
   try {
@@ -99,21 +99,18 @@ export async function UpdateProfile(userId, updateData, userRole) {
       throw new Error('Utilisateur non trouvé');
     }
 
-    const { fullName, email, password, role, profileImage } = updateData;
+    const { fullName, email, password, role, profileImage, cloudinaryId } = updateData;
 
     if (fullName) user.fullName = fullName;
     if (email) user.email = email;
 
     if (profileImage !== undefined) {
-      const previousImage = user.profileImage;
-      if (previousImage) {
-        const imagePath = `public${previousImage}`;
-        if (fs.existsSync(imagePath)) {
-          fs.unlinkSync(imagePath);
-          logger.info(`Deleted old profile image: ${previousImage}`);
-        }
+      // Delete old image from Cloudinary if exists
+      if (user.cloudinaryId) {
+        await deleteUserImageFromCloudinary(user.cloudinaryId);
       }
       user.profileImage = profileImage;
+      user.cloudinaryId = cloudinaryId;
     }
 
     if (password) {

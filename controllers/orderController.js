@@ -29,8 +29,11 @@ export const handleAddOrder = async (req, res, next) => {
 export const handleGetOrder = async (req, res, next) => {
   try {
     const userId = req.user._id;
-    const order = await getOrder(userId);
-    res.status(200).json(order);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+    
+    const result = await getOrder(userId, page, limit);
+    res.status(200).json(result);
   } catch (err) {
     next(err);
   }

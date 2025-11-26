@@ -59,13 +59,23 @@ export async function addOrder(userId, cartId, couponCode = null) {
 }
 
 // get user's orders :
-export async function getOrder(userId) {
-  const order = await Order.find({ userId });
-  if (!order) {
-    throw new Error('no order');
-  }
+export async function getOrder(userId, page = 1, limit = 5) {
+  const skip = (page - 1) * limit;
+  
+  const totalItems = await Order.countDocuments({ userId });
+  const orders = await Order.find({ userId })
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit)
+    .populate('items.productId');
 
-  return order;
+  return {
+    page,
+    limit,
+    totalItems,
+    totalPages: Math.ceil(totalItems / limit),
+    orders,
+  };
 }
 
 // update order's status :

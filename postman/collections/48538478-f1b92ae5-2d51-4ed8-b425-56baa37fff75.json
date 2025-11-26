@@ -2262,6 +2262,73 @@
             "description": "Récupérer la liste des fichiers de logs de l'application. Nécessite les droits d'administrateur."
           },
           "response": []
+        },
+        {
+          "name": "Get Specific Log File",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Response has success property\", () => pm.expect(pm.response.json()).to.have.property('success'));",
+                  "pm.test(\"Response has filename\", () => pm.expect(pm.response.json()).to.have.property('filename'));",
+                  "pm.test(\"Response has content array\", () => pm.expect(pm.response.json()).to.have.property('content'));",
+                  "pm.test(\"Response has pagination\", () => {",
+                  "    const json = pm.response.json();",
+                  "    pm.expect(json).to.have.property('pagination');",
+                  "    pm.expect(json.pagination).to.have.property('currentPage');",
+                  "    pm.expect(json.pagination).to.have.property('totalPages');",
+                  "    pm.expect(json.pagination).to.have.property('totalLines');",
+                  "});",
+                  "pm.test(\"Response time < 2s\", () => pm.expect(pm.response.responseTime).to.be.below(2000));"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/admin/logs/:filename?page=1&limit=100",
+              "host": ["{{baseURL}}"],
+              "path": ["api", "admin", "logs", ":filename"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Numéro de la page (défaut: 1)"
+                },
+                {
+                  "key": "limit",
+                  "value": "100",
+                  "description": "Nombre de lignes par page (défaut: 100)"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "filename",
+                  "value": "logs-2025-11-14.log",
+                  "description": "Nom du fichier de log"
+                }
+              ]
+            },
+            "description": "Lire le contenu d'un fichier de log spécifique avec pagination. Nécessite les droits d'administrateur."
+          },
+          "response": []
         }
       ]
     },
